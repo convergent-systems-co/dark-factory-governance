@@ -2,6 +2,33 @@
 
 Execute this on agent launch. This is the Code Manager's entry point for autonomous operation.
 
+<!-- ANCHOR: This instruction must survive context resets -->
+
+## Context Capacity — MANDATORY (Read First)
+
+**This section overrides all other work. If context is under pressure, stop and checkpoint.**
+
+### Detection Signals
+
+Watch for these signals that context is filling up:
+
+1. **Token count warnings** — Claude Code shows token usage in verbose mode (right side). Copilot surfaces similar warnings. When total tokens exceed 80% of the model's context window, stop immediately.
+2. **System warnings** — The runtime emits warnings when approaching context limits. These are non-negotiable stop signals.
+3. **Conversation length heuristic** — If you have completed 3 issues, or made more than 50 tool calls, or the conversation exceeds ~100 exchanges, assume you are at or near 80% regardless of other signals.
+4. **Degraded recall** — If you find yourself re-reading files you already read, forgetting earlier decisions, or producing inconsistent output, context pressure is likely the cause.
+
+### Hard Limits
+
+- **Maximum 3 issues per session** — non-negotiable safety net
+- **Mandatory checkpoint after every issue** — before starting the next issue, always write a checkpoint (see Step 7i below)
+- **Two-tier capacity threshold**: at ~70%, do not start a new issue (finish the current one, checkpoint, request `/clear`); at ~80%, stop immediately and execute the full shutdown protocol regardless of current step
+
+### When Triggered
+
+Execute the **Context Capacity Shutdown Protocol** (see end of this file). Do not start the next issue. Do not finish the current step. Stop, clean, checkpoint, report.
+
+<!-- /ANCHOR -->
+
 ## In-Session Work
 
 When the user provides work directly (bug reports, feature requests, feedback, or tasks) that does not correspond to an existing GitHub issue:
@@ -221,11 +248,21 @@ After merge and before marking the plan as completed, run a lightweight retrospe
 3. If findings warrant governance changes, create a new issue labeled `enhancement`
 4. Skip if the issue was trivial or context capacity is above 70%
 
-6. Update the plan status to `completed` in `.plans/{issue-number}-*.md`.
+5. Update the plan status to `completed` in `.plans/{issue-number}-*.md`.
+
+#### 7i: Mandatory Checkpoint (Between Issues)
+
+**This step is not optional. Execute it after every issue, before starting the next.**
+
+1. Write a checkpoint to `.checkpoints/{timestamp}-{branch}.json` with current session state
+2. Record the just-completed issue in the checkpoint's `issues_completed` array; the session issue counter is implicitly the length of this array
+3. **If 3 issues have been completed this session**: execute the full Context Capacity Shutdown Protocol and request `/clear`. Do not start a 4th issue.
+4. **If any context pressure signal is present** (see "Context Capacity — MANDATORY" at top of file): execute shutdown protocol regardless of issue count
+5. **If neither limit is hit**: proceed to Step 8
 
 ### Step 8: Continue
 
-Return to Step 1. Pick the next actionable issue. Repeat until no actionable issues remain.
+Return to Step 1. Pick the next actionable issue. Repeat until no actionable issues remain or a hard limit is reached.
 
 ## Constraints
 
@@ -234,15 +271,23 @@ Return to Step 1. Pick the next actionable issue. Repeat until no actionable iss
 - Always comment on the issue before starting work (announce intent)
 - Always create an issue before starting work (even for in-session tasks)
 - If any step fails, log the failure and move to the next issue
-- Respect rate limits: maximum 5 issues per session
+- **Maximum 3 issues per session** — hard cap, non-negotiable
 - Maximum 3 review cycles per PR before escalating to human review
-- **Context capacity is a hard constraint** — check before starting each new issue and after every major step (plan, implement, review, merge)
+- **Mandatory checkpoint after every issue** — Step 7i is never skipped
+- **Context capacity is a hard constraint** — if any detection signal triggers, execute the shutdown protocol immediately
 
 ## Context Capacity Shutdown Protocol
 
 **This protocol is mandatory. Violating it causes irrecoverable loss of instructions and working context.**
 
-Check context capacity before every new issue and after every major step. When at or above 80%:
+**Trigger conditions** (any one is sufficient):
+- Token count at or above 80% of context window (visible in verbose mode)
+- System warning about approaching context limits
+- 3 issues completed this session (hard cap)
+- Conversation exceeds ~100 exchanges or ~50 tool calls
+- Agent notices degraded recall or inconsistent output
+
+When triggered:
 
 1. **Stop immediately** — do not start the next issue or step
 2. **Clean git state** — commit pending changes, abort any in-progress merges or rebases, ensure `git status` shows a clean working tree on every branch you touched
@@ -271,6 +316,6 @@ Check context capacity before every new issue and after every major step. When a
 
 Stop the loop when:
 - No actionable issues remain
-- 5 issues have been processed in this session
-- **Context window is at or above 80% capacity** — execute the shutdown protocol above before doing anything else
+- **3 issues have been completed this session** — execute shutdown protocol, checkpoint, request `/clear`
+- **Any context pressure signal triggers** — execute shutdown protocol immediately
 - A human sends a message (human input takes priority)

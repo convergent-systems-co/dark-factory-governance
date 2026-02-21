@@ -185,11 +185,32 @@ When a context window fills, the AI runtime may truncate or summarize early cont
 
 Uncontrolled compaction is the worst outcome. If the context compacts while the working tree has uncommitted changes, merge conflicts, or in-progress operations, the agent loses both the instructions that explain what it was doing and the ability to recover cleanly. This must never happen.
 
+### Context Pressure Detection (Platform-Specific)
+
+The agent must actively monitor for context pressure using platform-specific signals:
+
+#### Claude Code
+- **Token counter**: Visible in `--verbose` mode on the right side of the terminal. Shows current token usage vs. model context window.
+- **System warnings**: Claude Code emits warnings when approaching context limits. These appear as system messages in the conversation.
+- **Automatic summarization**: When Claude Code summarizes earlier messages, this is a signal that context is already under pressure. If this happens mid-task, immediately checkpoint.
+
+#### GitHub Copilot
+- **Context window indicators**: Copilot surfaces context usage in its UI. Watch for degraded suggestion quality as a proxy.
+- **Response truncation**: If responses are cut short or lose coherence, context is likely near capacity.
+
+#### Universal Heuristics (All Platforms)
+- **Issue count**: After 3 completed issues, stop regardless of token count.
+- **Tool call count**: After ~50 tool calls in a session, assume 70%+ capacity.
+- **Conversation exchanges**: After ~100 back-and-forth exchanges, assume 70%+ capacity.
+- **Self-detection**: If the agent re-reads files it already read, forgets earlier decisions, or produces contradictory output, context pressure is the likely cause.
+
+**The user should never have to manage context.** The agent is responsible for detecting pressure and executing the shutdown protocol before the user notices any degradation.
+
 ### Capacity Shutdown Protocol
 
 **This is the primary defense against context loss. It is mandatory and overrides all other work.**
 
-The agent must check context capacity before starting any new issue, and after completing each major step (plan, implement, review, merge). When context reaches 80% capacity:
+The agent must check context capacity before starting any new issue, and after completing each major step (plan, implement, review, merge). When context reaches 80% capacity or any detection signal triggers:
 
 1. **Stop immediately** — do not start the next task, issue, or step
 2. **Clean all git state**:
