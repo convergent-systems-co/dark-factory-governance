@@ -20,7 +20,7 @@ Safe, incremental code restructuring with verification at every step.
 
 ## Phase 1: Analysis
 
-> **Adopt persona:** `personas/engineering/refactor-specialist.md`
+> **Adopt persona:** `governance/personas/engineering/refactor-specialist.md`
 
 ### Input
 
@@ -75,8 +75,8 @@ Safe, incremental code restructuring with verification at every step.
 
 ## Phase 2: Strategy
 
-> **Adopt persona:** `personas/engineering/refactor-specialist.md`
-> **Invoke prompt:** `prompts/plan.md`
+> **Adopt persona:** `governance/personas/engineering/refactor-specialist.md`
+> **Invoke prompt:** `governance/prompts/plan.md`
 
 ### Input
 
@@ -129,8 +129,8 @@ Safe, incremental code restructuring with verification at every step.
 
 ## Phase 3: Execute
 
-> **Invoke prompt:** `prompts/refactor.md`
-> **Secondary persona:** `personas/engineering/test-engineer.md`
+> **Invoke prompt:** `governance/prompts/refactor.md`
+> **Secondary persona:** `governance/personas/engineering/test-engineer.md`
 
 ### Input
 
@@ -176,8 +176,8 @@ For each step in the strategy:
 
 ## Phase 4: Verify
 
-> **Adopt persona:** `personas/engineering/test-engineer.md`
-> **Invoke prompt:** `prompts/write-tests.md`
+> **Adopt persona:** `governance/personas/engineering/test-engineer.md`
+> **Invoke prompt:** `governance/prompts/write-tests.md`
 
 ### Input
 
@@ -219,7 +219,7 @@ For each step in the strategy:
 
 ## Phase 5: Review
 
-> **Invoke panel:** `personas/panels/code-review.md`
+> **Invoke panel:** `governance/personas/panels/code-review.md`
 
 ### Input
 

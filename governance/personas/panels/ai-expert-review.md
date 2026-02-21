@@ -13,10 +13,10 @@ Evaluate changes to AI governance artifacts — personas, prompts, workflows, po
 ## Scope
 
 This panel triggers when changes affect:
-- Persona definitions (`personas/`)
-- Prompt templates and workflows (`prompts/`)
-- Policy profiles (`policy/`)
-- Validation schemas (`schemas/`)
+- Persona definitions (`governance/personas/`)
+- Prompt templates and workflows (`governance/prompts/`)
+- Policy profiles (`governance/policy/`)
+- Validation schemas (`governance/schemas/`)
 - Base instructions (`instructions/`, `instructions.md`)
 
 ## Process

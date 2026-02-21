@@ -21,7 +21,7 @@ Managing an active incident through mitigation, communication, root cause analys
 
 ## Phase 1: Triage
 
-> **Adopt persona:** `personas/specialist/incident-commander.md`
+> **Adopt persona:** `governance/personas/specialist/incident-commander.md`
 
 ### Input
 
@@ -78,8 +78,8 @@ Managing an active incident through mitigation, communication, root cause analys
 
 ## Phase 2: Mitigate
 
-> **Adopt persona:** `personas/specialist/incident-commander.md`
-> **Secondary persona:** `personas/operations/sre.md`
+> **Adopt persona:** `governance/personas/specialist/incident-commander.md`
+> **Secondary persona:** `governance/personas/operations/sre.md`
 
 ### Input
 
@@ -129,7 +129,7 @@ Managing an active incident through mitigation, communication, root cause analys
 
 ## Phase 3: Communicate
 
-> **Adopt persona:** `personas/specialist/incident-commander.md`
+> **Adopt persona:** `governance/personas/specialist/incident-commander.md`
 
 ### Input
 
@@ -169,8 +169,8 @@ Managing an active incident through mitigation, communication, root cause analys
 
 ## Phase 4: Root Cause
 
-> **Adopt persona:** `personas/engineering/debugger.md`
-> **Invoke prompt:** `prompts/debug.md`
+> **Adopt persona:** `governance/personas/engineering/debugger.md`
+> **Invoke prompt:** `governance/prompts/debug.md`
 
 ### Input
 
@@ -228,7 +228,7 @@ Managing an active incident through mitigation, communication, root cause analys
 
 ## Phase 5: Post-Mortem
 
-> **Invoke panel:** `personas/panels/incident-post-mortem.md`
+> **Invoke panel:** `governance/personas/panels/incident-post-mortem.md`
 
 ### Input
 
@@ -284,7 +284,7 @@ Managing an active incident through mitigation, communication, root cause analys
 
 ## Phase 6: Action Items
 
-> **Adopt persona:** `personas/leadership/tech-lead.md`
+> **Adopt persona:** `governance/personas/leadership/tech-lead.md`
 
 ### Input
 

@@ -21,7 +21,7 @@ Systematic investigation and resolution of a bug, from reproduction through comm
 
 ## Phase 1: Reproduce
 
-> **Adopt persona:** `personas/engineering/debugger.md`
+> **Adopt persona:** `governance/personas/engineering/debugger.md`
 
 ### Input
 
@@ -67,8 +67,8 @@ Systematic investigation and resolution of a bug, from reproduction through comm
 
 ## Phase 2: Investigate
 
-> **Adopt persona:** `personas/engineering/debugger.md`
-> **Invoke prompt:** `prompts/debug.md`
+> **Adopt persona:** `governance/personas/engineering/debugger.md`
+> **Invoke prompt:** `governance/prompts/debug.md`
 
 ### Input
 
@@ -105,7 +105,7 @@ Systematic investigation and resolution of a bug, from reproduction through comm
 
 ## Phase 3: Root Cause
 
-> **Adopt persona:** `personas/engineering/debugger.md`
+> **Adopt persona:** `governance/personas/engineering/debugger.md`
 
 ### Input
 
@@ -153,7 +153,7 @@ Systematic investigation and resolution of a bug, from reproduction through comm
 
 ## Phase 4: Fix
 
-> **Adopt persona:** `personas/leadership/tech-lead.md`
+> **Adopt persona:** `governance/personas/leadership/tech-lead.md`
 
 ### Input
 
@@ -182,8 +182,8 @@ Systematic investigation and resolution of a bug, from reproduction through comm
 
 ## Phase 5: Test
 
-> **Adopt persona:** `personas/engineering/test-engineer.md`
-> **Invoke prompt:** `prompts/write-tests.md`
+> **Adopt persona:** `governance/personas/engineering/test-engineer.md`
+> **Invoke prompt:** `governance/prompts/write-tests.md`
 
 ### Input
 
@@ -220,7 +220,7 @@ Systematic investigation and resolution of a bug, from reproduction through comm
 
 ## Phase 6: Review
 
-> **Adopt persona:** `personas/quality/code-reviewer.md`
+> **Adopt persona:** `governance/personas/quality/code-reviewer.md`
 
 ### Input
 
@@ -265,7 +265,7 @@ Systematic investigation and resolution of a bug, from reproduction through comm
 
 ## Phase 7: Commit
 
-> **Invoke prompt:** `prompts/commit.md`
+> **Invoke prompt:** `governance/prompts/commit.md`
 
 ### Input
 

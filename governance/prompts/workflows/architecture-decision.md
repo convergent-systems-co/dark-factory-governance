@@ -20,8 +20,8 @@ Making and documenting an architectural choice using an Architecture Decision Re
 
 ## Phase 1: Context
 
-> **Adopt persona:** `personas/architecture/architect.md`
-> **Invoke prompt:** `prompts/explain.md`
+> **Adopt persona:** `governance/personas/architecture/architect.md`
+> **Invoke prompt:** `governance/prompts/explain.md`
 
 ### Input
 
@@ -69,7 +69,7 @@ Making and documenting an architectural choice using an Architecture Decision Re
 
 ## Phase 2: Options
 
-> **Adopt persona:** `personas/architecture/systems-architect.md`
+> **Adopt persona:** `governance/personas/architecture/systems-architect.md`
 
 ### Input
 
@@ -103,7 +103,7 @@ Making and documenting an architectural choice using an Architecture Decision Re
 
 ## Phase 3: Trade-offs
 
-> **Invoke panel:** `personas/panels/architecture-review.md`
+> **Invoke panel:** `governance/personas/panels/architecture-review.md`
 
 ### Input
 
@@ -162,7 +162,7 @@ Making and documenting an architectural choice using an Architecture Decision Re
 
 ## Phase 4: Decision
 
-> **Adopt persona:** `personas/leadership/tech-lead.md`
+> **Adopt persona:** `governance/personas/leadership/tech-lead.md`
 
 ### Input
 
@@ -213,8 +213,8 @@ Making and documenting an architectural choice using an Architecture Decision Re
 
 ## Phase 5: Documentation
 
-> **Adopt persona:** `personas/documentation/documentation-writer.md`
-> **Invoke prompt:** `prompts/commit.md`
+> **Adopt persona:** `governance/personas/documentation/documentation-writer.md`
+> **Invoke prompt:** `governance/prompts/commit.md`
 
 ### Input
 

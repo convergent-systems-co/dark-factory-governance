@@ -160,11 +160,11 @@ required_panels:
 # Panels executed based on change characteristics.
 optional_panels:
   - panel: ai-expert-review
-    trigger: files_changed_in ["personas/", "prompts/", "policy/", "schemas/", "instructions/"]
+    trigger: files_changed_in ["governance/personas/", "governance/prompts/", "governance/policy/", "governance/schemas/", "instructions/"]
   - panel: architecture-review
-    trigger: files_changed_in ["src/", "lib/", "pkg/", "personas/panels/", "prompts/workflows/", ".github/workflows/"]
+    trigger: files_changed_in ["src/", "lib/", "pkg/", "governance/personas/panels/", "governance/prompts/workflows/", ".github/workflows/"]
   - panel: threat-modeling
-    trigger: files_changed_in ["policy/", "schemas/", "personas/agentic/", ".github/workflows/"]
+    trigger: files_changed_in ["governance/policy/", "governance/schemas/", "governance/personas/agentic/", ".github/workflows/"]
   - panel: performance-review
     trigger: files_changed_in ["src/", "bench/"]
   - panel: testing-review

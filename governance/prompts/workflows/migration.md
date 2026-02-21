@@ -21,8 +21,8 @@ System, dependency, or data migrations with safety gates at every critical junct
 
 ## Phase 1: Assessment
 
-> **Adopt persona:** `personas/specialist/migration-specialist.md`
-> **Invoke prompt:** `prompts/migrate.md`
+> **Adopt persona:** `governance/personas/specialist/migration-specialist.md`
+> **Invoke prompt:** `governance/prompts/migrate.md`
 
 ### Input
 
@@ -81,8 +81,8 @@ System, dependency, or data migrations with safety gates at every critical junct
 
 ## Phase 2: Strategy
 
-> **Adopt persona:** `personas/specialist/migration-specialist.md`
-> **Invoke prompt:** `prompts/plan.md`
+> **Adopt persona:** `governance/personas/specialist/migration-specialist.md`
+> **Invoke prompt:** `governance/prompts/plan.md`
 
 ### Input
 
@@ -142,8 +142,8 @@ System, dependency, or data migrations with safety gates at every critical junct
 
 ## Phase 3: Execution Plan
 
-> **Adopt persona:** `personas/specialist/migration-specialist.md`
-> **Secondary persona:** `personas/operations/sre.md`
+> **Adopt persona:** `governance/personas/specialist/migration-specialist.md`
+> **Secondary persona:** `governance/personas/operations/sre.md`
 
 ### Input
 
@@ -206,7 +206,7 @@ System, dependency, or data migrations with safety gates at every critical junct
 
 ## Phase 4: Execute
 
-> **Invoke prompt:** `prompts/migrate.md`
+> **Invoke prompt:** `governance/prompts/migrate.md`
 
 ### Input
 
@@ -259,7 +259,7 @@ For each step in the execution plan:
 
 ## Phase 5: Validation
 
-> **Invoke panel:** `personas/panels/migration-review.md`
+> **Invoke panel:** `governance/personas/panels/migration-review.md`
 
 ### Input
 
@@ -313,7 +313,7 @@ For each step in the execution plan:
 
 ## Phase 6: Rollback Readiness
 
-> **Adopt persona:** `personas/operations/failure-engineer.md`
+> **Adopt persona:** `governance/personas/operations/failure-engineer.md`
 
 ### Input
 

@@ -12,7 +12,7 @@ Names should be:
 
 ### Issue 1: "Reviewer" vs "Code Reviewer" Ambiguity
 
-`personas/code_quality/reviewer.md` and `personas/code_quality/code-reviewer.md` are too similar.
+`governance/personas/code_quality/reviewer.md` and `governance/personas/code_quality/code-reviewer.md` are too similar.
 
 | Current Name | Role | Problem |
 |-------------|------|---------|
@@ -27,11 +27,11 @@ The plan document uses "panels" throughout. The codebase uses "round_tables". Th
 
 | Term | Used In | Context |
 |------|---------|---------|
-| Round Tables | `personas/round_tables/` directory | Original codebase |
-| Panels | Governance plan, `panels/` directory | New governance model |
+| Round Tables | `governance/personas/round_tables/` directory | Original codebase |
+| Panels | Governance plan, `governance/personas/panels/` directory | New governance model |
 | Review | Panel filenames (`code-review.md`) | File names |
 
-**Recommendation:** Standardize on "panels" as the term. Rename `personas/round_tables/` to `personas/panels/`. Update `personas/index.md` to use "Panels" instead of "Round Tables". The governance model already uses "panels" exclusively.
+**Recommendation:** Standardize on "panels" as the term. Rename `governance/personas/round_tables/` to `governance/personas/panels/`. Update `governance/personas/index.md` to use "Panels" instead of "Round Tables". The governance model already uses "panels" exclusively.
 
 ### Issue 3: Directory Name Inconsistencies
 
@@ -56,7 +56,7 @@ Category directories use different conventions:
 | `operations_reliability/` | `operations/` | Shorter, "reliability" is implicit |
 | `process_people/` | `leadership/` | More descriptive of the actual roles |
 | `special_purpose/` | `specialist/` | More descriptive |
-| `round_tables/` | `panels/` | Aligns with governance model terminology |
+| `round_tables/` | `governance/personas/panels/` | Aligns with governance model terminology |
 
 ### Issue 4: New Persona Categories
 
@@ -73,9 +73,9 @@ These are well-named. No changes needed.
 
 Panel filenames are clear and consistent (`code-review.md`, `security-review.md`, etc.). The `-review` suffix works well.
 
-One addition: the new `copilot-review.md` in `panels/` (not `personas/panels/`) is in a different directory than the other panel definitions. This could cause confusion.
+One addition: the new `copilot-review.md` in `governance/personas/panels/` (not `governance/personas/panels/`) is in a different directory than the other panel definitions. This could cause confusion.
 
-**Recommendation:** After renaming `round_tables/` to `panels/`, move `copilot-review.md` from the top-level `panels/` directory into `personas/panels/` to keep all panel definitions together. The top-level `panels/` directory can then be removed.
+**Recommendation:** After renaming `round_tables/` to `governance/personas/panels/`, move `copilot-review.md` from the top-level `governance/personas/panels/` directory into `governance/personas/panels/` to keep all panel definitions together. The top-level `governance/personas/panels/` directory can then be removed.
 
 ## Summary of Proposed Renames
 
@@ -83,25 +83,25 @@ One addition: the new `copilot-review.md` in `panels/` (not `personas/panels/`) 
 
 | From | To |
 |------|----|
-| `personas/code_quality/` | `personas/quality/` |
-| `personas/compliance_governance/` | `personas/compliance/` |
-| `personas/domain_specific/` | `personas/domain/` |
-| `personas/operations_reliability/` | `personas/operations/` |
-| `personas/process_people/` | `personas/leadership/` |
-| `personas/special_purpose/` | `personas/specialist/` |
-| `personas/round_tables/` | `personas/panels/` |
+| `governance/personas/code_quality/` | `governance/personas/quality/` |
+| `governance/personas/compliance_governance/` | `governance/personas/compliance/` |
+| `governance/personas/domain_specific/` | `governance/personas/domain/` |
+| `governance/personas/operations_reliability/` | `governance/personas/operations/` |
+| `governance/personas/process_people/` | `governance/personas/leadership/` |
+| `governance/personas/special_purpose/` | `governance/personas/specialist/` |
+| `governance/personas/round_tables/` | `governance/personas/panels/` |
 
 ### File Renames
 
 | From | To |
 |------|----|
-| `personas/code_quality/reviewer.md` | `personas/quality/style-reviewer.md` |
+| `governance/personas/code_quality/reviewer.md` | `governance/personas/quality/style-reviewer.md` |
 
 ### Moves
 
 | From | To |
 |------|----|
-| `panels/copilot-review.md` | `personas/panels/copilot-review.md` |
+| `governance/personas/panels/copilot-review.md` | `governance/personas/panels/copilot-review.md` |
 
 ## Impact Assessment
 
@@ -111,4 +111,4 @@ One addition: the new `copilot-review.md` in `panels/` (not `personas/panels/`) 
 
 ## Decision
 
-All renames have been executed as a single atomic commit. References in `personas/index.md` and `README.md` have been updated.
+All renames have been executed as a single atomic commit. References in `governance/personas/index.md` and `README.md` have been updated.

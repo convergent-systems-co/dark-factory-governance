@@ -23,13 +23,13 @@ All artifacts in the `.ai/` system fall into three categories. Each category has
 
 | Directory | Contents | Loading Strategy |
 |-----------|----------|-----------------|
-| `personas/` | Role definitions for AI agents | Load only activated personas per `project.yaml` |
-| `personas/panels/` | Multi-persona review panel definitions | Load only when panel is invoked |
-| `prompts/` | Single-task prompt templates | Load on-demand per workflow phase |
-| `prompts/workflows/` | Multi-phase orchestration workflows | Load one phase at a time |
+| `governance/personas/` | Role definitions for AI agents | Load only activated personas per `project.yaml` |
+| `governance/personas/panels/` | Multi-persona review panel definitions | Load only when panel is invoked |
+| `governance/prompts/` | Single-task prompt templates | Load on-demand per workflow phase |
+| `governance/prompts/workflows/` | Multi-phase orchestration workflows | Load one phase at a time |
 | `templates/` | Language-specific conventions | Load once at session start based on project language |
 | `instructions.md` | Base AI instructions | Always loaded (compact, < 500 tokens) |
-| `docs/` | Architecture and design documents | Reference only, not loaded into agent context |
+| `governance/docs/` | Architecture and design documents | Reference only, not loaded into agent context |
 | `.plans/` | Implementation plans | Load only the active plan for the current task |
 
 **Versioning:** Git commit SHA. Cognitive artifacts evolve with the submodule version.
@@ -52,8 +52,8 @@ All artifacts in the `.ai/` system fall into three categories. Each category has
 
 | Directory | Contents | Validation |
 |-----------|----------|------------|
-| `schemas/` | JSON Schema definitions for structured outputs | Self-validating (JSON Schema draft 2020-12) |
-| `policy/` | Policy profiles with deterministic rules | YAML structure validated against policy schema |
+| `governance/schemas/` | JSON Schema definitions for structured outputs | Self-validating (JSON Schema draft 2020-12) |
+| `governance/policy/` | Policy profiles with deterministic rules | YAML structure validated against policy schema |
 | `config.yaml` | System configuration (symlinks, defaults) | YAML structure validated |
 | `templates/*/project.yaml` | Project configuration templates | YAML structure validated |
 
@@ -77,7 +77,7 @@ All artifacts in the `.ai/` system fall into three categories. Each category has
 
 | Directory | Contents | Retention |
 |-----------|----------|-----------|
-| `manifests/` | Run manifests (JSON per `run-manifest.schema.json`) | Permanent — required for audit replay |
+| `governance/manifests/` | Run manifests (JSON per `run-manifest.schema.json`) | Permanent — required for audit replay |
 | Panel outputs | Structured emissions (JSON per `panel-output.schema.json`) | Retained with the PR/merge they belong to |
 | `.plans/` | Implementation plans (Markdown) | Retained with the branch/PR lifecycle |
 
@@ -87,7 +87,7 @@ All artifacts in the `.ai/` system fall into three categories. Each category has
 
 ## Structured Emission Schema
 
-All panels must emit structured output conforming to `schemas/panel-output.schema.json`. The emission is appended after the Markdown reasoning in the panel output.
+All panels must emit structured output conforming to `governance/schemas/panel-output.schema.json`. The emission is appended after the Markdown reasoning in the panel output.
 
 **Format:**
 
@@ -119,7 +119,7 @@ To minimize context window usage and prevent instruction loss during context res
 4. **Policy context** (never loaded into AI context): Evaluated programmatically, not by the AI model
 5. **Audit context** (write-only): Generated as output, never loaded as input except for replay
 
-See `docs/context-management.md` for the full JIT loading strategy.
+See `governance/docs/context-management.md` for the full JIT loading strategy.
 
 ## Summary Matrix
 

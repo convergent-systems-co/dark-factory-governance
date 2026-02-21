@@ -20,8 +20,8 @@ Creating or updating technical documentation, from audience analysis through pub
 
 ## Phase 1: Audience Analysis
 
-> **Adopt persona:** `personas/documentation/documentation-writer.md`
-> **Secondary persona:** `personas/leadership/product-manager.md`
+> **Adopt persona:** `governance/personas/documentation/documentation-writer.md`
+> **Secondary persona:** `governance/personas/leadership/product-manager.md`
 
 ### Input
 
@@ -66,8 +66,8 @@ Creating or updating technical documentation, from audience analysis through pub
 
 ## Phase 2: Content Inventory
 
-> **Adopt persona:** `personas/documentation/documentation-writer.md`
-> **Invoke prompt:** `prompts/explain.md`
+> **Adopt persona:** `governance/personas/documentation/documentation-writer.md`
+> **Invoke prompt:** `governance/prompts/explain.md`
 
 ### Input
 
@@ -121,7 +121,7 @@ Creating or updating technical documentation, from audience analysis through pub
 
 ## Phase 3: Draft
 
-> **Adopt persona:** `personas/documentation/documentation-writer.md`
+> **Adopt persona:** `governance/personas/documentation/documentation-writer.md`
 
 ### Input
 
@@ -166,7 +166,7 @@ Creating or updating technical documentation, from audience analysis through pub
 
 ## Phase 4: Review
 
-> **Invoke panel:** `personas/panels/documentation-review.md`
+> **Invoke panel:** `governance/personas/panels/documentation-review.md`
 
 ### Input
 
@@ -223,7 +223,7 @@ Creating or updating technical documentation, from audience analysis through pub
 
 ## Phase 5: Publish
 
-> **Invoke prompt:** `prompts/commit.md`
+> **Invoke prompt:** `governance/prompts/commit.md`
 
 ### Input
 

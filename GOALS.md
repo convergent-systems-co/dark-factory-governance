@@ -74,7 +74,7 @@ The following Phase 4b capabilities are designed but not yet implemented:
 
 ## Phase 5 — Dark Factory (Future)
 
-Architecture is documented in `docs/runtime-feedback-architecture.md`. Not yet implemented:
+Architecture is documented in `governance/docs/runtime-feedback-architecture.md`. Not yet implemented:
 
 - [ ] Runtime feedback loop (anomaly → signal → DI → implementation → deploy)
 - [ ] Self-evolution (governance process improves itself based on outcomes)

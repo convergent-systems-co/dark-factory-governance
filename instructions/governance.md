@@ -7,7 +7,7 @@ Loaded for governance pipeline tasks — panel coordination, policy evaluation, 
 ## Structured Emissions
 
 - All panel output must include JSON between `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers
-- Validate emissions against `schemas/panel-output.schema.json`
+- Validate emissions against `governance/schemas/panel-output.schema.json`
 - Missing markers or invalid JSON means panel execution failed
 
 ## Policy
@@ -19,5 +19,5 @@ Loaded for governance pipeline tasks — panel coordination, policy evaluation, 
 ## Manifests
 
 - Run manifests are immutable — never edit after creation
-- Every merge decision must produce a manifest conforming to `schemas/run-manifest.schema.json`
+- Every merge decision must produce a manifest conforming to `governance/schemas/run-manifest.schema.json`
 - Record the persona set commit, policy profile, and all panel emissions

@@ -72,8 +72,8 @@ It does NOT govern:
 |------|-----------|
 | **Dark Factory** | An autonomous software delivery system where agentic processes handle the full lifecycle from intent to production, with policy-bound constraints replacing manual gates. |
 | **Design Intent (DI)** | A structured request that describes a desired change to the system. The atomic unit of work intake. |
-| **Persona** | A Markdown-defined cognitive role that constrains the reasoning approach of an agentic process. Defined in `personas/`. |
-| **Panel** | A multi-persona review panel where several personas evaluate an artifact from different perspectives. Defined in `personas/panels/`. |
+| **Persona** | A Markdown-defined cognitive role that constrains the reasoning approach of an agentic process. Defined in `governance/personas/`. |
+| **Panel** | A multi-persona review panel where several personas evaluate an artifact from different perspectives. Defined in `governance/personas/panels/`. |
 | **Panel** (governance context) | Panels produce structured emissions. The term "panel" is used in both the multi-persona review definition above and in the governance context. |
 | **Structured Emission** | A JSON object conforming to `panel-output.schema.json` that accompanies the Markdown reasoning output of a panel. The machine-readable governance interface. |
 | **Cognitive Artifact** | A Markdown document produced by persona reasoning. Human-readable, not machine-evaluated for governance decisions. |
@@ -98,14 +98,14 @@ The governance model operates on the following existing components:
 
 | Category | Count | Directory |
 |----------|-------|-----------|
-| Code Quality | 3 | `personas/quality/` |
-| Architecture | 3 | `personas/architecture/` |
-| Engineering | 6 | `personas/engineering/` |
-| Operations & Reliability | 6 | `personas/operations/` |
-| Domain Specific | 5 | `personas/domain/` |
-| Compliance & Governance | 3 | `personas/compliance/` |
-| Process & People | 4 | `personas/leadership/` |
-| Special Purpose | 4 | `personas/specialist/` |
+| Code Quality | 3 | `governance/personas/quality/` |
+| Architecture | 3 | `governance/personas/architecture/` |
+| Engineering | 6 | `governance/personas/engineering/` |
+| Operations & Reliability | 6 | `governance/personas/operations/` |
+| Domain Specific | 5 | `governance/personas/domain/` |
+| Compliance & Governance | 3 | `governance/personas/compliance/` |
+| Process & People | 4 | `governance/personas/leadership/` |
+| Special Purpose | 4 | `governance/personas/specialist/` |
 
 **Panels (12 multi-persona panels):**
 
@@ -287,8 +287,8 @@ Cognitive Governance controls how the system thinks. It ensures that the correct
 |-----------|--------|--------|
 | Validated Intent Package | Layer 1 | Structured JSON (intent package schema) |
 | Panel Graph Configuration | `project.yaml` | YAML panel routing rules |
-| Persona Registry | `personas/index.md` + persona directory | Markdown persona definitions |
-| Workflow Definitions | `prompts/workflows/` | Markdown workflow specifications |
+| Persona Registry | `governance/personas/index.md` + persona directory | Markdown persona definitions |
+| Workflow Definitions | `governance/prompts/workflows/` | Markdown workflow specifications |
 
 ### 6.3 Outputs
 
@@ -311,7 +311,7 @@ Cognitive Governance controls how the system thinks. It ensures that the correct
 |-------|------|-------------|
 | `phase_number` | integer | Ordinal position |
 | `phase_name` | string | Human-readable name |
-| `persona` | string | Primary persona path (e.g., `personas/architecture/architect.md`) |
+| `persona` | string | Primary persona path (e.g., `governance/personas/architecture/architect.md`) |
 | `secondary_personas` | array[string] | Additional personas if required |
 | `prompts` | array[string] | Prompt templates to invoke |
 | `output_artifact` | string | Expected artifact identifier |
@@ -338,7 +338,7 @@ The panel graph defines the mandatory routing rules for intent types. It specifi
 - Minimum persona activation sets per workflow phase
 - Required artifact production at each stage
 
-**Secondary:** Workflow definitions in `prompts/workflows/`
+**Secondary:** Workflow definitions in `governance/prompts/workflows/`
 
 Workflow files define the canonical phase sequence, including which personas are adopted and which panels are invoked. Deviations from the defined workflow are governance violations.
 
@@ -453,8 +453,8 @@ Execution Governance controls what the system does. It ensures that code changes
 | Test Results | Test execution (CI or local) | Test framework output (parsed) |
 | Panel Outputs | Panel execution | Markdown reasoning + structured emission (JSON) |
 | Cognitive Artifacts | Workflow phase outputs | Markdown documents (FEAT-N, BUG-N, etc.) |
-| Policy Profile | `policy/` directory | YAML policy configuration |
-| Emission Schema | `schemas/panel-output.schema.json` | JSON Schema |
+| Policy Profile | `governance/policy/` directory | YAML policy configuration |
+| Emission Schema | `governance/schemas/panel-output.schema.json` | JSON Schema |
 
 ### 7.3 Outputs
 
@@ -509,7 +509,7 @@ Every panel execution must produce a structured emission conforming to `panel-ou
 
 The enforcement mechanism is three-fold:
 
-1. **Schema Validation:** Every panel emission must conform to `schemas/panel-output.schema.json`. Emissions that fail schema validation are rejected; the panel must re-execute.
+1. **Schema Validation:** Every panel emission must conform to `governance/schemas/panel-output.schema.json`. Emissions that fail schema validation are rejected; the panel must re-execute.
 
 2. **Policy Engine:** The policy engine evaluates the aggregate set of emissions against the active policy profile. Policy evaluation is deterministic -- given the same emissions and policy profile, the same decision is always produced.
 
@@ -1356,9 +1356,9 @@ The transition from Phase 3 to Phase 4 is incremental. Repositories can adopt go
 | Step | Change | Risk | Rollback |
 |------|--------|------|----------|
 | 1 | Add `governance:` section to `project.yaml` | None | Remove section |
-| 2 | Add `schemas/panel-output.schema.json` | None | Remove file |
+| 2 | Add `governance/schemas/panel-output.schema.json` | None | Remove file |
 | 3 | Update panels to produce structured emissions (alongside existing Markdown) | Low | Emissions are additive; remove JSON blocks |
-| 4 | Add `policy/` directory with policy profiles | None | Remove directory |
+| 4 | Add `governance/policy/` directory with policy profiles | None | Remove directory |
 | 5 | Enable policy evaluation in CI | Medium | Disable CI check |
 | 6 | Enable auto-merge for qualifying work items | Medium | Revert to manual gates |
 | 7 | Enable runtime governance feedback loop | Low | Disable DI auto-generation |
@@ -1527,21 +1527,21 @@ FEATURE REQUEST ENTERS SYSTEM
 | Type | Format | Governance Role | Location | Versioned |
 |------|--------|----------------|----------|-----------|
 | **Cognitive** | Markdown | Human reasoning record. Not consumed by policy engine. | Workflow artifacts (`[FEAT-N]`, etc.) | By workflow execution |
-| **Enforcement** | JSON/YAML | Machine-evaluated. Consumed by policy engine and CI. | `schemas/`, `policy/`, structured emissions | By schema version |
-| **Audit** | Hybrid (JSON envelope + Markdown content) | Post-hoc analysis. Complete record of a governance decision. | `manifests/`, run manifests | By manifest version |
+| **Enforcement** | JSON/YAML | Machine-evaluated. Consumed by policy engine and CI. | `governance/schemas/`, `governance/policy/`, structured emissions | By schema version |
+| **Audit** | Hybrid (JSON envelope + Markdown content) | Post-hoc analysis. Complete record of a governance decision. | `governance/manifests/`, run manifests | By manifest version |
 
 ### B.2 Directory-to-Artifact-Type Mapping
 
 | Directory | Artifact Type | Description |
 |-----------|--------------|-------------|
-| `personas/` | Cognitive | Persona definitions (Markdown) |
-| `personas/panels/` | Cognitive | Panel definitions (Markdown) |
-| `prompts/` | Cognitive | Prompt templates (Markdown) |
-| `prompts/workflows/` | Cognitive | Workflow definitions (Markdown) |
+| `governance/personas/` | Cognitive | Persona definitions (Markdown) |
+| `governance/personas/panels/` | Cognitive | Panel definitions (Markdown) |
+| `governance/prompts/` | Cognitive | Prompt templates (Markdown) |
+| `governance/prompts/workflows/` | Cognitive | Workflow definitions (Markdown) |
 | `templates/` | Cognitive | Language-specific scaffolding |
-| `schemas/` | Enforcement | JSON Schema definitions |
-| `policy/` | Enforcement | Policy profiles (YAML) |
-| `manifests/` | Audit | Run manifests and governance version manifests |
+| `governance/schemas/` | Enforcement | JSON Schema definitions |
+| `governance/policy/` | Enforcement | Policy profiles (YAML) |
+| `governance/manifests/` | Audit | Run manifests and governance version manifests |
 | `docs/` | Cognitive | Architecture and specification documents |
 | `.plans/` | Cognitive | Implementation plans |
 
@@ -1592,7 +1592,7 @@ The following invariants must hold at all times:
 
 ---
 
-*This document is a governance artifact subject to Evolution Governance (Layer 5). Changes to this document require a version bump, backward compatibility assessment, and review by the Technical Debt Review panel. The canonical location is `docs/dark-factory-governance-model.md` within the `.ai/` submodule.*
+*This document is a governance artifact subject to Evolution Governance (Layer 5). Changes to this document require a version bump, backward compatibility assessment, and review by the Technical Debt Review panel. The canonical location is `governance/docs/dark-factory-governance-model.md` within the `.ai/` submodule.*
 
 *Governance Model Version: 1.0.0*
 *Document Classification: Foundational Specification*

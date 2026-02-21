@@ -41,7 +41,7 @@ Each workflow uses a unique prefix for its artifacts, enabling cross-referencing
 
 - **Artifacts** are named `[PREFIX-N]: Name` (e.g., `[FEAT-1]: Requirements Spec`)
 - **Gates** require explicit approval before the workflow continues
-- **Personas** are adopted at the start of each phase via `personas/` paths
-- **Prompts** are invoked where a specific task prompt applies via `prompts/` paths
+- **Personas** are adopted at the start of each phase via `governance/personas/` paths
+- **Prompts** are invoked where a specific task prompt applies via `governance/prompts/` paths
 - **Panels** are invoked for multi-perspective review phases
 - **Mid-workflow resume:** paste a prior artifact to pick up from that point

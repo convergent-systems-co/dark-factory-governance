@@ -151,7 +151,7 @@ External systems push signals via HTTP POST to a well-known endpoint. This is th
 
 For systems that do not support outbound webhooks, a polling adapter queries external APIs on a configurable interval. Each adapter is defined as a YAML configuration file.
 
-**Location:** `policy/signal-adapters/`
+**Location:** `governance/policy/signal-adapters/`
 
 **Polling interval:** Configurable per adapter. Minimum 30 seconds. Default 60 seconds.
 
@@ -206,7 +206,7 @@ df-governance signal submit \
 
 Every signal, regardless of ingestion mode, is normalized to the following schema before entering the pipeline.
 
-**Schema location:** `schemas/runtime-signal.schema.json`
+**Schema location:** `governance/schemas/runtime-signal.schema.json`
 
 ```json
 {
@@ -327,7 +327,7 @@ Severity is determined by a two-pass process:
 
 2. **Governance-reclassification.** After normalization, the signal passes through the severity reclassifier, which may upgrade or downgrade severity based on governance policy.
 
-**Reclassification rules** are defined in `policy/severity-reclassification.yaml`:
+**Reclassification rules** are defined in `governance/policy/severity-reclassification.yaml`:
 
 ```yaml
 reclassification_rules:
@@ -409,7 +409,7 @@ The fingerprint intentionally excludes `timestamp` and `signal_id` so that ident
 +-------------------------------------------------------------------+
 ```
 
-**Deduplication parameters** (configurable in `policy/deduplication.yaml`):
+**Deduplication parameters** (configurable in `governance/policy/deduplication.yaml`):
 
 | Parameter | Default | Description |
 |---|---|---|
@@ -439,7 +439,7 @@ The following table defines where observability tools connect to the input chann
 | Integration Pattern | Contract | Example Tools (Not Prescriptive) |
 |---|---|---|
 | Alerting webhook | HTTP POST to `/api/signals/ingest` with HMAC auth | Any alerting system with webhook support |
-| Metrics polling | Polling adapter YAML in `policy/signal-adapters/` | Any system exposing a metrics/alerts REST API |
+| Metrics polling | Polling adapter YAML in `governance/policy/signal-adapters/` | Any system exposing a metrics/alerts REST API |
 | Log-based signals | Event bus consumer on `governance.signals.ingest` | Any log aggregator with pub/sub forwarding |
 | APM/tracing signals | Webhook or polling adapter | Any APM tool with alerting capabilities |
 | Custom scripts | CLI `df-governance signal submit` | Runbook automation, cron jobs, ChatOps bots |
@@ -685,7 +685,7 @@ Panel re-execution is triggered by the following events. Each trigger type maps 
 
 ### Panel Selection by Signal Type
 
-The DI Generator proposes panels based on signal category. The mapping is defined in `policy/signal-panel-mapping.yaml` and is overridable per policy profile.
+The DI Generator proposes panels based on signal category. The mapping is defined in `governance/policy/signal-panel-mapping.yaml` and is overridable per policy profile.
 
 ```yaml
 signal_panel_mapping:
@@ -850,7 +850,7 @@ The rate limiter operates at three levels:
 +---------------------------------------------------------------------+
 ```
 
-**Configuration location:** `policy/rate-limits.yaml`
+**Configuration location:** `governance/policy/rate-limits.yaml`
 
 ```yaml
 rate_limits:
@@ -910,7 +910,7 @@ The circuit breaker prevents infinite remediation loops. It operates as a state 
 | `max_cooldown_period` | 4 hours | Exponential backoff ceiling. Each consecutive trip doubles the cooldown, up to this max. |
 | `open_action` | `human_escalation` | When circuit opens, escalate to human. The system will not attempt further automatic remediation for this DI until the circuit is manually or automatically reset. |
 
-**Configuration location:** `policy/circuit-breaker.yaml`
+**Configuration location:** `governance/policy/circuit-breaker.yaml`
 
 ### Cooldown Periods
 
@@ -1111,7 +1111,7 @@ Drift detection requires a baseline: the "expected" state against which runtime 
 +---------------------------------------------------------------------+
 ```
 
-**Baseline store schema:** `schemas/baseline.schema.json`
+**Baseline store schema:** `governance/schemas/baseline.schema.json`
 
 ```json
 {
@@ -1179,7 +1179,7 @@ drift_severity = deviation_magnitude * dimension_criticality
 | 0.5--0.8 | Functional parameter change | 2--3 std dev from baseline | 15--30% degradation | Critical control gap |
 | 0.8--1.0 | Security-relevant or breaking change | > 3 std dev from baseline | > 30% degradation | Regulatory control failure |
 
-**Dimension criticality** (configured per component in `policy/component-registry.yaml`):
+**Dimension criticality** (configured per component in `governance/policy/component-registry.yaml`):
 
 | Criticality | Score | Description |
 |---|---|---|
@@ -1235,7 +1235,7 @@ The system distinguishes between drift that can be automatically remediated and 
 +---------------------------------------------------------------------+
 ```
 
-**Auto-remediation ceiling** (configurable in `policy/drift-remediation.yaml`):
+**Auto-remediation ceiling** (configurable in `governance/policy/drift-remediation.yaml`):
 
 ```yaml
 auto_remediation:
@@ -1283,7 +1283,7 @@ auto_remediation:
 
 Drift signals enter the policy engine through the same path as any other DI. The policy engine applies the following additional rules for drift-originated DIs:
 
-**Drift-specific policy rules** (in `policy/drift-policy.yaml`):
+**Drift-specific policy rules** (in `governance/policy/drift-policy.yaml`):
 
 ```yaml
 drift_policy:
@@ -1401,11 +1401,11 @@ All audit entries include:
 
 ### Phase 5a: Foundation (Implement First)
 
-1. Define `schemas/runtime-signal.schema.json`.
+1. Define `governance/schemas/runtime-signal.schema.json`.
 2. Implement the signal normalizer and fingerprint computation.
 3. Deploy the webhook receiver with HMAC authentication.
 4. Implement deduplication with configurable windows.
-5. Create `policy/signal-panel-mapping.yaml` with initial mappings.
+5. Create `governance/policy/signal-panel-mapping.yaml` with initial mappings.
 6. Implement the DI Generator with template hydration (without root cause hypothesis generation, which requires historical data).
 
 ### Phase 5b: Panel Integration
@@ -1441,22 +1441,22 @@ The following files are defined or referenced by this architecture. Files marked
 
 | File | Status | Purpose |
 |---|---|---|
-| `docs/runtime-feedback-architecture.md` | This document | Design specification |
-| `schemas/runtime-signal.schema.json` | New | Signal normalization schema |
-| `schemas/baseline.schema.json` | New | Baseline snapshot schema |
+| `governance/docs/runtime-feedback-architecture.md` | This document | Design specification |
+| `governance/schemas/runtime-signal.schema.json` | New | Signal normalization schema |
+| `governance/schemas/baseline.schema.json` | New | Baseline snapshot schema |
 | `templates/runtime-di.md` | New | DI template for runtime-generated intents |
-| `policy/severity-reclassification.yaml` | New | Severity reclassification rules |
-| `policy/deduplication.yaml` | New | Deduplication window configuration |
-| `policy/signal-adapters/` | New (directory) | Polling adapter configurations |
-| `policy/signal-panel-mapping.yaml` | New | Signal category to panel mapping |
-| `policy/rate-limits.yaml` | New | Rate limit configuration |
-| `policy/circuit-breaker.yaml` | New | Circuit breaker parameters |
-| `policy/drift-remediation.yaml` | New | Drift auto-remediation rules |
-| `policy/drift-policy.yaml` | New | Drift-specific policy engine rules |
-| `policy/component-registry.yaml` | New | Component criticality and ownership |
-| `schemas/panel-output.schema.json` | Defined in Phase 4 | Structured panel emission schema |
-| `schemas/run-manifest.schema.json` | Defined in Phase 4 | Merge manifest schema |
-| `personas/panels/*.md` | Existing | Panel definitions consumed by re-execution |
-| `personas/operations/*.md` | Existing | Personas involved in runtime review |
-| `personas/compliance/*.md` | Existing | Personas involved in compliance drift |
-| `prompts/workflows/incident-response.md` | Existing | Incident response workflow (input to DI Generator) |
+| `governance/policy/severity-reclassification.yaml` | New | Severity reclassification rules |
+| `governance/policy/deduplication.yaml` | New | Deduplication window configuration |
+| `governance/policy/signal-adapters/` | New (directory) | Polling adapter configurations |
+| `governance/policy/signal-panel-mapping.yaml` | New | Signal category to panel mapping |
+| `governance/policy/rate-limits.yaml` | New | Rate limit configuration |
+| `governance/policy/circuit-breaker.yaml` | New | Circuit breaker parameters |
+| `governance/policy/drift-remediation.yaml` | New | Drift auto-remediation rules |
+| `governance/policy/drift-policy.yaml` | New | Drift-specific policy engine rules |
+| `governance/policy/component-registry.yaml` | New | Component criticality and ownership |
+| `governance/schemas/panel-output.schema.json` | Defined in Phase 4 | Structured panel emission schema |
+| `governance/schemas/run-manifest.schema.json` | Defined in Phase 4 | Merge manifest schema |
+| `governance/personas/panels/*.md` | Existing | Panel definitions consumed by re-execution |
+| `governance/personas/operations/*.md` | Existing | Personas involved in runtime review |
+| `governance/personas/compliance/*.md` | Existing | Personas involved in compliance drift |
+| `governance/prompts/workflows/incident-response.md` | Existing | Incident response workflow (input to DI Generator) |

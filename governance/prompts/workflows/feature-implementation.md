@@ -21,7 +21,7 @@ End-to-end delivery of a new feature, from requirements gathering through commit
 
 ## Phase 1: Requirements
 
-> **Adopt persona:** `personas/leadership/product-manager.md`
+> **Adopt persona:** `governance/personas/leadership/product-manager.md`
 
 ### Input
 
@@ -75,8 +75,8 @@ End-to-end delivery of a new feature, from requirements gathering through commit
 
 ## Phase 2: Design
 
-> **Adopt persona:** `personas/architecture/architect.md`
-> **Invoke prompt:** `prompts/plan.md`
+> **Adopt persona:** `governance/personas/architecture/architect.md`
+> **Invoke prompt:** `governance/prompts/plan.md`
 
 ### Input
 
@@ -132,7 +132,7 @@ End-to-end delivery of a new feature, from requirements gathering through commit
 
 ## Phase 3: Implementation
 
-> **Adopt persona:** `personas/leadership/tech-lead.md`
+> **Adopt persona:** `governance/personas/leadership/tech-lead.md`
 
 ### Input
 
@@ -166,8 +166,8 @@ End-to-end delivery of a new feature, from requirements gathering through commit
 
 ## Phase 4: Testing
 
-> **Adopt persona:** `personas/engineering/test-engineer.md`
-> **Invoke prompt:** `prompts/write-tests.md`
+> **Adopt persona:** `governance/personas/engineering/test-engineer.md`
+> **Invoke prompt:** `governance/prompts/write-tests.md`
 
 ### Input
 
@@ -206,7 +206,7 @@ End-to-end delivery of a new feature, from requirements gathering through commit
 
 ## Phase 5: Review
 
-> **Invoke panel:** `personas/panels/code-review.md`
+> **Invoke panel:** `governance/personas/panels/code-review.md`
 
 ### Input
 
@@ -252,7 +252,7 @@ End-to-end delivery of a new feature, from requirements gathering through commit
 
 ## Phase 6: Commit
 
-> **Invoke prompt:** `prompts/commit.md`
+> **Invoke prompt:** `governance/prompts/commit.md`
 
 ### Input
 

@@ -6,8 +6,8 @@ deterministic merge decisions, rule-by-rule audit logs, and run manifests.
 
 Usage:
     python .governance/policy-engine.py \
-        --emissions-dir emissions/ \
-        --profile policy/default.yaml \
+        --emissions-dir governance/emissions/ \
+        --profile governance/policy/default.yaml \
         --output manifest.json
 
 Exit codes:
@@ -55,9 +55,15 @@ class EvaluationLog:
 # ---------------------------------------------------------------------------
 
 def find_schema_dir():
-    """Locate the schemas/ directory relative to this script."""
+    """Locate the governance/schemas/ directory relative to this script."""
     here = Path(__file__).resolve().parent
-    candidates = [here.parent / "schemas", here / "schemas", Path("schemas")]
+    candidates = [
+        here.parent / "governance" / "schemas",
+        here.parent / "schemas",
+        here / "schemas",
+        Path("governance") / "schemas",
+        Path("schemas"),
+    ]
     for c in candidates:
         if c.is_dir():
             return c
@@ -616,7 +622,7 @@ def generate_manifest(
             "panel_name": emission["panel_name"],
             "verdict": emission.get("aggregate_verdict", "approve"),
             "confidence_score": emission["confidence_score"],
-            "artifact_path": f"emissions/{emission['panel_name']}.json"
+            "artifact_path": f"governance/emissions/{emission['panel_name']}.json"
         })
 
     manifest = {

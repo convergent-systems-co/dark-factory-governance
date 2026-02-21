@@ -88,14 +88,14 @@ For the highest-priority actionable issue:
 
 1. Create a branch: `itsfwcp/{issue-type}/{issue-number}/{branch-name}` (e.g., `itsfwcp/feat/42/add-auth`)
    - `{issue-type}` maps from the issue's conventional commit type: `feat`, `fix`, `refactor`, `docs`, `chore`
-2. Write a plan using the plan template (`prompts/plan-template.md`)
+2. Write a plan using the plan template (`governance/prompts/plan-template.md`)
 3. Save the plan to `.plans/{issue-number}-{short-description}.md`
 4. If the issue is low risk and well-defined, proceed to implementation
 5. If the issue is high risk or ambiguous, comment the plan on the issue and wait for approval
 
 ### Step 6: Execute & Push PR
 
-1. Adopt the Coder persona (`personas/agentic/coder.md`)
+1. Adopt the Coder persona (`governance/personas/agentic/coder.md`)
 2. Implement the plan
 3. Write tests (if applicable to the change type)
 4. Commit with conventional commit messages — one logical change per commit (Git Commit Isolation)
@@ -156,7 +156,7 @@ After checks complete, fetch Copilot findings from **all three comment sources**
 
 For each Copilot recommendation and any panel emission finding:
 
-1. **Classify severity** using the rules in `personas/panels/copilot-review.md`:
+1. **Classify severity** using the rules in `governance/personas/panels/copilot-review.md`:
    - `critical`: Security vulnerability, injection, auth bypass → **must fix**
    - `high`: Bug, incorrect logic, null reference, race condition → **must fix**
    - `medium`: Performance concern, N+1 query → **should fix**
@@ -241,7 +241,7 @@ Once governance approves (all checks pass, aggregate confidence meets threshold,
 
 #### 7h: Retrospective
 
-After merge and before marking the plan as completed, run a lightweight retrospective per `prompts/retrospective.md`:
+After merge and before marking the plan as completed, run a lightweight retrospective per `governance/prompts/retrospective.md`:
 
 1. Evaluate planning accuracy, review cycle count, and token cost observations
 2. Post findings as a comment on the closed issue

@@ -30,10 +30,10 @@ jobs:
       - name: Check for panel emissions
         id: check
         run: |
-          EMISSIONS=$(find emissions -name '*.json' 2>/dev/null | sort)
+          EMISSIONS=$(find governance/emissions -name '*.json' 2>/dev/null | sort)
           if [ -z "$EMISSIONS" ]; then
             echo "has_emissions=false" >> "$GITHUB_OUTPUT"
-            echo "No panel emissions found in emissions/"
+            echo "No panel emissions found in governance/emissions/"
           else
             echo "has_emissions=true" >> "$GITHUB_OUTPUT"
             echo "Found emissions:"
@@ -64,8 +64,8 @@ jobs:
         shell: bash
         run: |
           python .governance/policy-engine.py \
-            --emissions-dir emissions/ \
-            --profile policy/default.yaml \
+            --emissions-dir governance/emissions/ \
+            --profile governance/policy/default.yaml \
             --output manifest.json \
             --commit-sha "${{ github.event.pull_request.head.sha }}" \
             --pr-number "${{ github.event.pull_request.number }}" \
@@ -183,4 +183,4 @@ jobs:
     if: needs.detect.outputs.has_emissions != 'true'
     steps:
       - name: No emissions found
-        run: echo "No panel emissions found in emissions/. Skipping governance review."
+        run: echo "No panel emissions found in governance/emissions/. Skipping governance review."

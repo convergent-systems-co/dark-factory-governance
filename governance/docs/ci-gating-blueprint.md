@@ -21,7 +21,7 @@ Every pull request targeting a protected branch must produce the following artif
 
 ### 1.1 Panel Structured Emissions
 
-Each AI review panel (including GitHub Copilot) must emit a structured JSON block conforming to `schemas/panel-output.schema.json`.
+Each AI review panel (including GitHub Copilot) must emit a structured JSON block conforming to `governance/schemas/panel-output.schema.json`.
 
 **Required Fields:**
 
@@ -86,7 +86,7 @@ The policy engine must produce a policy evaluation result for every pull request
 
 ### 1.3 Run Manifest
 
-A run manifest conforming to `schemas/run-manifest.schema.json` must be produced for every merge event.
+A run manifest conforming to `governance/schemas/run-manifest.schema.json` must be produced for every merge event.
 
 **Required Fields:**
 
@@ -112,7 +112,7 @@ A run manifest conforming to `schemas/run-manifest.schema.json` must be produced
 
 - All reference fields must resolve to existing artifacts.
 - `run_id` must be unique across the repository history.
-- The manifest must be committed to the `manifests/` directory as part of the merge.
+- The manifest must be committed to the `governance/manifests/` directory as part of the merge.
 - Manifests are append-only. Modification of a committed manifest is a policy violation detectable by audit.
 
 ### 1.4 Artifact Dependency Chain
@@ -208,7 +208,7 @@ The checks must be configured with `strict: true` to require branches to be up t
 
 GitHub Copilot is designated as a formal review panel within the Dark Factory governance model. Its review feedback on pull requests is consumed programmatically, not treated as advisory.
 
-The Copilot review panel definition resides at `personas/panels/copilot-review.md`. The governance workflow parses Copilot's output and produces a structured emission conforming to the same `panel-output.schema.json` as all other panels.
+The Copilot review panel definition resides at `governance/personas/panels/copilot-review.md`. The governance workflow parses Copilot's output and produces a structured emission conforming to the same `panel-output.schema.json` as all other panels.
 
 ### 3.2 Consuming Copilot Review Feedback
 
@@ -233,7 +233,7 @@ Each Copilot suggestion is classified into a severity tier using the following d
 
 **Classification Rules:**
 
-- Keyword matching against Copilot suggestion text is the primary classification method. The keyword sets are defined in `policy/copilot-severity-keywords.yaml`.
+- Keyword matching against Copilot suggestion text is the primary classification method. The keyword sets are defined in `governance/policy/copilot-severity-keywords.yaml`.
 - If a suggestion contains multiple severity-relevant keywords, the highest severity takes precedence.
 - Suggestions that cannot be classified default to `warning` severity (fail-safe, not fail-open).
 
@@ -475,7 +475,7 @@ Once two valid override approvals are received:
    - All panel emission references.
    - Policy evaluation result at time of override.
 
-2. The override record is committed to `manifests/overrides/` as a JSON file named `override-{run_id}.json`.
+2. The override record is committed to `governance/manifests/overrides/` as a JSON file named `override-{run_id}.json`.
 
 3. The `Merge Gate` status check transitions to `success` with description: `Override approved. See override record.`
 
@@ -489,7 +489,7 @@ Override events are logged at multiple levels:
 
 | Log Target                           | Content                                                    | Retention       |
 |--------------------------------------|------------------------------------------------------------|-----------------|
-| `manifests/overrides/`               | Full override record (JSON).                               | Permanent (git).|
+| `governance/manifests/overrides/`               | Full override record (JSON).                               | Permanent (git).|
 | Run manifest                         | `override_applied: true` flag.                             | Permanent (git).|
 | GitHub Actions workflow run log      | Timestamped override approval events.                      | Per GH retention.|
 | Pull request timeline                | Structured comments documenting override lifecycle.        | Permanent (GH). |
@@ -534,7 +534,7 @@ Failure to close the retrospective issue within 10 business days triggers an aut
 **Rate Limiting:**
 
 - A maximum of **3 overrides per protected branch per rolling 30-day period** is enforced. Exceeding this limit requires repository administrator intervention to reset the counter.
-- The override count is tracked in `manifests/overrides/override-counter.json` and updated atomically on each override.
+- The override count is tracked in `governance/manifests/overrides/override-counter.json` and updated atomically on each override.
 
 ---
 
@@ -991,8 +991,8 @@ Every merge into a protected branch produces the following audit trail:
 
 1. **Panel emissions** -- stored as GitHub Actions artifacts with 90-day retention.
 2. **Policy evaluation result** -- stored as GitHub Actions artifact with 90-day retention.
-3. **Run manifest** -- committed to `manifests/` in the repository (permanent).
-4. **Override records** (if applicable) -- committed to `manifests/overrides/` (permanent).
+3. **Run manifest** -- committed to `governance/manifests/` in the repository (permanent).
+4. **Override records** (if applicable) -- committed to `governance/manifests/overrides/` (permanent).
 5. **GitHub pull request timeline** -- structured comments from the governance workflow (permanent on GitHub).
 6. **GitHub Actions workflow run logs** -- retained per GitHub/enterprise retention policy.
 
@@ -1000,7 +1000,7 @@ For regulatory audit purposes, the run manifest serves as the single source of t
 
 To replay a governance decision:
 
-1. Retrieve the run manifest from `manifests/`.
+1. Retrieve the run manifest from `governance/manifests/`.
 2. Retrieve the referenced panel emissions and policy result from GitHub Actions artifacts (or from cached copies if retention has expired).
 3. Re-execute the policy engine with the same inputs and policy profile version.
 4. Verify that the output decision matches the recorded decision.

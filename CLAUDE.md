@@ -46,13 +46,13 @@ Every code change flows through these layers in order:
 
 ### Persona and Panel System
 
-- **Personas** (`personas/`) — 48 role definitions across 10 categories. Each defines Role, Evaluate For, Output Format, Principles, Anti-patterns. They are reasoning roles, not model prompts.
-- **Panels** (`personas/panels/`) — 13 multi-persona review workflows. Panels coordinate personas and emit structured JSON conforming to `schemas/panel-output.schema.json`.
-- **Agentic personas** (`personas/agentic/`) — Code Manager (orchestrator, never writes code) and Coder (executor, follows Code Manager direction).
+- **Personas** (`governance/personas/`) — 48 role definitions across 10 categories. Each defines Role, Evaluate For, Output Format, Principles, Anti-patterns. They are reasoning roles, not model prompts.
+- **Panels** (`governance/personas/panels/`) — 13 multi-persona review workflows. Panels coordinate personas and emit structured JSON conforming to `governance/schemas/panel-output.schema.json`.
+- **Agentic personas** (`governance/personas/agentic/`) — Code Manager (orchestrator, never writes code) and Coder (executor, follows Code Manager direction).
 
 ### Policy Engine
 
-Three deterministic YAML profiles in `policy/`:
+Three deterministic YAML profiles in `governance/policy/`:
 - `default.yaml` — Standard risk tolerance, auto-merge enabled with conditions
 - `fin_pii_high.yaml` — SOC2/PCI-DSS/HIPAA/GDPR, auto-merge disabled, 3-approver override
 - `infrastructure_critical.yaml` — Mandatory architecture and SRE review
@@ -67,17 +67,17 @@ Context is loaded in tiers to prevent window overflow:
 - **Tier 2** (~3,000 tokens, per-phase): Workflow phase + panel context
 - **Tier 3** (0 tokens, on-demand): Policies, schemas, docs — queried only when needed
 
-**Hard stop at 80% context capacity.** When approaching this limit: stop all work, clean git state, write a checkpoint to `.checkpoints/`, report to user, and request `/clear`. Never allow context to compact with dirty state. See `docs/context-management.md` for the full shutdown protocol.
+**Hard stop at 80% context capacity.** When approaching this limit: stop all work, clean git state, write a checkpoint to `.checkpoints/`, report to user, and request `/clear`. Never allow context to compact with dirty state. See `governance/docs/context-management.md` for the full shutdown protocol.
 
 ### Structured Emissions
 
-All panel output must include JSON between `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers, validated against `schemas/panel-output.schema.json`. Missing markers or invalid JSON means panel execution failed.
+All panel output must include JSON between `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers, validated against `governance/schemas/panel-output.schema.json`. Missing markers or invalid JSON means panel execution failed.
 
 ## Key Conventions
 
 - **Commit style**: Conventional commits (`feat:`, `fix:`, `refactor:`, `docs:`)
 - **Branch naming**: `itsfwcp/{issue-type}/{issue-number}/{branch-name}` (e.g., `itsfwcp/feat/42/add-auth`)
-- **Plans before code**: Every implementation requires a plan in `.plans/` using `prompts/plan-template.md`
+- **Plans before code**: Every implementation requires a plan in `.plans/` using `governance/prompts/plan-template.md`
 - **Backward compatibility**: All changes must be additive. Breaking changes require migration plans and version bumps.
 - **Enforcement artifacts use semantic versioning** in their `profile_version` or `version` field
 - **Cognitive artifacts version by git SHA** — they evolve with the submodule
@@ -85,7 +85,7 @@ All panel output must include JSON between `<!-- STRUCTURED_EMISSION_START -->` 
 
 ## Agentic Startup Sequence
 
-When operating autonomously (via `prompts/startup.md`), the Code Manager:
+When operating autonomously (via `governance/prompts/startup.md`), the Code Manager:
 1. Scans open GitHub issues
 2. Filters for actionable (no branch, not blocked/wontfix/duplicate, not recently human-edited)
 3. Prioritizes by label (P0 > P1 > P2 > P3 > P4), then creation date

@@ -20,43 +20,9 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
 ```
 .ai/  (or repo root when working on this repo directly)
   instructions.md              Base AI instructions (< 200 tokens, Tier 0)
+  instructions/                Decomposed instruction modules (code-quality, security, testing, etc.)
   config.yaml                  Symlink and sync configuration
   init.sh                      Bootstrap script for consuming repos
-
-  personas/                    AI persona definitions (Markdown)
-    architecture/              System design personas
-    quality/                   Code review personas
-    compliance/                Security, regulatory, accessibility personas
-    documentation/             Content creation and review personas
-    domain/                    Frontend, backend, data, ML, mobile personas
-    engineering/               Testing, performance, debugging personas
-    operations/                SRE, DevOps, infrastructure personas
-    leadership/                Technical leadership, product, mentoring personas
-    specialist/                Legacy, incidents, migrations personas
-    governance/                Governance Auditor, Policy Evaluator
-    agentic/                   Code Manager, Coder
-    panels/                    Multi-persona review panels (see index.md for full list)
-    index.md                   Persona and panel reference grid
-
-  prompts/                     Reusable prompt templates
-    startup.md                 Agentic improvement loop entry point
-    retrospective.md           Post-merge process evaluation prompt
-    plan-template.md           Standardized plan template for AI and humans
-    workflows/                 Multi-phase orchestration (8 workflows)
-
-  schemas/                     Enforcement artifacts (JSON Schema)
-    panel-output.schema.json   Structured emission standard for panel reviews
-    run-manifest.schema.json   Audit manifest for every merge decision
-
-  policy/                      Deterministic policy profiles (YAML)
-    default.yaml               Standard risk tolerance
-    fin_pii_high.yaml          Financial/PII — SOC2, PCI-DSS, HIPAA, GDPR
-    infrastructure_critical.yaml  Infrastructure-as-code, deployment configs
-
-  .governance/                 Policy engine runtime
-    policy-engine.py           Deterministic evaluation engine (Phase 4b)
-
-  manifests/                   Run manifests (audit trail, append-only)
 
   templates/                   Language-specific scaffolding
     go/                        Go conventions and project config
@@ -65,14 +31,51 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
     react/                     React conventions
     csharp/                    C#/.NET conventions
 
-  docs/                        Architecture and design documents
-    dark-factory-governance-model.md    Governance layers and decision authority
-    artifact-classification.md          Cognitive, Enforcement, Audit artifact types
-    context-management.md               JIT loading and context reset protection
-    runtime-feedback-architecture.md    Drift detection and incident-to-DI generation
-    autonomy-metrics.md                 Autonomy index and weekly reporting
-    ci-gating-blueprint.md              CI checks, branch protection, auto-merge
-    naming-review.md                    Persona/panel naming consistency review
+  governance/                  All governance machinery (personas, policy, schemas, etc.)
+    personas/                  AI persona definitions (Markdown)
+      architecture/            System design personas
+      quality/                 Code review personas
+      compliance/              Security, regulatory, accessibility personas
+      documentation/           Content creation and review personas
+      domain/                  Frontend, backend, data, ML, mobile personas
+      engineering/             Testing, performance, debugging personas
+      operations/              SRE, DevOps, infrastructure personas
+      leadership/              Technical leadership, product, mentoring personas
+      specialist/              Legacy, incidents, migrations personas
+      governance/              Governance Auditor, Policy Evaluator
+      agentic/                 Code Manager, Coder
+      panels/                  Multi-persona review panels (see index.md for full list)
+      index.md                 Persona and panel reference grid
+
+    prompts/                   Reusable prompt templates
+      startup.md               Agentic improvement loop entry point
+      retrospective.md         Post-merge process evaluation prompt
+      plan-template.md         Standardized plan template for AI and humans
+      workflows/               Multi-phase orchestration (8 workflows)
+
+    schemas/                   Enforcement artifacts (JSON Schema)
+      panel-output.schema.json Structured emission standard for panel reviews
+      run-manifest.schema.json Audit manifest for every merge decision
+
+    policy/                    Deterministic policy profiles (YAML)
+      default.yaml             Standard risk tolerance
+      fin_pii_high.yaml        Financial/PII — SOC2, PCI-DSS, HIPAA, GDPR
+      infrastructure_critical.yaml  Infrastructure-as-code, deployment configs
+
+    emissions/                 Panel emission outputs (structured JSON)
+    manifests/                 Run manifests (audit trail, append-only)
+
+    docs/                      Architecture and design documents
+      dark-factory-governance-model.md    Governance layers and decision authority
+      artifact-classification.md          Cognitive, Enforcement, Audit artifact types
+      context-management.md               JIT loading and context reset protection
+      runtime-feedback-architecture.md    Drift detection and incident-to-DI generation
+      autonomy-metrics.md                 Autonomy index and weekly reporting
+      ci-gating-blueprint.md              CI checks, branch protection, auto-merge
+      naming-review.md                    Persona/panel naming consistency review
+
+  .governance/                 Policy engine runtime
+    policy-engine.py           Deterministic evaluation engine (Phase 4b)
 
   .plans/                      Implementation plans (archived to releases after merge)
   .checkpoints/                Context capacity checkpoints (session state)
@@ -106,7 +109,7 @@ Panel graph activated (Layer 2: Cognitive Governance)
         v
 Panels emit structured JSON (Layer 3: Execution Governance)
   - Confidence scores, risk levels, policy flags
-  - Validated against schemas/panel-output.schema.json
+  - Validated against governance/schemas/panel-output.schema.json
         |
         v
 Policy engine evaluates (deterministic, no prose)
@@ -114,7 +117,7 @@ Policy engine evaluates (deterministic, no prose)
   - Produces decision: auto_merge | auto_remediate | human_review_required | block
         |
         v
-Run manifest logged (schemas/run-manifest.schema.json)
+Run manifest logged (governance/schemas/run-manifest.schema.json)
   - Complete audit trail for replay and compliance
 ```
 
@@ -161,7 +164,7 @@ The framework uses JIT (Just-In-Time) loading to minimize AI context window usag
 | 2 | Current workflow phase + panel context | ~3,000 tokens | Released per phase |
 | 3 | Policies, schemas, docs | 0 tokens | Queried on-demand |
 
-See `docs/context-management.md` for the full strategy including checkpoint-based reset protection and instruction decomposition.
+See `governance/docs/context-management.md` for the full strategy including checkpoint-based reset protection and instruction decomposition.
 
 ## Repo Rename Recommendation
 
