@@ -7,35 +7,42 @@ AI governance framework for autonomous software delivery. Provides personas, pan
 | Phase | Name | Description | Status |
 |-------|------|-------------|--------|
 | 3 | Agentic Orchestration | Personas, panels, workflows with human gates | Implemented |
-| 4a | Policy-Bound Autonomy | Deterministic merge decisions, structured emissions | **Current** |
-| 4b | Autonomous Remediation | Auto-fix, drift detection, remediation loops | Designed |
+| 4a | Policy-Bound Autonomy | Deterministic merge decisions, structured emissions | **Implemented** — CI enforcement live |
+| 4b | Autonomous Remediation | Auto-fix, drift detection, remediation loops | Partial — policy engine built, CI gating active |
 | 5 | Dark Factory | Full automation with runtime feedback and self-evolution | Architecture defined |
+
+See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and open enhancements.
 
 ## Repository Structure
 
+> **Note:** In consuming repositories, this content lives at `.ai/` as a git submodule. In this repository itself, the files are at the root.
+
 ```
-.ai/
+.ai/  (or repo root when working on this repo directly)
   instructions.md              Base AI instructions (< 200 tokens, Tier 0)
   config.yaml                  Symlink and sync configuration
+  init.sh                      Bootstrap script for consuming repos
 
   personas/                    AI persona definitions (Markdown)
-    architecture/              System design (3 personas)
-    quality/                   Code review (3 personas)
-    compliance/                Security, regulatory, accessibility (3 personas)
-    documentation/             Content creation and review (2 personas)
-    domain/                    Frontend, backend, data, ML, mobile (5 personas)
-    engineering/               Testing, performance, debugging (6 personas)
-    operations/                SRE, DevOps, infrastructure (6 personas)
-    leadership/                Technical leadership, product, mentoring (4 personas)
-    specialist/                Legacy, incidents, migrations (4 personas)
-    governance/                Governance Auditor, Policy Evaluator (2 personas)
-    agentic/                   Code Manager, Coder (2 personas)
-    panels/                    Multi-persona review panels (13 panels incl. Copilot)
-    index.md                   Persona reference grid
+    architecture/              System design personas
+    quality/                   Code review personas
+    compliance/                Security, regulatory, accessibility personas
+    documentation/             Content creation and review personas
+    domain/                    Frontend, backend, data, ML, mobile personas
+    engineering/               Testing, performance, debugging personas
+    operations/                SRE, DevOps, infrastructure personas
+    leadership/                Technical leadership, product, mentoring personas
+    specialist/                Legacy, incidents, migrations personas
+    governance/                Governance Auditor, Policy Evaluator
+    agentic/                   Code Manager, Coder
+    panels/                    Multi-persona review panels (see index.md for full list)
+    index.md                   Persona and panel reference grid
 
   prompts/                     Reusable prompt templates
-    workflows/                 Multi-phase orchestration (8 workflows)
+    startup.md                 Agentic improvement loop entry point
+    retrospective.md           Post-merge process evaluation prompt
     plan-template.md           Standardized plan template for AI and humans
+    workflows/                 Multi-phase orchestration (8 workflows)
 
   schemas/                     Enforcement artifacts (JSON Schema)
     panel-output.schema.json   Structured emission standard for panel reviews
@@ -45,6 +52,9 @@ AI governance framework for autonomous software delivery. Provides personas, pan
     default.yaml               Standard risk tolerance
     fin_pii_high.yaml          Financial/PII — SOC2, PCI-DSS, HIPAA, GDPR
     infrastructure_critical.yaml  Infrastructure-as-code, deployment configs
+
+  .governance/                 Policy engine runtime
+    policy-engine.py           Deterministic evaluation engine (Phase 4b)
 
   manifests/                   Run manifests (audit trail, append-only)
 
@@ -64,8 +74,18 @@ AI governance framework for autonomous software delivery. Provides personas, pan
     ci-gating-blueprint.md              CI checks, branch protection, auto-merge
     naming-review.md                    Persona/panel naming consistency review
 
-  .plans/                      Implementation plans (per-task)
-  .github/workflows/           CI/CD (jm-compliance.yml — enterprise-locked)
+  .plans/                      Implementation plans (archived to releases after merge)
+  .checkpoints/                Context capacity checkpoints (session state)
+  .github/
+    workflows/
+      dark-factory-governance.yml   Governance review CI (detect + policy engine + review)
+      plan-archival.yml             Archives plans to releases on PR merge
+      propagate-submodule.yml       Auto-propagation for consuming repos
+      jm-compliance.yml             Enterprise-locked compliance checks
+    ISSUE_TEMPLATE/
+      feature-request.yml           Structured feature request form
+      bug-report.yml                Structured bug report form
+      config.yml                    Template chooser configuration
 ```
 
 ## How It Works
