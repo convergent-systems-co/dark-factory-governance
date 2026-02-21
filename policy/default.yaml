@@ -3,7 +3,7 @@
 # All policy evaluation is deterministic and must not depend on prose.
 
 profile_name: default
-profile_version: "1.0.0"
+profile_version: "1.1.0"
 description: >
   Baseline policy profile for standard repositories. Balances automation
   with human oversight. Suitable for internal applications with moderate
@@ -15,11 +15,12 @@ description: >
 weighting:
   model: weighted_average
   weights:
-    code-review: 0.25
+    code-review: 0.20
     security-review: 0.20
+    ai-expert-review: 0.15
     architecture-review: 0.15
-    testing-review: 0.15
-    performance-review: 0.10
+    testing-review: 0.10
+    performance-review: 0.05
     copilot-review: 0.10
     documentation-review: 0.05
   # If a panel is not executed, its weight is redistributed proportionally.
@@ -158,8 +159,12 @@ required_panels:
 # Optional Panels
 # Panels executed based on change characteristics.
 optional_panels:
+  - panel: ai-expert-review
+    trigger: files_changed_in ["personas/", "prompts/", "policy/", "schemas/", "instructions/"]
   - panel: architecture-review
-    trigger: files_changed_in ["src/", "lib/", "pkg/"]
+    trigger: files_changed_in ["src/", "lib/", "pkg/", "personas/panels/", "prompts/workflows/", ".github/workflows/"]
+  - panel: threat-modeling
+    trigger: files_changed_in ["policy/", "schemas/", "personas/agentic/", ".github/workflows/"]
   - panel: performance-review
     trigger: files_changed_in ["src/", "bench/"]
   - panel: testing-review
