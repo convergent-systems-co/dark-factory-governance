@@ -57,6 +57,7 @@ Quick reference for all available personas and when to use them.
 | Security Auditor | `compliance/security-auditor.md` | Security assessment — injection, auth, secrets, insecure defaults |
 | Compliance Officer | `compliance/compliance-officer.md` | Regulatory — GDPR, SOC2, HIPAA, PCI-DSS, audit readiness |
 | Accessibility Engineer | `compliance/accessibility-engineer.md` | Accessibility — WCAG, screen readers, keyboard navigation |
+| MITRE Specialist | `compliance/mitre-specialist.md` | Threat modeling — ATT&CK technique mapping, kill chains, detection gap analysis |
 
 ## Leadership
 
@@ -116,4 +117,5 @@ Multi-perspective reviews where several personas collaborate. See `panels/` for 
 | Technical Debt Review | `panels/technical-debt-review.md` | Refactor Specialist, Systems Architect, Test Engineer, Tech Lead, Minimalist Engineer |
 | Migration Review | `panels/migration-review.md` | Migration Specialist, Data Architect, SRE, Failure Engineer, Tech Lead |
 | Incident Post-Mortem | `panels/incident-post-mortem.md` | Incident Commander, SRE, Systems Architect, Failure Engineer, Observability Engineer |
+| Threat Modeling | `panels/threat-modeling.md` | MITRE Specialist, Security Auditor, Infrastructure Engineer, Adversarial Reviewer, Architect |
 | Copilot Review | `panels/copilot-review.md` | GitHub Copilot as a formal review panel — feedback parsing, severity classification, confidence scoring |
