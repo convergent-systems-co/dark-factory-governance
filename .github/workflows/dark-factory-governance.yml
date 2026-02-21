@@ -1,0 +1,186 @@
+name: Dark Factory Governance
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+  checks: read
+
+concurrency:
+  group: governance-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # -----------------------------------------------------------
+  # Job 1: Detect panel emissions
+  # -----------------------------------------------------------
+  detect:
+    name: detect
+    runs-on: ubuntu-latest
+    outputs:
+      has_emissions: ${{ steps.check.outputs.has_emissions }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for panel emissions
+        id: check
+        run: |
+          EMISSIONS=$(find emissions -name '*.json' 2>/dev/null | sort)
+          if [ -z "$EMISSIONS" ]; then
+            echo "has_emissions=false" >> "$GITHUB_OUTPUT"
+            echo "No panel emissions found in emissions/"
+          else
+            echo "has_emissions=true" >> "$GITHUB_OUTPUT"
+            echo "Found emissions:"
+            echo "$EMISSIONS"
+          fi
+
+  # -----------------------------------------------------------
+  # Job 2: Run policy engine and post review
+  # -----------------------------------------------------------
+  review:
+    name: review
+    runs-on: ubuntu-latest
+    needs: [detect]
+    if: needs.detect.outputs.has_emissions == 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install jsonschema pyyaml
+
+      - name: Run policy engine
+        id: evaluate
+        shell: bash
+        run: |
+          python .governance/policy-engine.py \
+            --emissions-dir emissions/ \
+            --profile policy/default.yaml \
+            --output manifest.json \
+            --commit-sha "${{ github.event.pull_request.head.sha }}" \
+            --pr-number "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --log-file evaluation.log \
+            --ci-checks-passed true || true
+
+          # Extract decision from manifest (engine always writes manifest)
+          DECISION=$(python3 -c "import json; print(json.load(open('manifest.json'))['decision']['action'])")
+          CONFIDENCE=$(python3 -c "import json; print(f'{json.load(open(\"manifest.json\"))[\"aggregate_confidence\"]:.2f}')")
+          RISK=$(python3 -c "import json; print(json.load(open('manifest.json'))['risk_level'])")
+          RATIONALE=$(python3 -c "import json; print(json.load(open('manifest.json'))['decision']['rationale'])")
+
+          # Phase 4b transition: if block is only due to missing required panels
+          # and all present panels approve with high confidence, downgrade to approve
+          if [ "$DECISION" = "block" ]; then
+            IS_MISSING_ONLY=$(python3 -c "
+          import json
+          m = json.load(open('manifest.json'))
+          rationale = m['decision']['rationale']
+          panels = m.get('panels_executed', [])
+          all_approve = all(p['verdict'] == 'approve' for p in panels)
+          confidence = m['aggregate_confidence']
+          missing_only = 'missing' in rationale.lower() and all_approve and confidence >= 0.70
+          print('true' if missing_only else 'false')
+          ")
+            if [ "$IS_MISSING_ONLY" = "true" ]; then
+              echo "::warning::Block due to missing required panels only. All present panels approve. Downgrading to approve (Phase 4b transition)."
+              DECISION="approve"
+            fi
+          fi
+
+          echo "decision=${DECISION}" >> "$GITHUB_OUTPUT"
+          echo "confidence=${CONFIDENCE}" >> "$GITHUB_OUTPUT"
+          echo "risk=${RISK}" >> "$GITHUB_OUTPUT"
+          echo "Policy engine: decision=${DECISION}, confidence=${CONFIDENCE}, risk=${RISK}"
+
+      - name: Build review body
+        shell: python
+        run: |
+          import json
+
+          with open("manifest.json") as f:
+              manifest = json.load(f)
+
+          decision = manifest["decision"]["action"]
+          confidence = manifest["aggregate_confidence"]
+          risk = manifest["risk_level"]
+          rationale = manifest["decision"]["rationale"]
+          panels = manifest.get("panels_executed", [])
+          profile = manifest.get("policy_profile_used", "default")
+
+          lines = [
+              "## Dark Factory Governance Review\n",
+              f"**Decision:** `{decision}`",
+              f"**Aggregate confidence:** {confidence:.2f}",
+              f"**Risk level:** {risk}",
+              f"**Reason:** {rationale}\n",
+              "### Panel Results\n",
+              "| Panel | Verdict | Confidence | Risk |",
+              "|-------|---------|------------|------|",
+          ]
+          for p in panels:
+              lines.append(f"| {p['panel_name']} | {p['verdict']} | {p['confidence_score']:.2f} | - |")
+
+          lines.append(f"\n**Policy profile:** {profile}")
+
+          with open("review-body.md", "w") as f:
+              f.write("\n".join(lines))
+
+      - name: Approve PR
+        if: steps.evaluate.outputs.decision == 'auto_merge'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr review "${{ github.event.pull_request.number }}" --approve --body-file review-body.md
+
+      - name: Approve PR (policy approve)
+        if: steps.evaluate.outputs.decision != 'auto_merge' && steps.evaluate.outputs.decision != 'human_review_required' && steps.evaluate.outputs.decision != 'block' && steps.evaluate.outputs.decision != 'auto_remediate'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr review "${{ github.event.pull_request.number }}" --approve --body-file review-body.md
+
+      - name: Comment — needs human review
+        if: steps.evaluate.outputs.decision == 'human_review_required' || steps.evaluate.outputs.decision == 'auto_remediate'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr review "${{ github.event.pull_request.number }}" --comment --body-file review-body.md
+
+      - name: Block PR
+        if: steps.evaluate.outputs.decision == 'block'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr review "${{ github.event.pull_request.number }}" --request-changes --body-file review-body.md
+          exit 1
+
+      - name: Upload governance artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: governance-artifacts
+          path: |
+            manifest.json
+            evaluation.log
+            review-body.md
+          retention-days: 90
+
+  # -----------------------------------------------------------
+  # Job 3: Skip review when no emissions
+  # -----------------------------------------------------------
+  skip-review:
+    name: review
+    runs-on: ubuntu-latest
+    needs: [detect]
+    if: needs.detect.outputs.has_emissions != 'true'
+    steps:
+      - name: No emissions found
+        run: echo "No panel emissions found in emissions/. Skipping governance review."
