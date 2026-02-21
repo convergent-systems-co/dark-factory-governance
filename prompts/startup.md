@@ -34,7 +34,7 @@ gh api repos/{owner}/{repo}/branches --jq '.[].name'
 ```
 
 An issue is **actionable** if:
-- It has no associated branch matching `itsfwcp/*` or `feature/*` patterns
+- It has no associated branch matching `itsfwcp/*/*` or `feature/*` patterns
 - It is not labeled `blocked`, `wontfix`, or `duplicate`
 - It is not assigned to a human (or is assigned to an agentic persona)
 - It has not been updated in the last 24 hours by a human (avoid conflicts)
@@ -56,7 +56,8 @@ For the highest-priority actionable issue:
 
 ### Step 5: Create Plan
 
-1. Create a branch: `itsfwcp/{issue-number}-{short-description}`
+1. Create a branch: `itsfwcp/{issue-type}/{issue-number}/{branch-name}` (e.g., `itsfwcp/feat/42/add-auth`)
+   - `{issue-type}` maps from the issue's conventional commit type: `feat`, `fix`, `refactor`, `docs`, `chore`
 2. Write a plan using the plan template (`prompts/plan-template.md`)
 3. Save the plan to `.plans/{issue-number}-{short-description}.md`
 4. If the issue is low risk and well-defined, proceed to implementation

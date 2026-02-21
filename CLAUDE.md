@@ -76,7 +76,7 @@ All panel output must include JSON between `<!-- STRUCTURED_EMISSION_START -->` 
 ## Key Conventions
 
 - **Commit style**: Conventional commits (`feat:`, `fix:`, `refactor:`, `docs:`)
-- **Branch naming**: `itsfwcp/{issue-number}-{short-description}`
+- **Branch naming**: `itsfwcp/{issue-type}/{issue-number}/{branch-name}` (e.g., `itsfwcp/feat/42/add-auth`)
 - **Plans before code**: Every implementation requires a plan in `.plans/` using `prompts/plan-template.md`
 - **Backward compatibility**: All changes must be additive. Breaking changes require migration plans and version bumps.
 - **Enforcement artifacts use semantic versioning** in their `profile_version` or `version` field
