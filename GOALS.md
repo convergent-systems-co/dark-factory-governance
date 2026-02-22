@@ -33,6 +33,7 @@ This document tracks the maturity phases, completed work, and open enhancements 
 | #43 | #44 | Context management enforcement | 3-issue cap, mandatory checkpoints, two-tier capacity thresholds |
 | #26 | #29 | Branch naming convention | `itsfwcp/{type}/{number}/{name}` standard |
 | #32 | #33 | Issue labeling | Governance labels (refine, blocked, P0-P4, chore, refactor, ci) |
+| #48 | #55 | Agentic loop goals fallback | Startup sequence falls back to GOALS.md when no actionable issues remain |
 
 ### Documentation & Structure
 
@@ -49,17 +50,12 @@ This document tracks the maturity phases, completed work, and open enhancements 
 | Issue | PR | Title | Impact |
 |-------|----|-------|--------|
 | #51 | #60 | Panel pass/fail criteria | Standardized scoring, schema, and local override system for all 15 panels |
+| #53 | #64 | Evaluate personas and panels | 11 language, 2 platform, 1 LLM personas + Cost Analysis panel (42→57 personas, 15→16 panels) |
 | #5 | #13 | Agile Coach persona | Sprint planning, velocity, retrospective guidance |
 | #6 | #15 | FinOps group | FinOps Engineer and FinOps Analyst personas |
 | #7 | #16 | MITRE Specialist | Threat modeling panel and MITRE ATT&CK mapping |
 
 ## Open Work
-
-### In Progress
-
-| Issue | Title | Labels | Notes |
-|-------|-------|--------|-------|
-| #48 | Agentic loop goals fallback | `enhancement` (P1) | Startup sequence falls back to GOALS.md when no issues remain |
 
 ### Needs Refinement
 
