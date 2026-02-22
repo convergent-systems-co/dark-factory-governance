@@ -7,6 +7,8 @@ Evaluate the cost implications of proposed changes, including estimated implemen
 - **FinOps Analyst** - Unit economics, forecasting, cost trend analysis
 - **FinOps Engineer** - Tagging standards, budget enforcement, cost governance
 - **Cost Optimizer** - Resource right-sizing, waste elimination, commitment planning
+- **Cloud Cost Analyst** - Azure/AWS cost estimation from IaC (Bicep, Terraform)
+- **LLM Cost Analyst** - LLM token costs, agentic AI development costs, inference pricing
 - **Infrastructure Engineer** - Deployment topology, resource requirements, scaling costs
 
 ## Process

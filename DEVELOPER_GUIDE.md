@@ -44,7 +44,7 @@ git add .ai && git commit -m "Update .ai submodule"
 
 | Concept | What It Is | Where It Lives |
 |---------|-----------|----------------|
-| **Personas** | 57 AI reasoning roles (Security Auditor, Architect, Rust Engineer, etc.) | `governance/personas/` |
+| **Personas** | 60 AI reasoning roles (Security Auditor, Architect, Rust Engineer, etc.) | `governance/personas/` |
 | **Panels** | Multi-persona review workflows that emit structured JSON | `governance/personas/panels/` |
 | **Policy profiles** | Deterministic rules for merge decisions (no AI interpretation) | `governance/policy/` |
 | **Structured emissions** | JSON output from panels, validated against schema | `governance/schemas/panel-output.schema.json` |
@@ -137,7 +137,7 @@ AI context windows are finite. The framework uses tiered loading:
   init.ps1                   # Bootstrap script (Windows)
   templates/                 # Language-specific scaffolding (go, python, node, react, csharp)
   governance/
-    personas/                # 57 persona definitions (including 2 agentic) + 16 panels
+    personas/                # 60 persona definitions (including 2 agentic) + 16 panels
     policy/                  # 3 deterministic policy profiles (YAML)
     schemas/                 # JSON Schema for emissions and manifests
     prompts/                 # Reusable prompts and workflows

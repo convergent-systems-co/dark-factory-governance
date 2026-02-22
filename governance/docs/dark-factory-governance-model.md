@@ -94,7 +94,7 @@ It does NOT govern:
 
 The governance model operates on the following existing components:
 
-**Personas (57 across 13 categories):**
+**Personas (60 across 13 categories):**
 
 | Category | Count | Directory |
 |----------|-------|-----------|
@@ -103,7 +103,7 @@ The governance model operates on the following existing components:
 | Documentation | 2 | `governance/personas/documentation/` |
 | Domain Specific | 6 | `governance/personas/domain/` |
 | Engineering | 6 | `governance/personas/engineering/` |
-| FinOps | 2 | `governance/personas/finops/` |
+| FinOps | 4 | `governance/personas/finops/` |
 | Governance | 2 | `governance/personas/governance/` |
 | Language Specific | 11 | `governance/personas/language/` |
 | Leadership | 5 | `governance/personas/leadership/` |
@@ -121,7 +121,7 @@ The governance model operates on the following existing components:
 | Architecture Review | 5 | Cognitive (L2) / Execution (L3) |
 | Code Review | 5 | Execution (L3) |
 | Copilot Review | 5 | Execution (L3) |
-| Cost Analysis | 4 | Execution (L3) |
+| Cost Analysis | 6 | Execution (L3) |
 | Data Design Review | 5 | Cognitive (L2) / Execution (L3) |
 | Documentation Review | 5 | Execution (L3) |
 | Incident Post-Mortem | 5 | Runtime (L4) |

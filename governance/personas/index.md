@@ -49,6 +49,7 @@ Quick reference for all available personas and when to use them.
 | Data Architect | `domain/data-architect.md` | Data layer — schema evolution, indexing, migrations |
 | ML Engineer | `domain/ml-engineer.md` | Machine learning — training pipelines, model versioning, drift |
 | Mobile Engineer | `domain/mobile-engineer.md` | Mobile — platform conventions, offline-first, battery efficiency |
+| LLM Engineer | `domain/llm-engineer.md` | LLM systems — prompt engineering, RAG, token optimization, guardrails |
 
 ## Compliance
 
@@ -84,6 +85,8 @@ Quick reference for all available personas and when to use them.
 |---------|------|----------|
 | FinOps Engineer | `finops/finops-engineer.md` | Cloud cost governance — tagging compliance, budget enforcement, rightsizing, waste detection |
 | FinOps Analyst | `finops/finops-analyst.md` | Financial reporting — showback/chargeback, unit economics, forecasting, anomaly detection |
+| Cloud Cost Analyst | `finops/cloud-cost-analyst.md` | Cloud infrastructure costing — Azure/AWS cost estimation from Bicep, Terraform, CloudFormation |
+| LLM Cost Analyst | `finops/llm-cost-analyst.md` | AI/LLM costing — token usage, agentic loop costs, inference pricing, development cost estimation |
 
 ## Governance
 
@@ -118,4 +121,5 @@ Multi-perspective reviews where several personas collaborate. See `panels/` for 
 | Migration Review | `panels/migration-review.md` | Migration Specialist, Data Architect, SRE, Failure Engineer, Tech Lead |
 | Incident Post-Mortem | `panels/incident-post-mortem.md` | Incident Commander, SRE, Systems Architect, Failure Engineer, Observability Engineer |
 | Threat Modeling | `panels/threat-modeling.md` | MITRE Specialist, Security Auditor, Infrastructure Engineer, Adversarial Reviewer, Architect |
+| Cost Analysis | `panels/cost-analysis.md` | FinOps Analyst, FinOps Engineer, Cost Optimizer, Cloud Cost Analyst, LLM Cost Analyst, Infrastructure Engineer |
 | Copilot Review | `panels/copilot-review.md` | GitHub Copilot as a formal review panel — feedback parsing, severity classification, confidence scoring |
