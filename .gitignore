@@ -22,3 +22,7 @@ venv/
 
 # Checkpoints (runtime state, not committed — but keep the directory)
 .checkpoints/*.json
+
+# Issue monitor runtime files
+scripts/*.log
+scripts/.issue-monitor-state
