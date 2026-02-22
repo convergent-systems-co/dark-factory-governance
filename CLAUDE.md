@@ -57,7 +57,7 @@ Three deterministic YAML profiles in `governance/policy/`:
 - `fin_pii_high.yaml` — SOC2/PCI-DSS/HIPAA/GDPR, auto-merge disabled, 3-approver override
 - `infrastructure_critical.yaml` — Mandatory architecture and SRE review
 
-Policies are evaluated programmatically. AI models never interpret policy rules.
+All profiles require security-review, threat-modeling, cost-analysis, and documentation-review panels on every PR. Policies are evaluated programmatically. AI models never interpret policy rules.
 
 ### Context Management (JIT Loading)
 

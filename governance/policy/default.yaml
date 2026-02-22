@@ -23,6 +23,8 @@ weighting:
     performance-review: 0.05
     copilot-review: 0.10
     documentation-review: 0.05
+    threat-modeling: 0.05
+    cost-analysis: 0.05
   # If a panel is not executed, its weight is redistributed proportionally.
   missing_panel_behavior: redistribute
 
@@ -155,6 +157,9 @@ override:
 required_panels:
   - code-review
   - security-review
+  - threat-modeling
+  - cost-analysis
+  - documentation-review
 
 # Optional Panels
 # Panels executed based on change characteristics.
@@ -163,14 +168,10 @@ optional_panels:
     trigger: files_changed_in ["governance/personas/", "governance/prompts/", "governance/policy/", "governance/schemas/", "instructions/"]
   - panel: architecture-review
     trigger: files_changed_in ["src/", "lib/", "pkg/", "governance/personas/panels/", "governance/prompts/workflows/", ".github/workflows/"]
-  - panel: threat-modeling
-    trigger: files_changed_in ["governance/policy/", "governance/schemas/", "governance/personas/agentic/", ".github/workflows/"]
   - panel: performance-review
     trigger: files_changed_in ["src/", "bench/"]
   - panel: testing-review
     trigger: test_files_changed == true
-  - panel: documentation-review
-    trigger: docs_files_changed == true
   - panel: data-design-review
     trigger: files_changed_in ["db/", "migrations/", "schema/"]
   - panel: copilot-review

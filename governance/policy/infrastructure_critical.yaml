@@ -19,6 +19,9 @@ weighting:
     performance-review: 0.10
     production-readiness-review: 0.15
     copilot-review: 0.05
+    documentation-review: 0.05
+    threat-modeling: 0.05
+    cost-analysis: 0.05
   missing_panel_behavior: redistribute
 
 risk_aggregation:
@@ -128,6 +131,9 @@ required_panels:
   - code-review
   - security-review
   - architecture-review
+  - threat-modeling
+  - cost-analysis
+  - documentation-review
 
 optional_panels:
   - panel: production-readiness-review

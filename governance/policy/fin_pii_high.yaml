@@ -20,6 +20,8 @@ weighting:
     performance-review: 0.05
     copilot-review: 0.05
     documentation-review: 0.05
+    threat-modeling: 0.05
+    cost-analysis: 0.05
     data-design-review: 0.15
   missing_panel_behavior: block
 
@@ -144,13 +146,14 @@ required_panels:
   - security-review
   - data-design-review
   - testing-review
+  - threat-modeling
+  - cost-analysis
+  - documentation-review
 
 optional_panels:
   - panel: architecture-review
     trigger: files_changed_in ["src/", "lib/", "pkg/"]
   - panel: performance-review
     trigger: files_changed_in ["src/", "bench/"]
-  - panel: documentation-review
-    trigger: docs_files_changed == true
   - panel: copilot-review
     trigger: always
