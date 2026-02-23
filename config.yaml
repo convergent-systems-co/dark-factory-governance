@@ -26,7 +26,7 @@ gitignore:
 # These are defaults; consuming projects override in project.yaml
 repository:
   # GitHub repo settings
-  auto_merge: true
+  auto_merge: false  # opt-in: consuming repos must explicitly enable in project.yaml
   delete_branch_on_merge: true
   allow_squash_merge: true
   allow_merge_commit: true

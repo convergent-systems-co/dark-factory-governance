@@ -16,7 +16,7 @@ The `repository` section in `config.yaml` provides framework-wide defaults:
 
 ```yaml
 repository:
-  auto_merge: true
+  auto_merge: false  # opt-in: set to true in project.yaml to enable
   delete_branch_on_merge: true
   allow_squash_merge: true
   allow_merge_commit: true

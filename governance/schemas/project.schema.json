@@ -11,8 +11,8 @@
       "properties": {
         "auto_merge": {
           "type": "boolean",
-          "default": true,
-          "description": "Enable GitHub auto-merge. Required for the agentic loop to merge PRs after CI + approval."
+          "default": false,
+          "description": "Enable GitHub auto-merge. Required for the agentic loop to merge PRs after CI + approval. Default is false (opt-in) — consuming repos must explicitly enable."
         },
         "delete_branch_on_merge": {
           "type": "boolean",
