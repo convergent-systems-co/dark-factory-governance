@@ -85,6 +85,7 @@ This document tracks the maturity phases, completed work, and open enhancements 
 | #120 | #131 | Consuming repo governance review flow | Auto-detect governance root in CI workflow, SSH→HTTPS URL conversion in init.sh |
 | #119 | #134 | CODEOWNERS setup | Populated CODEOWNERS, documented governance workflow interaction with code owner reviews |
 | #127 | #129 | Reconcile documentation drift | Fixed phase status, added missing completed work, updated file structure across all docs |
+| #136 | #137 | Fix init.sh PYTHON_CMD crash | Moved Python detection before symlinks section; fixed `local` outside function |
 
 ## Open Work
 

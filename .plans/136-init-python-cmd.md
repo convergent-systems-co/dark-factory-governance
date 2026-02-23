@@ -2,7 +2,7 @@
 
 **Author:** Coder (agentic)
 **Date:** 2026-02-23
-**Status:** in_progress
+**Status:** completed
 **Issue:** #136
 **Branch:** itsfwcp/fix/136/init-python-cmd
 
