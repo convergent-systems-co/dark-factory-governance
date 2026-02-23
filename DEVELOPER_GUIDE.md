@@ -125,8 +125,9 @@ The `.ai` governance framework can configure GitHub repository settings to suppo
 
 Run `bash .ai/init.sh` -- the script will:
 1. Create symlinks (existing behavior)
-2. Configure repository settings via `gh api` (requires admin permissions)
-3. Generate CODEOWNERS if empty or missing
+2. Copy issue templates and symlink governance workflows to `.github/` (submodule context only)
+3. Configure repository settings via `gh api` (requires admin permissions)
+4. Generate CODEOWNERS if empty or missing
 
 If the script lacks admin permissions, it will print instructions for a repository admin to apply the settings manually. All steps degrade gracefully -- missing `gh` CLI or insufficient permissions are warnings, not errors.
 

@@ -17,6 +17,11 @@ symlinks:
       - CLAUDE.md
       - .cursorrules
 
+# Governance workflows to copy to consuming repos during init
+# Only copied in submodule context; skip-if-exists prevents overwriting
+workflows_to_copy:
+  - dark-factory-governance.yml
+
 # Gitignore patterns for .ai/
 gitignore:
   - context.md

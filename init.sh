@@ -101,8 +101,45 @@ if [ "$IS_SUBMODULE" = "true" ]; then
       fi
     done
   fi
+  # Governance workflows — symlink to consuming repo's .github/workflows/
+  # Symlinks ensure submodule updates flow automatically without re-running init.sh
+  WORKFLOW_SRC="$SCRIPT_DIR/.github/workflows"
+  WORKFLOW_DST="$PROJECT_ROOT/.github/workflows"
+  if [ -d "$WORKFLOW_SRC" ]; then
+    mkdir -p "$WORKFLOW_DST"
+    # Read workflow list from config.yaml if Python is available, otherwise use default
+    WORKFLOWS_TO_LINK="dark-factory-governance.yml"
+    if [ -n "$PYTHON_CMD" ]; then
+      CONFIG_WORKFLOWS=$("$PYTHON_CMD" -c "
+import yaml, os
+config = {}
+for f in ['$SCRIPT_DIR/config.yaml', '$SCRIPT_DIR/project.yaml']:
+    if os.path.exists(f):
+        with open(f) as fh:
+            data = yaml.safe_load(fh) or {}
+            config.update(data)
+wf = config.get('workflows_to_copy', ['dark-factory-governance.yml'])
+print(' '.join(wf))
+" 2>/dev/null) && WORKFLOWS_TO_LINK="$CONFIG_WORKFLOWS"
+    fi
+    for wf_name in $WORKFLOWS_TO_LINK; do
+      if [ -f "$WORKFLOW_SRC/$wf_name" ]; then
+        local link_target="../../.ai/.github/workflows/$wf_name"
+        if [ -L "$WORKFLOW_DST/$wf_name" ] && [ "$(readlink "$WORKFLOW_DST/$wf_name")" = "$link_target" ]; then
+          echo "  Workflow $wf_name already linked"
+        elif [ -f "$WORKFLOW_DST/$wf_name" ] && [ ! -L "$WORKFLOW_DST/$wf_name" ]; then
+          echo "  Workflow $wf_name exists as regular file, skipping (remove to use symlink)"
+        else
+          ln -sf "$link_target" "$WORKFLOW_DST/$wf_name"
+          echo "  Linked $wf_name -> .ai/.github/workflows/$wf_name"
+        fi
+      else
+        echo "  [WARN] Workflow $wf_name not found in .ai/.github/workflows/"
+      fi
+    done
+  fi
 else
-  echo "  Skipping issue template copy (not a submodule context)"
+  echo "  Skipping template/workflow copy (not a submodule context)"
 fi
 
 echo ""
