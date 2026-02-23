@@ -1449,7 +1449,7 @@ The following files are defined or referenced by this architecture. Files marked
 | `governance/prompts/di-generation-workflow.md` | Implemented (PR #89) | Agentic workflow for DI generation |
 | `governance/policy/severity-reclassification.yaml` | Implemented (PR #69) | Severity reclassification rules |
 | `governance/policy/deduplication.yaml` | Implemented (PR #69) | Deduplication window configuration |
-| `governance/policy/signal-adapters/` | New (directory) | Polling adapter configurations |
+| `governance/policy/signal-adapters/` | Implemented (PR #98) | Polling adapter configurations with examples |
 | `governance/policy/signal-panel-mapping.yaml` | Implemented (PR #69) | Signal category to panel mapping |
 | `governance/policy/rate-limits.yaml` | Implemented (PR #69) | Rate limit configuration |
 | `governance/policy/circuit-breaker.yaml` | Implemented (PR #69) | Circuit breaker parameters |

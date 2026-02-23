@@ -91,7 +91,7 @@ The following Phase 4b capabilities are designed but not yet implemented:
 
 Architecture is documented in `governance/docs/runtime-feedback-architecture.md`. Not yet implemented:
 
-- [ ] Runtime feedback loop (anomaly → signal → DI → implementation → deploy)
+- [x] Runtime feedback loop (anomaly → signal → DI → implementation → deploy) — All governance artifacts implemented: schemas (PR #69), policies (PR #69), templates (PR #89), workflows (PR #83, #89), signal adapters (PR #98)
 - [ ] Self-evolution (governance process improves itself based on outcomes)
 - [x] Backward compatibility enforcement for governance changes (PR #92)
 - [ ] Autonomy metrics and weekly reporting dashboard
