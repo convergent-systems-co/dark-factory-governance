@@ -40,6 +40,14 @@ repository:
         require_code_owner_review: true
       - name: "Pull Request - Base"
       - name: "JM Compliance Workflow"
+
+workflows:
+  required:
+    - dark-factory-governance.yml
+  optional:
+    - issue-monitor.yml
+    - plan-archival.yml
+    - propagate-submodule.yml
 ```
 
 ### Per-Project Overrides in `project.yaml`
@@ -92,13 +100,42 @@ Every step degrades gracefully:
 | Generate CODEOWNERS | Write access (file creation via git) |
 | Validate branch protection rulesets | Read access |
 
+## Governance Workflows
+
+The `workflows` section in `config.yaml` declares which governance workflows should be symlinked into consuming repos:
+
+```yaml
+workflows:
+  required:
+    - dark-factory-governance.yml    # Policy engine + auto-approve PRs
+  optional:
+    - issue-monitor.yml              # Issue lifecycle monitoring
+    - plan-archival.yml              # Plan file management
+    - propagate-submodule.yml        # Submodule update propagation
+```
+
+**Required** workflows are always symlinked; a warning is emitted if the source file is missing. **Optional** workflows are symlinked if present but silently skipped if the source file does not exist.
+
+`init.sh` creates symlinks (not copies) so that submodule updates flow automatically without re-running the script. If a consuming repo already has a regular file at the target path, it is not overwritten — a message instructs the user to remove it to use the symlink.
+
+### Backward Compatibility
+
+The legacy `workflows_to_copy` flat list is still supported. If `config.yaml` uses the old key, `init.sh` treats all listed workflows as required.
+
+## Ruleset Validation
+
+`init.sh` validates that expected org/repo rulesets are active by reading `repository.branch_protection.expected_rulesets` from config and checking against `gh api repos/{owner}/{repo}/rulesets`. This is informational — rulesets are validated, not applied (they are typically configured at the org level).
+
+If the API call fails (insufficient permissions), validation is skipped with a warning. Missing rulesets are reported but do not block the script.
+
 ## Pre-flight Check in Startup
 
 The agentic startup sequence (`governance/prompts/startup.md`) includes a pre-flight check that verifies repository settings before scanning issues:
 
 1. Checks `allow_auto_merge` is enabled via `gh api`
 2. Checks CODEOWNERS file exists and is non-empty
-3. If either fails, warns the user and suggests running `bash .ai/init.sh`
+3. Checks governance workflow (`dark-factory-governance.yml`) exists in `.github/workflows/`
+4. If any check fails, warns the user and suggests running `bash .ai/init.sh`
 
 This catches misconfiguration before the agentic loop starts, preventing silent failures during PR merge.
 

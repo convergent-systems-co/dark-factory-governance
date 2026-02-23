@@ -96,7 +96,12 @@ Before scanning issues, verify the repository supports the agentic workflow:
    ```bash
    test -s CODEOWNERS && echo "OK" || echo "MISSING"
    ```
-3. If either check fails:
+3. Check governance workflow is present in `.github/workflows/`:
+   ```bash
+   test -f .github/workflows/dark-factory-governance.yml && echo "OK" || echo "MISSING"
+   ```
+   If running inside the ai-submodule repo itself (not a consuming repo), check `.github/workflows/` directly.
+4. If any check fails:
    - Warn the user: "Repository is not configured for the agentic loop."
    - Suggest running `bash .ai/init.sh` to apply settings from `config.yaml`
    - Continue with the startup sequence (non-blocking) but note that PR auto-merge may fail

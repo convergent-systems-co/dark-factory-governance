@@ -17,10 +17,15 @@ symlinks:
       - CLAUDE.md
       - .cursorrules
 
-# Governance workflows to copy to consuming repos during init
-# Only copied in submodule context; skip-if-exists prevents overwriting
-workflows_to_copy:
-  - dark-factory-governance.yml
+# Governance workflows to symlink into consuming repos during init
+# Only applied in submodule context; existing regular files are not overwritten
+workflows:
+  required:
+    - dark-factory-governance.yml
+  optional:
+    - issue-monitor.yml
+    - plan-archival.yml
+    - propagate-submodule.yml
 
 # Directories to create in consuming repos during init
 # These are created with .gitkeep files so git tracks empty directories

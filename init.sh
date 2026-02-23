@@ -221,22 +221,50 @@ if [ "$IS_SUBMODULE" = "true" ]; then
   WORKFLOW_DST="$PROJECT_ROOT/.github/workflows"
   if [ -d "$WORKFLOW_SRC" ]; then
     mkdir -p "$WORKFLOW_DST"
-    # Read workflow list from config.yaml if Python is available, otherwise use default
-    WORKFLOWS_TO_LINK="dark-factory-governance.yml"
+    # Read workflow lists from config.yaml if Python is available, otherwise use default
+    REQUIRED_WORKFLOWS="dark-factory-governance.yml"
+    OPTIONAL_WORKFLOWS=""
     if [ -n "$PYTHON_CMD" ]; then
       CONFIG_WORKFLOWS=$("$PYTHON_CMD" -c "
 import yaml, os
+
+def deep_merge(base, override):
+    result = dict(base)
+    for k, v in override.items():
+        if k in result and isinstance(result[k], dict) and isinstance(v, dict):
+            result[k] = deep_merge(result[k], v)
+        elif k in result and isinstance(result[k], list) and isinstance(v, list):
+            result[k] = result[k] + v
+        else:
+            result[k] = v
+    return result
+
 config = {}
 for f in ['$SCRIPT_DIR/config.yaml', '$SCRIPT_DIR/project.yaml']:
     if os.path.exists(f):
         with open(f) as fh:
             data = yaml.safe_load(fh) or {}
-            config.update(data)
-wf = config.get('workflows_to_copy', ['dark-factory-governance.yml'])
-print(' '.join(wf))
-" 2>/dev/null) && WORKFLOWS_TO_LINK="$CONFIG_WORKFLOWS"
+            config = deep_merge(config, data)
+
+# Support both new (workflows.required/optional) and legacy (workflows_to_copy) config
+wf = config.get('workflows', {})
+if isinstance(wf, dict):
+    req = wf.get('required', ['dark-factory-governance.yml'])
+    opt = wf.get('optional', [])
+else:
+    req = config.get('workflows_to_copy', ['dark-factory-governance.yml'])
+    opt = []
+print('REQUIRED=' + ' '.join(req))
+print('OPTIONAL=' + ' '.join(opt))
+" 2>/dev/null)
+      if [ -n "$CONFIG_WORKFLOWS" ]; then
+        REQUIRED_WORKFLOWS=$(echo "$CONFIG_WORKFLOWS" | grep '^REQUIRED=' | sed 's/^REQUIRED=//')
+        OPTIONAL_WORKFLOWS=$(echo "$CONFIG_WORKFLOWS" | grep '^OPTIONAL=' | sed 's/^OPTIONAL=//')
+      fi
     fi
-    for wf_name in $WORKFLOWS_TO_LINK; do
+
+    # Link required workflows (warn if source is missing)
+    for wf_name in $REQUIRED_WORKFLOWS; do
       if [ -f "$WORKFLOW_SRC/$wf_name" ]; then
         link_target="../../.ai/.github/workflows/$wf_name"
         if [ -L "$WORKFLOW_DST/$wf_name" ] && [ "$(readlink "$WORKFLOW_DST/$wf_name")" = "$link_target" ]; then
@@ -248,7 +276,22 @@ print(' '.join(wf))
           echo "  Linked $wf_name -> .ai/.github/workflows/$wf_name"
         fi
       else
-        echo "  [WARN] Workflow $wf_name not found in .ai/.github/workflows/"
+        echo "  [WARN] Required workflow $wf_name not found in .ai/.github/workflows/"
+      fi
+    done
+
+    # Link optional workflows (skip silently if source is missing)
+    for wf_name in $OPTIONAL_WORKFLOWS; do
+      if [ -f "$WORKFLOW_SRC/$wf_name" ]; then
+        link_target="../../.ai/.github/workflows/$wf_name"
+        if [ -L "$WORKFLOW_DST/$wf_name" ] && [ "$(readlink "$WORKFLOW_DST/$wf_name")" = "$link_target" ]; then
+          echo "  Workflow $wf_name already linked (optional)"
+        elif [ -f "$WORKFLOW_DST/$wf_name" ] && [ ! -L "$WORKFLOW_DST/$wf_name" ]; then
+          echo "  Workflow $wf_name exists as regular file, skipping (optional)"
+        else
+          ln -sf "$link_target" "$WORKFLOW_DST/$wf_name"
+          echo "  Linked $wf_name -> .ai/.github/workflows/$wf_name (optional)"
+        fi
       fi
     done
   fi
@@ -558,10 +601,98 @@ configure_codeowners() {
   echo "  [OK] CODEOWNERS generated at $codeowners_path"
 }
 
+validate_rulesets() {
+  echo ""
+  echo "Validating org/repo rulesets..."
+
+  # Check if gh CLI is available and authenticated (already verified in configure_repository)
+  if ! command -v gh &>/dev/null || ! gh auth status &>/dev/null 2>&1; then
+    echo "  [SKIP] GitHub CLI not available or not authenticated"
+    return 0
+  fi
+
+  local repo
+  repo=$(gh repo view --json nameWithOwner --jq '.nameWithOwner' 2>/dev/null) || {
+    echo "  [SKIP] Could not detect GitHub repository"
+    return 0
+  }
+
+  # Read expected rulesets from config
+  local python_cmd
+  if [ -d "$VENV_DIR" ]; then
+    python_cmd="$VENV_DIR/bin/python"
+  elif [ -n "$PYTHON_CMD" ] && [ "$PYTHON_OK" = "true" ]; then
+    python_cmd="$PYTHON_CMD"
+  else
+    echo "  [SKIP] Python not available for config parsing"
+    return 0
+  fi
+
+  local expected_names
+  expected_names=$("$python_cmd" -c "
+import yaml, os
+
+def deep_merge(base, override):
+    result = dict(base)
+    for k, v in override.items():
+        if k in result and isinstance(result[k], dict) and isinstance(v, dict):
+            result[k] = deep_merge(result[k], v)
+        elif k in result and isinstance(result[k], list) and isinstance(v, list):
+            result[k] = result[k] + v
+        else:
+            result[k] = v
+    return result
+
+config = {}
+for f in ['$SCRIPT_DIR/config.yaml', '$SCRIPT_DIR/project.yaml']:
+    if os.path.exists(f):
+        with open(f) as fh:
+            data = yaml.safe_load(fh) or {}
+            config = deep_merge(config, data)
+
+rulesets = config.get('repository', {}).get('branch_protection', {}).get('expected_rulesets', [])
+for rs in rulesets:
+    name = rs.get('name', '')
+    if name:
+        print(name)
+" 2>/dev/null)
+
+  if [ -z "$expected_names" ]; then
+    echo "  [SKIP] No expected rulesets configured"
+    return 0
+  fi
+
+  # Fetch active rulesets from GitHub API (repo-level and org-level)
+  local active_rulesets
+  active_rulesets=$(gh api "repos/$repo/rulesets" --jq '.[].name' 2>/dev/null) || {
+    echo "  [WARN] Could not fetch rulesets (may require admin permissions)"
+    echo "         Verify rulesets manually in Settings > Rules > Rulesets"
+    return 0
+  }
+
+  local missing=0
+  while IFS= read -r expected; do
+    if echo "$active_rulesets" | grep -qF "$expected"; then
+      echo "  [OK] Ruleset found: $expected"
+    else
+      echo "  [WARN] Expected ruleset not found: $expected"
+      missing=$((missing + 1))
+    fi
+  done <<< "$expected_names"
+
+  if [ "$missing" -gt 0 ]; then
+    echo "  [WARN] $missing expected ruleset(s) not found. Check org/repo settings."
+    echo "         These are validated, not applied — configure them in GitHub Settings > Rules."
+  else
+    echo "  [OK] All expected rulesets present"
+  fi
+}
+
 # Run repository configuration (only if Python is available for YAML parsing)
 if [ "$PYTHON_OK" = "true" ]; then
   echo ""
   configure_repository
+  validate_rulesets
 else
   echo ""
   echo "  [SKIP] Repository configuration requires Python for YAML parsing"
