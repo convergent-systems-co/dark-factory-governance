@@ -81,6 +81,7 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
       default.yaml             Standard risk tolerance
       fin_pii_high.yaml        Financial/PII — SOC2, PCI-DSS, HIPAA, GDPR
       infrastructure_critical.yaml  Infrastructure-as-code, deployment configs
+      threshold-tuning.yaml    Auto-tuning rules for confidence threshold adjustment
 
     emissions/                 Panel emission outputs (structured JSON)
     manifests/                 Run manifests (audit trail, append-only)
@@ -94,6 +95,7 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
       ci-gating-blueprint.md              CI checks, branch protection, auto-merge
       naming-review.md                    Persona/panel naming consistency review
       retrospective-aggregation.md         Aggregated retrospective data schema docs
+      threshold-tuning.md                  Auto-tuning mechanism and safety bounds
 
   .governance/                 Policy engine runtime
     policy-engine.py           Deterministic evaluation engine (Phase 4b)

@@ -120,7 +120,7 @@ The Phase 5 roadmap is informed by industry maturity models for autonomous softw
 ### 5b — Self-Evolution (Achievable — Governance Artifacts)
 
 - [x] Retrospective aggregation schema — JSON Schema for collecting panel accuracy, false positive rates, and override frequency across runs (PR #115)
-- [ ] Threshold auto-tuning policy — Policy that adjusts confidence thresholds based on retrospective data (e.g., lower security threshold after repeated false positives)
+- [x] Threshold auto-tuning policy — Policy that adjusts confidence thresholds based on retrospective data (e.g., lower security threshold after repeated false positives) (PR #118)
 - [ ] Persona effectiveness scoring schema — Schema tracking per-persona signal-to-noise ratio, enabling automated persona weight adjustment
 - [ ] Governance change proposal workflow — Agentic workflow where the system proposes governance config changes (new thresholds, persona adjustments) for human approval
 
