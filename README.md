@@ -65,6 +65,7 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
 
     prompts/                   Reusable prompt templates
       startup.md               Agentic improvement loop entry point
+      init.md                  Agentic bootstrap prompt (interactive install for consuming repos)
       retrospective.md         Post-merge process evaluation prompt
       templates/               Reusable document templates
         plan-template.md       Standardized plan template for AI and humans

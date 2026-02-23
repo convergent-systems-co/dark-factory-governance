@@ -26,7 +26,11 @@ Never allow context to reach compaction with uncommitted changes, merge conflict
 
 ## Repository Configuration
 
-Repository settings (auto-merge, CODEOWNERS, branch protection) are declared in `config.yaml` and `project.yaml`. Run `bash .ai/init.sh` to apply. See `governance/docs/repository-configuration.md` for details.
+Repository settings (auto-merge, CODEOWNERS, branch protection) are declared in `config.yaml` and `project.yaml`. To apply:
+- **CLI:** `bash .ai/init.sh` (or `bash .ai/init.sh --install-deps` for full setup)
+- **Agentic:** Tell your AI assistant to read and execute `governance/prompts/init.md` for an interactive, guided setup
+
+See `governance/docs/repository-configuration.md` for details.
 
 <!-- /ANCHOR -->
 

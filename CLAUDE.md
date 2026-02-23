@@ -14,9 +14,13 @@ There is no build system, test runner, or linter. This is a configuration-only r
 
 **Bootstrap (for consuming repos):**
 ```bash
-bash .ai/init.sh
+bash .ai/init.sh                    # Symlinks only
+bash .ai/init.sh --install-deps     # Symlinks + Python venv + dependencies
 ```
 Creates symlinks for CLAUDE.md, .cursorrules, and .github/copilot-instructions.md in the parent project.
+
+**Agentic bootstrap (interactive):**
+Tell your AI assistant to read and execute `governance/prompts/init.md`. This walks through setup interactively — choosing a language template, configuring repository settings, and installing dependencies — with the agent asking about each option.
 
 **Submodule operations (from consuming repo):**
 ```bash
