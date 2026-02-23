@@ -32,6 +32,31 @@ Repository settings (auto-merge, CODEOWNERS, branch protection) are declared in 
 
 See `governance/docs/repository-configuration.md` for details.
 
+## Governance Pipeline — Mandatory
+
+**The governance pipeline applies to ALL work, in ALL modes (local and remote). No exceptions.**
+
+Every code change — regardless of size, urgency, or operating mode — must follow this sequence:
+
+1. **Plan first** — Create a plan in `.plans/` before writing any code. No implementation without a plan.
+2. **Panels must run** — Default panels (code-review, security-review, threat-modeling, cost-analysis, documentation-review) must execute on every change. If panel emissions are missing, the change is not governance-approved.
+3. **Documentation with every change** — Update affected docs in the same commit (GOALS.md, CLAUDE.md, README.md, governance docs).
+
+### Local Mode (no GitHub remote)
+
+When operating without a GitHub remote (no issues, PRs, or CI):
+- Plans are still mandatory — write to `.plans/` before implementing.
+- Panel evaluation still applies — the policy engine can run locally via `python .governance/policy-engine.py`.
+- Commit messages must still use conventional commit format.
+- Skip only GitHub-specific steps (issue comments, PR creation, Copilot polling).
+
+### Missing Panels
+
+If required panel emissions are not present in `governance/emissions/`:
+- **Do not merge.** A merge without governance approval violates the pipeline.
+- Run the required panels or escalate to human review.
+- See `governance/policy/default.yaml` for the list of required panels.
+
 <!-- /ANCHOR -->
 
 *Domain-specific guidance in `instructions/`. Project-specific instructions extend this.*

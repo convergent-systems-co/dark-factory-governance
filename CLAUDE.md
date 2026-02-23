@@ -17,7 +17,7 @@ There is no build system, test runner, or linter. This is a configuration-only r
 bash .ai/init.sh                    # Symlinks only
 bash .ai/init.sh --install-deps     # Symlinks + Python venv + dependencies
 ```
-Checks `.ai` submodule freshness (auto-updates if behind), creates symlinks for CLAUDE.md, .cursorrules, and .github/copilot-instructions.md, and creates `.plans/` and `.panels/` directories for governance artifacts.
+Checks `.ai` submodule freshness (auto-updates if behind), creates symlinks for CLAUDE.md, .cursorrules, and .github/copilot-instructions.md, creates `.plans/` and `.panels/` directories, generates GOALS.md from template, and validates required panel emissions.
 
 **Agentic bootstrap (interactive):**
 Tell your AI assistant to read and execute `governance/prompts/init.md`. This walks through setup interactively — choosing a language template, configuring repository settings, and installing dependencies — with the agent asking about each option.
@@ -82,6 +82,7 @@ All panel output must include JSON between `<!-- STRUCTURED_EMISSION_START -->` 
 - **Commit style**: Conventional commits (`feat:`, `fix:`, `refactor:`, `docs:`)
 - **Branch naming**: `itsfwcp/{issue-type}/{issue-number}/{branch-name}` (e.g., `itsfwcp/feat/42/add-auth`)
 - **Plans before code**: Every implementation requires a plan in `.plans/` using `governance/prompts/templates/plan-template.md`
+- **Governance pipeline is mandatory**: The governance pipeline applies in all modes (local and remote). Required panels must execute, plan-first is non-negotiable, and the CI workflow blocks merges when panel emissions are missing. Projects can opt out via `governance.skip_panel_validation: true` in `project.yaml`.
 - **Backward compatibility**: All changes must be additive. Breaking changes require migration plans and version bumps.
 - **Enforcement artifacts use semantic versioning** in their `profile_version` or `version` field
 - **Cognitive artifacts version by git SHA** — they evolve with the submodule

@@ -295,6 +295,39 @@ print('OPTIONAL=' + ' '.join(opt))
       fi
     done
   fi
+  # GOALS.md — create from template if not present in consuming repo
+  GOALS_TEMPLATE="$SCRIPT_DIR/templates/GOALS.md"
+  GOALS_DST="$PROJECT_ROOT/GOALS.md"
+  if [ -f "$GOALS_TEMPLATE" ]; then
+    if [ -f "$GOALS_DST" ]; then
+      echo "  GOALS.md already exists, skipping"
+    else
+      cp "$GOALS_TEMPLATE" "$GOALS_DST"
+      echo "  Created GOALS.md from template"
+    fi
+  else
+    echo "  [WARN] GOALS.md template not found at $GOALS_TEMPLATE"
+  fi
+
+  # Panel emission validation — check required panels have baseline emissions
+  echo ""
+  echo "Validating panel emissions..."
+  EMISSIONS_DIR="$SCRIPT_DIR/governance/emissions"
+  REQUIRED_PANELS="code-review security-review threat-modeling cost-analysis documentation-review"
+  MISSING_PANELS=""
+  for panel in $REQUIRED_PANELS; do
+    if [ ! -f "$EMISSIONS_DIR/${panel}.json" ]; then
+      MISSING_PANELS="$MISSING_PANELS $panel"
+    fi
+  done
+  if [ -n "$MISSING_PANELS" ]; then
+    echo "  [WARN] Missing required panel emissions:$MISSING_PANELS"
+    echo "         The governance workflow will block PRs until these panels have emissions."
+    echo "         See governance/policy/default.yaml for required panel definitions."
+  else
+    echo "  [OK] All required panel emissions present"
+  fi
+
   # Project directories — create .plans/ and .panels/ in consuming repo
   echo ""
   echo "Creating project directories..."

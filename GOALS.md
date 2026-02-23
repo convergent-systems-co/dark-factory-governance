@@ -87,6 +87,12 @@ This document tracks the maturity phases, completed work, and open enhancements 
 | #127 | #129 | Reconcile documentation drift | Fixed phase status, added missing completed work, updated file structure across all docs |
 | #136 | #137 | Fix init.sh PYTHON_CMD crash | Moved Python detection before symlinks section; fixed `local` outside function |
 
+### Governance Enforcement
+
+| Issue | PR | Title | Impact |
+|-------|----|-------|--------|
+| #155 | — | Enforce Dark Governance Framework | Mandatory governance pipeline in all modes, CI blocks on missing panels, GOALS.md template in init.sh |
+
 ## Open Work
 
 ### Needs Refinement
