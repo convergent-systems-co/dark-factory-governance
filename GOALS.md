@@ -95,6 +95,7 @@ This document tracks the maturity phases, completed work, and open enhancements 
 | #126 | #157 | Data Governance Standards enforcement | data-governance-review panel, canonical model compliance, missing-canonical workflow, dach-canonical-models integration |
 | #158 | — | Phase 5a Self-Proving Systems | Test governance schema, test-generation panel, proof-of-correctness policy |
 | #167 | #168 | Reduced human touchpoint model (Phase 5e) | Near-full-autonomy policy profile; completes Phase 5e Spec-Driven Interface |
+| #170 | #171 | Conflict detection schema (Phase 5d) | JSON Schema for multi-agent conflict detection; first Phase 5d governance artifact |
 
 ## Open Work
 
@@ -160,7 +161,7 @@ The Phase 5 roadmap is informed by industry maturity models for autonomous softw
 
 ### 5d — Multi-Agent Coordination (Blocked)
 
-- [x] Conflict detection schema — JSON Schema for detecting when multiple agents modify overlapping files or governance state (PR #TBD)
+- [x] Conflict detection schema — JSON Schema for detecting when multiple agents modify overlapping files or governance state (PR #171)
 - [ ] Merge sequencing policy — Policy rules for ordering concurrent agent PRs to avoid conflicts and maintain governance consistency
 - [ ] Parallel agent session protocol — Specification for spawning, coordinating, and reconciling multiple concurrent agent sessions
 
