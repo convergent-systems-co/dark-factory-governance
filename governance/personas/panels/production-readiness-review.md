@@ -27,6 +27,8 @@ Assess whether a system is ready for production deployment.
 
 ## Output Format
 
+> **Schema:** All emissions must conform to [`panel-output.schema.json`](../../schemas/panel-output.schema.json). Wrap the JSON block in `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers.
+
 ### Per Participant
 
 - Perspective name
@@ -43,6 +45,44 @@ Assess whether a system is ready for production deployment.
 - Post-launch requirements
 - Operational runbook status
 - Go/No-Go recommendation
+
+### Structured Emission Example
+
+```json
+{
+  "panel_name": "production-readiness-review",
+  "panel_version": "1.0.0",
+  "confidence_score": 0.85,
+  "risk_level": "low",
+  "compliance_score": 0.92,
+  "policy_flags": [],
+  "requires_human_review": false,
+  "timestamp": "2026-01-15T10:30:00Z",
+  "findings": [
+    {
+      "persona": "SRE",
+      "verdict": "approve",
+      "confidence": 0.90,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Infrastructure Engineer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Observability Engineer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    }
+  ],
+  "aggregate_verdict": "approve"
+}
+```
+
+_Other participants (Failure Engineer, DevOps Engineer) omitted for brevity._
 
 ## Pass/Fail Criteria
 

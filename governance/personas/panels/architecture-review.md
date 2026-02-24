@@ -18,6 +18,9 @@ Evaluate system design decisions from multiple architectural perspectives.
 5. Converge on recommendations
 
 ## Output Format
+
+> **Schema:** All emissions must conform to [`panel-output.schema.json`](../../schemas/panel-output.schema.json). Wrap the JSON block in `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers.
+
 ### Per Participant
 - Perspective name
 - Architectural concerns
@@ -30,6 +33,44 @@ Evaluate system design decisions from multiple architectural perspectives.
 - Design modifications required
 - Tradeoffs accepted (with rationale)
 - Go/No-Go recommendation
+
+### Structured Emission Example
+
+```json
+{
+  "panel_name": "architecture-review",
+  "panel_version": "1.0.0",
+  "confidence_score": 0.85,
+  "risk_level": "low",
+  "compliance_score": 0.92,
+  "policy_flags": [],
+  "requires_human_review": false,
+  "timestamp": "2026-01-15T10:30:00Z",
+  "findings": [
+    {
+      "persona": "Systems Architect",
+      "verdict": "approve",
+      "confidence": 0.90,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Security Auditor",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Failure Engineer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    }
+  ],
+  "aggregate_verdict": "approve"
+}
+```
+
+_Other participants (Infrastructure Engineer, API Designer) omitted for brevity._
 
 ## Pass/Fail Criteria
 

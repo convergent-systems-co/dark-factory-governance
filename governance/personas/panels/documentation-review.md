@@ -18,6 +18,9 @@ Evaluate documentation completeness, accuracy, and usability.
 5. Prioritize improvements by user impact
 
 ## Output Format
+
+> **Schema:** All emissions must conform to [`panel-output.schema.json`](../../schemas/panel-output.schema.json). Wrap the JSON block in `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers.
+
 ### Per Participant
 - Perspective name
 - Gaps identified
@@ -30,6 +33,44 @@ Evaluate documentation completeness, accuracy, and usability.
 - Structure improvements
 - Example additions needed
 - Maintenance recommendations
+
+### Structured Emission Example
+
+```json
+{
+  "panel_name": "documentation-review",
+  "panel_version": "1.0.0",
+  "confidence_score": 0.85,
+  "risk_level": "low",
+  "compliance_score": 0.92,
+  "policy_flags": [],
+  "requires_human_review": false,
+  "timestamp": "2026-01-15T10:30:00Z",
+  "findings": [
+    {
+      "persona": "Documentation Reviewer",
+      "verdict": "approve",
+      "confidence": 0.90,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Documentation Writer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "API Consumer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    }
+  ],
+  "aggregate_verdict": "approve"
+}
+```
+
+_Other participants (Mentor, UX Engineer) omitted for brevity._
 
 ## Pass/Fail Criteria
 

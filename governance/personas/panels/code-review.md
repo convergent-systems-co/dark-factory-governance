@@ -17,6 +17,9 @@ Comprehensive code evaluation from multiple engineering perspectives.
 4. Produce consolidated assessment
 
 ## Output Format
+
+> **Schema:** All emissions must conform to [`panel-output.schema.json`](../../schemas/panel-output.schema.json). Wrap the JSON block in `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers.
+
 ### Per Participant
 - Perspective name
 - Key concerns (bulleted)
@@ -29,6 +32,44 @@ Comprehensive code evaluation from multiple engineering perspectives.
 - Consider items
 - Tradeoff summary
 - Final recommendation (Approve/Request Changes/Reject)
+
+### Structured Emission Example
+
+```json
+{
+  "panel_name": "code-review",
+  "panel_version": "1.0.0",
+  "confidence_score": 0.85,
+  "risk_level": "low",
+  "compliance_score": 0.92,
+  "policy_flags": [],
+  "requires_human_review": false,
+  "timestamp": "2026-01-15T10:30:00Z",
+  "findings": [
+    {
+      "persona": "Code Reviewer",
+      "verdict": "approve",
+      "confidence": 0.90,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Security Auditor",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Performance Engineer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    }
+  ],
+  "aggregate_verdict": "approve"
+}
+```
+
+_Other participants (Test Engineer, Refactor Specialist) omitted for brevity._
 
 ## Pass/Fail Criteria
 

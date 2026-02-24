@@ -18,6 +18,9 @@ Analyze incident for root cause and systemic improvements.
 5. Prioritize preventive actions
 
 ## Output Format
+
+> **Schema:** All emissions must conform to [`panel-output.schema.json`](../../schemas/panel-output.schema.json). Wrap the JSON block in `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers.
+
 ### Per Participant
 - Perspective name
 - Contributing factors identified
@@ -31,6 +34,44 @@ Analyze incident for root cause and systemic improvements.
 - What went well
 - Action items with owners and deadlines
 - Systemic improvements needed
+
+### Structured Emission Example
+
+```json
+{
+  "panel_name": "incident-post-mortem",
+  "panel_version": "1.0.0",
+  "confidence_score": 0.85,
+  "risk_level": "low",
+  "compliance_score": 0.92,
+  "policy_flags": [],
+  "requires_human_review": false,
+  "timestamp": "2026-01-15T10:30:00Z",
+  "findings": [
+    {
+      "persona": "Incident Commander",
+      "verdict": "approve",
+      "confidence": 0.90,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "SRE",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Systems Architect",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    }
+  ],
+  "aggregate_verdict": "approve"
+}
+```
+
+_Other participants (Failure Engineer, Observability Engineer) omitted for brevity._
 
 ## Pass/Fail Criteria
 

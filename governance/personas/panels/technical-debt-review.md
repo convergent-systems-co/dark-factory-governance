@@ -18,6 +18,9 @@ Assess and prioritize technical debt for strategic remediation.
 5. Prioritize by ROI
 
 ## Output Format
+
+> **Schema:** All emissions must conform to [`panel-output.schema.json`](../../schemas/panel-output.schema.json). Wrap the JSON block in `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers.
+
 ### Per Participant
 - Perspective name
 - Debt items identified
@@ -30,6 +33,44 @@ Assess and prioritize technical debt for strategic remediation.
 - Quick wins (low effort, high value)
 - Strategic debt (accept with monitoring)
 - Recommended roadmap
+
+### Structured Emission Example
+
+```json
+{
+  "panel_name": "technical-debt-review",
+  "panel_version": "1.0.0",
+  "confidence_score": 0.85,
+  "risk_level": "low",
+  "compliance_score": 0.92,
+  "policy_flags": [],
+  "requires_human_review": false,
+  "timestamp": "2026-01-15T10:30:00Z",
+  "findings": [
+    {
+      "persona": "Refactor Specialist",
+      "verdict": "approve",
+      "confidence": 0.90,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Systems Architect",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Test Engineer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    }
+  ],
+  "aggregate_verdict": "approve"
+}
+```
+
+_Other participants (Tech Lead, Minimalist Engineer) omitted for brevity._
 
 ## Pass/Fail Criteria
 

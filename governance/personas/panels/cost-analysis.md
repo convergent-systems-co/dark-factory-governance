@@ -20,6 +20,9 @@ Evaluate the cost implications of proposed changes, including estimated implemen
 6. Produce consolidated cost assessment with recommendations
 
 ## Output Format
+
+> **Schema:** All emissions must conform to [`panel-output.schema.json`](../../schemas/panel-output.schema.json). Wrap the JSON block in `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers.
+
 ### Per Participant
 - Perspective name
 - Cost concerns (bulleted)
@@ -33,6 +36,44 @@ Evaluate the cost implications of proposed changes, including estimated implemen
 - **Cost optimization opportunities** (itemized savings)
 - **Cost risk factors** (scaling surprises, usage-based pricing variability)
 - Final recommendation (Approve/Flag for Review/Reject)
+
+### Structured Emission Example
+
+```json
+{
+  "panel_name": "cost-analysis",
+  "panel_version": "1.0.0",
+  "confidence_score": 0.85,
+  "risk_level": "low",
+  "compliance_score": 0.92,
+  "policy_flags": [],
+  "requires_human_review": false,
+  "timestamp": "2026-01-15T10:30:00Z",
+  "findings": [
+    {
+      "persona": "FinOps Analyst",
+      "verdict": "approve",
+      "confidence": 0.90,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "FinOps Engineer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Cost Optimizer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    }
+  ],
+  "aggregate_verdict": "approve"
+}
+```
+
+_Other participants (Cloud Cost Analyst, LLM Cost Analyst, Infrastructure Engineer) omitted for brevity._
 
 ## Pass/Fail Criteria
 

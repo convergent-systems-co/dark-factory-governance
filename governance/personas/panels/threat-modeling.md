@@ -20,6 +20,9 @@ Systematic threat analysis mapping attack surfaces to MITRE ATT&CK, identifying 
 7. Produce mitigation and detection recommendations
 
 ## Output Format
+
+> **Schema:** All emissions must conform to [`panel-output.schema.json`](../../schemas/panel-output.schema.json). Wrap the JSON block in `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers.
+
 ### Per Participant
 - Perspective name
 - Threats identified with ATT&CK technique IDs (where applicable)
@@ -32,6 +35,44 @@ Systematic threat analysis mapping attack surfaces to MITRE ATT&CK, identifying 
 - Detection gap matrix
 - Prioritized mitigation roadmap
 - Residual risk assessment
+
+### Structured Emission Example
+
+```json
+{
+  "panel_name": "threat-modeling",
+  "panel_version": "1.0.0",
+  "confidence_score": 0.85,
+  "risk_level": "low",
+  "compliance_score": 0.92,
+  "policy_flags": [],
+  "requires_human_review": false,
+  "timestamp": "2026-01-15T10:30:00Z",
+  "findings": [
+    {
+      "persona": "MITRE Specialist",
+      "verdict": "approve",
+      "confidence": 0.90,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Security Auditor",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Infrastructure Engineer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    }
+  ],
+  "aggregate_verdict": "approve"
+}
+```
+
+_Other participants (Adversarial Reviewer, Architect) omitted for brevity._
 
 ## Pass/Fail Criteria
 

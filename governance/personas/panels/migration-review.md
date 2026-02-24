@@ -18,6 +18,9 @@ Evaluate migration plan safety, completeness, and risk mitigation.
 5. Validate communication plan
 
 ## Output Format
+
+> **Schema:** All emissions must conform to [`panel-output.schema.json`](../../schemas/panel-output.schema.json). Wrap the JSON block in `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers.
+
 ### Per Participant
 - Perspective name
 - Plan gaps
@@ -30,6 +33,44 @@ Evaluate migration plan safety, completeness, and risk mitigation.
 - Rollback verification checklist
 - Monitoring requirements
 - Go/No-Go recommendation
+
+### Structured Emission Example
+
+```json
+{
+  "panel_name": "migration-review",
+  "panel_version": "1.0.0",
+  "confidence_score": 0.85,
+  "risk_level": "low",
+  "compliance_score": 0.92,
+  "policy_flags": [],
+  "requires_human_review": false,
+  "timestamp": "2026-01-15T10:30:00Z",
+  "findings": [
+    {
+      "persona": "Migration Specialist",
+      "verdict": "approve",
+      "confidence": 0.90,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Data Architect",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "SRE",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    }
+  ],
+  "aggregate_verdict": "approve"
+}
+```
+
+_Other participants (Failure Engineer, Tech Lead) omitted for brevity._
 
 ## Pass/Fail Criteria
 

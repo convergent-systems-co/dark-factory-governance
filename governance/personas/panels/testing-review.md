@@ -17,6 +17,9 @@ Evaluate test coverage, quality, and testing approach comprehensively.
 4. Prioritize improvements by risk reduction
 
 ## Output Format
+
+> **Schema:** All emissions must conform to [`panel-output.schema.json`](../../schemas/panel-output.schema.json). Wrap the JSON block in `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers.
+
 ### Per Participant
 - Perspective name
 - Coverage gaps identified
@@ -29,6 +32,44 @@ Evaluate test coverage, quality, and testing approach comprehensively.
 - Testing infrastructure needs
 - Prioritized test backlog
 - Confidence assessment (High/Medium/Low)
+
+### Structured Emission Example
+
+```json
+{
+  "panel_name": "testing-review",
+  "panel_version": "1.0.0",
+  "confidence_score": 0.85,
+  "risk_level": "low",
+  "compliance_score": 0.92,
+  "policy_flags": [],
+  "requires_human_review": false,
+  "timestamp": "2026-01-15T10:30:00Z",
+  "findings": [
+    {
+      "persona": "Test Engineer",
+      "verdict": "approve",
+      "confidence": 0.90,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Failure Engineer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Performance Engineer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    }
+  ],
+  "aggregate_verdict": "approve"
+}
+```
+
+_Other participants (Security Auditor, Code Reviewer) omitted for brevity._
 
 ## Pass/Fail Criteria
 

@@ -18,6 +18,9 @@ Comprehensive security assessment from multiple threat perspectives.
 5. Prioritize remediation
 
 ## Output Format
+
+> **Schema:** All emissions must conform to [`panel-output.schema.json`](../../schemas/panel-output.schema.json). Wrap the JSON block in `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers.
+
 ### Per Participant
 - Perspective name
 - Threats identified
@@ -30,6 +33,44 @@ Comprehensive security assessment from multiple threat perspectives.
 - Compliance gaps
 - Defense-in-depth recommendations
 - Security posture assessment
+
+### Structured Emission Example
+
+```json
+{
+  "panel_name": "security-review",
+  "panel_version": "1.0.0",
+  "confidence_score": 0.85,
+  "risk_level": "low",
+  "compliance_score": 0.92,
+  "policy_flags": [],
+  "requires_human_review": false,
+  "timestamp": "2026-01-15T10:30:00Z",
+  "findings": [
+    {
+      "persona": "Security Auditor",
+      "verdict": "approve",
+      "confidence": 0.90,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Infrastructure Engineer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Compliance Officer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    }
+  ],
+  "aggregate_verdict": "approve"
+}
+```
+
+_Other participants (Adversarial Reviewer, Backend Engineer) omitted for brevity._
 
 ## Pass/Fail Criteria
 

@@ -30,6 +30,8 @@ This panel acts as the governance step observer requested in issue #176. It enri
 
 ## Output Format
 
+> **Schema:** All emissions must conform to [`panel-output.schema.json`](../../schemas/panel-output.schema.json). Wrap the JSON block in `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers.
+
 ### Per Step
 - Step name
 - Status (passed/failed/skipped/not_applicable)
@@ -41,6 +43,42 @@ This panel acts as the governance step observer requested in issue #176. It enri
 - Violation count by severity
 - Specific remediation steps for each violation
 - Confidence score
+
+### Structured Emission Example
+
+```json
+{
+  "panel_name": "governance-compliance-review",
+  "panel_version": "1.0.0",
+  "confidence_score": 0.85,
+  "risk_level": "low",
+  "compliance_score": 0.92,
+  "policy_flags": [],
+  "requires_human_review": false,
+  "timestamp": "2026-01-15T10:30:00Z",
+  "findings": [
+    {
+      "persona": "Governance Auditor",
+      "verdict": "approve",
+      "confidence": 0.90,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Code Manager",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    },
+    {
+      "persona": "Documentation Reviewer",
+      "verdict": "approve",
+      "confidence": 0.85,
+      "rationale": "No significant issues found."
+    }
+  ],
+  "aggregate_verdict": "approve"
+}
+```
 
 ## Pass/Fail Criteria
 

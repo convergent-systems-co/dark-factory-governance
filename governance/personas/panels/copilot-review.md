@@ -81,6 +81,8 @@ Classification is performed by keyword matching and context analysis. The classi
 
 ## Structured Output Schema
 
+> **Schema:** All emissions must conform to [`panel-output.schema.json`](../../schemas/panel-output.schema.json). Wrap the JSON block in `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers.
+
 Copilot review emits a standard `panel-output.schema.json` artifact:
 
 ```json
@@ -106,6 +108,30 @@ Copilot review emits a standard `panel-output.schema.json` artifact:
         "low": 2,
         "info": 0
       }
+    }
+  ],
+  "aggregate_verdict": "approve"
+}
+```
+
+### Structured Emission Example
+
+```json
+{
+  "panel_name": "copilot-review",
+  "panel_version": "1.0.0",
+  "confidence_score": 0.85,
+  "risk_level": "low",
+  "compliance_score": 0.92,
+  "policy_flags": [],
+  "requires_human_review": false,
+  "timestamp": "2026-01-15T10:30:00Z",
+  "findings": [
+    {
+      "persona": "Copilot",
+      "verdict": "approve",
+      "confidence": 0.90,
+      "rationale": "No significant issues found."
     }
   ],
   "aggregate_verdict": "approve"
