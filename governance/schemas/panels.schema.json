@@ -38,6 +38,10 @@
         "trigger": {
           "type": "string",
           "description": "Trigger condition for optional panels. Overrides the policy trigger if set. Use 'always' for unconditional execution."
+        },
+        "allowed_tools": {
+          "$ref": "#/$defs/tool_access",
+          "description": "Tool capabilities the executing agent should grant when running this panel. Defines what the panel can do beyond pure reasoning."
         }
       },
       "additionalProperties": false
@@ -126,6 +130,36 @@
           "default": 0.0
         }
       },
+      "additionalProperties": false
+    },
+    "tool_access": {
+      "type": "object",
+      "description": "Tool capabilities the executing agent should grant when running this panel. Capabilities are platform-agnostic — the executing agent maps them to its own tool names.",
+      "properties": {
+        "capabilities": {
+          "type": "array",
+          "description": "List of tool capabilities this panel requires.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "file_read",
+              "file_search",
+              "code_analysis",
+              "test_execution",
+              "security_scan",
+              "dependency_audit",
+              "git_history",
+              "web_fetch"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why these capabilities are needed for this panel."
+        }
+      },
+      "required": ["capabilities"],
       "additionalProperties": false
     }
   }
