@@ -24,7 +24,7 @@ See [GOALS.md](GOALS.md) for detailed phase tracking, completed work, and open e
 | 3 | Agentic Orchestration | Personas, panels, workflows with human gates | Implemented |
 | 4a | Policy-Bound Autonomy | Deterministic merge decisions, structured emissions | **Implemented** — CI enforcement live |
 | 4b | Autonomous Remediation | Auto-fix, drift detection, remediation loops | **Implemented** — drift detection, auto-remediation, and incident-to-DI governance artifacts complete |
-| 5 | Dark Factory | Full automation — decomposed into sub-phases 5a-5e with achievability assessment | 5a, 5b, 5e complete; 5c, 5d blocked by platform |
+| 5 | Dark Factory | Full automation — decomposed into sub-phases 5a-5e with achievability assessment | 5a, 5b, 5d, 5e governance artifacts complete; 5c, 5d runtime blocked by platform |
 
 See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and open enhancements.
 
@@ -105,6 +105,7 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
       component-registry.yaml  Component ownership registry
       signal-panel-mapping.yaml  Signal-to-panel routing rules
       merge-sequencing.yaml    Multi-agent PR ordering rules — Phase 5d
+      parallel-session-protocol.yaml  Parallel agent session coordination — Phase 5d
       signal-adapters/         Polling adapter configurations for runtime signals
 
     emissions/                 Panel emission outputs (structured JSON)

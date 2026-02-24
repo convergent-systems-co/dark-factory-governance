@@ -97,6 +97,8 @@ This document tracks the maturity phases, completed work, and open enhancements 
 | #167 | #168 | Reduced human touchpoint model (Phase 5e) | Near-full-autonomy policy profile; completes Phase 5e Spec-Driven Interface |
 | #170 | #171 | Conflict detection schema (Phase 5d) | JSON Schema for multi-agent conflict detection; first Phase 5d governance artifact |
 | #173 | #174 | Merge sequencing policy (Phase 5d) | PR ordering rules for multi-agent coordination; second Phase 5d governance artifact |
+| #178 | #179 | Governance workflow health check | Startup pre-flight checks verify governance workflow is enabled and healthy |
+| #181 | #182 | Parallel session protocol (Phase 5d) | Session lifecycle, work assignment, coordination, and handoff rules; completes Phase 5d governance artifacts |
 
 ## Open Work
 
@@ -136,7 +138,7 @@ The Phase 5 roadmap is informed by industry maturity models for autonomous softw
 | 5a | Self-Proving Systems | Partially | Can create test governance schemas, test-generation panel definition, proof-of-correctness policy. Cannot build runtime test execution — requires consuming repo integration. |
 | 5b | Self-Evolution | Yes (governance artifacts) | Retrospective aggregation schema, threshold auto-tuning policy, persona effectiveness scoring schema, governance change proposal workflow. All are config/schema artifacts. |
 | 5c | Always-On Orchestration | Partially | GitHub Actions scheduled trigger exists (#74). Cross-session state via checkpoints exists. Missing: event-driven webhook trigger, automatic session resumption from checkpoints. Blocked by Claude Code/Copilot being session-based tools. |
-| 5d | Multi-Agent Coordination | Blocked | Requires runtime capable of spawning parallel agent sessions. Current AI tools (Claude Code, Copilot) are single-session. Can define conflict detection schemas and merge sequencing policies, but cannot implement parallel execution. |
+| 5d | Multi-Agent Coordination | Governance artifacts complete | All governance artifacts defined: conflict detection schema, merge sequencing policy, parallel session protocol. Runtime execution blocked by current single-session AI tooling. |
 | 5e | Spec-Driven Interface | Yes (governance artifacts) | Formal spec schema (richer than GitHub issues), acceptance verification workflow, reduced human touchpoint model. All are config artifacts. |
 
 ### 5a — Self-Proving Systems (Partially Achievable)
@@ -160,13 +162,13 @@ The Phase 5 roadmap is informed by industry maturity models for autonomous softw
 
 > **Blocked by:** Claude Code and GitHub Copilot are session-based tools without persistent daemon capabilities. Scheduled triggers via GitHub Actions (#74) partially address this, but true always-on orchestration requires runtime infrastructure.
 
-### 5d — Multi-Agent Coordination (Blocked)
+### 5d — Multi-Agent Coordination (Governance Artifacts Complete)
 
 - [x] Conflict detection schema — JSON Schema for detecting when multiple agents modify overlapping files or governance state (PR #171)
 - [x] Merge sequencing policy — Policy rules for ordering concurrent agent PRs to avoid conflicts and maintain governance consistency (PR #174)
-- [ ] Parallel agent session protocol — Specification for spawning, coordinating, and reconciling multiple concurrent agent sessions
+- [x] Parallel agent session protocol — Specification for spawning, coordinating, and reconciling multiple concurrent agent sessions (PR #181)
 
-> **Blocked by:** Current AI coding tools (Claude Code, GitHub Copilot) operate as single-session agents. Multi-agent coordination requires a runtime orchestrator capable of spawning parallel sessions, which does not exist in current tooling. Governance schemas can be defined now, but execution is blocked.
+> **Runtime blocked:** All governance artifacts for Phase 5d are complete. Runtime execution requires a multi-agent orchestrator capable of spawning parallel sessions, which does not exist in current AI tooling (Claude Code, GitHub Copilot are single-session). The artifacts above define the protocol that a future orchestrator would implement.
 
 ### 5e — Spec-Driven Interface (Achievable — Governance Artifacts)
 
