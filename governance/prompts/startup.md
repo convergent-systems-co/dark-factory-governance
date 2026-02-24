@@ -96,11 +96,36 @@ Before scanning issues, verify the repository supports the agentic workflow:
    ```bash
    test -s CODEOWNERS && echo "OK" || echo "MISSING"
    ```
-3. Check governance workflow is present in `.github/workflows/`:
+3. Check governance workflow is present, enabled, and healthy:
+
+   **3a. File exists:**
    ```bash
    test -f .github/workflows/dark-factory-governance.yml && echo "OK" || echo "MISSING"
    ```
    If running inside the ai-submodule repo itself (not a consuming repo), check `.github/workflows/` directly.
+
+   **3b. Workflow is enabled:**
+   ```bash
+   gh api repos/{owner}/{repo}/actions/workflows --jq '.workflows[] | select(.path == ".github/workflows/dark-factory-governance.yml") | .state'
+   ```
+   Expected result: `active`. If the state is `disabled_manually` or `disabled_inactivity`, warn: "Governance workflow is disabled. Re-enable it in the repository's Actions settings or via `gh workflow enable dark-factory-governance.yml`." If the workflow is not found in the API response (but the file exists), it may not have been triggered yet — warn and continue.
+
+   **3c. Recent run health:**
+   ```bash
+   gh api repos/{owner}/{repo}/actions/workflows/dark-factory-governance.yml/runs --jq '[.workflow_runs[:5] | .[] | .conclusion]'
+   ```
+   Evaluate the last 5 workflow run conclusions:
+   - If **all 5 are `failure`**: Warn: "Governance workflow has failed 5 consecutive times. Investigate recent failures before relying on governance decisions." Log the URL of the most recent failed run for debugging.
+   - If **no runs exist** (empty array): Warn: "Governance workflow has never run. The first PR will trigger it — governance decisions may be delayed on the first cycle."
+   - If **at least 1 of the last 5 is `success`**: The workflow is considered healthy. Log: "Governance workflow health: OK ({N}/5 recent runs succeeded)."
+   - Conclusions of `cancelled` or `skipped` are neutral — count only `success` and `failure` for the health assessment.
+
+   **3d. Failure handling summary:**
+   - Workflow file missing → suggest `bash .ai/init.sh`
+   - Workflow disabled → suggest re-enabling via Actions settings or `gh workflow enable`
+   - Workflow consistently failing → suggest investigating failure logs; note that governance decisions on PRs may be unreliable
+   - All checks are **non-blocking** — warn and continue. The agent may still do useful work even with degraded governance, but PRs may not receive valid governance reviews.
+
 4. If any check fails:
    - Warn the user: "Repository is not configured for the agentic loop."
    - Suggest running `bash .ai/init.sh` to apply settings from `config.yaml`
