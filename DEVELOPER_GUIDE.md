@@ -52,13 +52,14 @@ git add .ai && git commit -m "Update .ai submodule"
 | **Code Manager** | Orchestrator persona — triages issues, invokes panels, merges PRs | `governance/personas/agentic/code-manager.md` |
 | **Coder** | Executor persona — writes plans, implements code, responds to reviews | `governance/personas/agentic/coder.md` |
 
-## Three Policy Profiles
+## Four Policy Profiles
 
 | Profile | Use When | Auto-Merge | Key Rules |
 |---------|----------|------------|-----------|
 | `default` | Standard internal apps | Yes (with conditions) | Balanced automation and oversight |
 | `fin_pii_high` | Financial, PII, regulated data | No | SOC2/PCI-DSS/HIPAA/GDPR, 3-approver override |
 | `infrastructure_critical` | Infra-as-code, deployments | No | Mandatory architecture + SRE review |
+| `reduced_touchpoint` | Mature repos wanting minimal human gates | Yes (broader) | Human review only for policy overrides, dismissed security findings, or critical risk |
 
 ## How a Change Flows Through Governance
 
@@ -174,7 +175,7 @@ AI context windows are finite. The framework uses tiered loading:
   templates/                 # Language-specific scaffolding (go, python, node, react, csharp)
   governance/
     personas/                # 60 persona definitions (including 2 agentic) + 16 panels
-    policy/                  # 3 policy profiles + supporting rules (13 YAML files + signal-adapters/)
+    policy/                  # 4 policy profiles + supporting rules (14 YAML files + signal-adapters/)
     schemas/                 # 14 JSON Schemas for emissions, manifests, metrics, and validation
     prompts/                 # Reusable prompts and workflows
     docs/                    # Architecture and design documents

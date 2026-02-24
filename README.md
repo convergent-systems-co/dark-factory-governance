@@ -24,7 +24,7 @@ See [GOALS.md](GOALS.md) for detailed phase tracking, completed work, and open e
 | 3 | Agentic Orchestration | Personas, panels, workflows with human gates | Implemented |
 | 4a | Policy-Bound Autonomy | Deterministic merge decisions, structured emissions | **Implemented** — CI enforcement live |
 | 4b | Autonomous Remediation | Auto-fix, drift detection, remediation loops | **Implemented** — drift detection, auto-remediation, and incident-to-DI governance artifacts complete |
-| 5 | Dark Factory | Full automation — decomposed into sub-phases 5a-5e with achievability assessment | Phase 5a-5e defined |
+| 5 | Dark Factory | Full automation — decomposed into sub-phases 5a-5e with achievability assessment | 5a, 5b, 5e complete; 5c, 5d blocked by platform |
 
 See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and open enhancements.
 
@@ -92,6 +92,7 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
       default.yaml             Standard risk tolerance
       fin_pii_high.yaml        Financial/PII — SOC2, PCI-DSS, HIPAA, GDPR
       infrastructure_critical.yaml  Infrastructure-as-code, deployment configs
+      reduced_touchpoint.yaml  Near-full autonomy — Phase 5e
       threshold-tuning.yaml    Auto-tuning rules for confidence threshold adjustment
       drift-policy.yaml        Drift detection thresholds and triggers
       drift-remediation.yaml   Drift remediation action rules
@@ -159,7 +160,7 @@ Panels emit structured JSON (Layer 3: Execution Governance)
         |
         v
 Policy engine evaluates (deterministic, no prose)
-  - Reads active policy profile (default, fin_pii_high, etc.)
+  - Reads active policy profile (default, fin_pii_high, infrastructure_critical, reduced_touchpoint)
   - Produces decision: auto_merge | auto_remediate | human_review_required | block
         |
         v
@@ -198,6 +199,7 @@ Policy profiles provide pre-configured compliance postures:
 - **`fin_pii_high`** — SOC2, PCI-DSS, HIPAA, GDPR. Auto-merge disabled. 3-approver override.
 - **`infrastructure_critical`** — Production stability. Mandatory architecture and SRE review.
 - **`default`** — Standard internal applications. Balanced automation and oversight.
+- **`reduced_touchpoint`** — Near-full autonomy. Human approval only for policy overrides, dismissed security-critical findings, or critical risk. Phase 5e.
 
 ## Context Management
 

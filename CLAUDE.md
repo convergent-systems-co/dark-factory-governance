@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is the **Dark Factory Governance Platform** — an AI governance framework for autonomous software delivery, distributed as a git submodule to consuming repositories. It contains no application source code; it is entirely configuration, policy, schemas, and documentation.
 
-Current maturity: **Phase 4b (Autonomous Remediation)** — all governance artifacts implemented. Phase 5 sub-phases (5a-5e) are defined with achievability assessments; select 5b artifacts (retrospective aggregation, threshold auto-tuning) are implemented.
+Current maturity: **Phase 4b (Autonomous Remediation)** — all governance artifacts implemented. Phase 5 sub-phases (5a-5e) are defined with achievability assessments; 5a (self-proving systems), 5b (self-evolution), and 5e (spec-driven interface) governance artifacts are complete.
 
 ## Repository Commands
 
@@ -56,10 +56,11 @@ Every code change flows through these layers in order:
 
 ### Policy Engine
 
-Three deterministic YAML profiles in `governance/policy/`:
+Four deterministic YAML profiles in `governance/policy/`:
 - `default.yaml` — Standard risk tolerance, auto-merge enabled with conditions
 - `fin_pii_high.yaml` — SOC2/PCI-DSS/HIPAA/GDPR, auto-merge disabled, 3-approver override
 - `infrastructure_critical.yaml` — Mandatory architecture and SRE review
+- `reduced_touchpoint.yaml` — Near-full autonomy, human approval only for policy overrides and dismissed security-critical findings (Phase 5e)
 
 All profiles require security-review, threat-modeling, cost-analysis, documentation-review, and data-governance-review panels on every PR. Policies are evaluated programmatically. AI models never interpret policy rules.
 
