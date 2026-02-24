@@ -51,17 +51,19 @@ repository:
   allow_merge_commit: true
   allow_rebase_merge: true
 
-  # CODEOWNERS template (generated if file is empty or missing)
+  # CODEOWNERS template (merged into existing CODEOWNERS during init)
+  # @github-actions[bot] is included so the governance workflow's approval
+  # can satisfy code owner review requirements (with appropriate ruleset config)
   codeowners:
     enabled: true
-    default_owner: "@SET-Apps/approvers"
+    default_owner: "@SET-Apps/approvers @github-actions[bot]"
     rules:
       - pattern: "/.github/workflows/"
-        owners: ["@SET-Apps/devops_engineers"]
+        owners: ["@SET-Apps/devops_engineers", "@github-actions[bot]"]
       - pattern: "/infra/"
-        owners: ["@SET-Apps/devops_engineers"]
+        owners: ["@SET-Apps/devops_engineers", "@github-actions[bot]"]
       - pattern: "/.ai"
-        owners: ["@SET-Apps/approvers"]
+        owners: ["@SET-Apps/approvers", "@github-actions[bot]"]
 
   # Branch protection expectations (validated, not applied)
   branch_protection:
