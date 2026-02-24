@@ -2,6 +2,7 @@
 context.md
 *.local.md
 *.local.json
+# Legacy: project.yaml now lives at project root; ignored here for backward compat
 project.yaml
 
 # OS files

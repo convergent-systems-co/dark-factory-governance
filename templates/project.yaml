@@ -1,5 +1,5 @@
 # Project AI Configuration
-# Copy this to .ai/project.yaml in your project root and customize.
+# Copy to project.yaml in your project root and customize.
 
 # Project metadata
 name: "my-project"

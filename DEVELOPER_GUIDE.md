@@ -28,10 +28,10 @@ git commit -m "Add .ai governance submodule"
 ### 2. Configure for your stack
 
 ```bash
-cp .ai/templates/python/project.yaml .ai/project.yaml   # or go/, node/, react/, csharp/
+cp .ai/templates/python/project.yaml project.yaml   # or go/, node/, react/, csharp/
 ```
 
-Edit `.ai/project.yaml` to review and customize your project configuration. Policy profiles are defined under `governance/policy/`; choose the one that matches your use case (see the table below for guidance).
+Edit `project.yaml` to review and customize your project configuration. Policy profiles are defined under `governance/policy/`; choose the one that matches your use case (see the table below for guidance).
 
 ### 3. Update when the submodule changes
 

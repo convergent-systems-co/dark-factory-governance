@@ -56,14 +56,14 @@ Ask the user which language template to use for `project.yaml`. Available templa
 
 If the user selects a template (not "skip"):
 ```bash
-cp .ai/templates/{selection}/project.yaml .ai/project.yaml
+cp .ai/templates/{selection}/project.yaml project.yaml
 ```
 For "generic":
 ```bash
-cp .ai/templates/project.yaml .ai/project.yaml
+cp .ai/templates/project.yaml project.yaml
 ```
 
-Then tell the user: "I've copied the template to `.ai/project.yaml`. You can customize it later — it controls which personas, panels, and conventions are active for your project."
+Then tell the user: "I've copied the template to `project.yaml` (project root). You can customize it later — it controls which personas, panels, and conventions are active for your project."
 
 ---
 
@@ -110,7 +110,7 @@ If the user chose a template in Step 1 and `project.yaml` exists, update it with
 
 ```bash
 # Example: Update auto_merge in project.yaml
-# The agent should edit the repository section of .ai/project.yaml
+# The agent should edit the repository section of project.yaml (project root)
 # to reflect the user's preferences, adding a repository section if missing:
 #
 # repository:
@@ -227,7 +227,7 @@ echo "Symlinks:"
 ls -la CLAUDE.md .cursorrules .github/copilot-instructions.md 2>/dev/null
 echo ""
 echo "Project config:"
-test -f .ai/project.yaml && echo "project.yaml: OK" || echo "project.yaml: not configured"
+test -f project.yaml && echo "project.yaml: OK" || echo "project.yaml: not configured"
 echo ""
 echo "CODEOWNERS:"
 test -s CODEOWNERS && echo "CODEOWNERS: OK" || echo "CODEOWNERS: not configured"
@@ -249,7 +249,7 @@ Setup complete. Here's what was configured:
 - [x/skip] Python dependencies installed
 
 Next steps:
-1. Customize .ai/project.yaml for your project's personas and conventions
+1. Customize project.yaml for your project's personas and conventions
 2. Review CODEOWNERS and adjust ownership rules
 3. Commit the new files: git add . && git commit -m "chore: bootstrap .ai governance submodule"
 ```

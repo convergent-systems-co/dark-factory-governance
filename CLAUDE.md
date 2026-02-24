@@ -82,7 +82,8 @@ All panel output must include JSON between `<!-- STRUCTURED_EMISSION_START -->` 
 - **Commit style**: Conventional commits (`feat:`, `fix:`, `refactor:`, `docs:`)
 - **Branch naming**: `itsfwcp/{issue-type}/{issue-number}/{branch-name}` (e.g., `itsfwcp/feat/42/add-auth`)
 - **Plans before code**: Every implementation requires a plan in `.plans/` using `governance/prompts/templates/plan-template.md`
-- **Governance pipeline is mandatory**: The governance pipeline applies in all modes (local and remote). Required panels must execute, plan-first is non-negotiable, and the CI workflow blocks merges when panel emissions are missing. Projects can opt out via `governance.skip_panel_validation: true` in `project.yaml`.
+- **Governance pipeline is mandatory**: The governance pipeline applies in all modes (local and remote). Required panels must execute, plan-first is non-negotiable, and the CI workflow blocks merges when panel emissions are missing. Projects can opt out via `governance.skip_panel_validation: true` in `project.yaml` (project root).
+- **`jm-compliance.yml` is enterprise-locked**: Never modify, move, or override `jm-compliance.yml`. It is managed centrally.
 - **Backward compatibility**: All changes must be additive. Breaking changes require migration plans and version bumps.
 - **Enforcement artifacts use semantic versioning** in their `profile_version` or `version` field
 - **Cognitive artifacts version by git SHA** — they evolve with the submodule
@@ -112,4 +113,4 @@ This ensures Claude Code, GitHub Copilot, and Cursor all receive the same base i
 - `.plans/` — Implementation plans for issues and features (accumulated)
 - `.panels/` — Panel review reports (latest only per panel type, overwrite strategy)
 
-Directories are configured in `config.yaml` under `project_directories` and can be extended in `project.yaml`.
+Directories are configured in `config.yaml` under `project_directories` and can be extended in `project.yaml` (project root).

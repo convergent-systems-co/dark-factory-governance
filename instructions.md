@@ -9,7 +9,11 @@
 - Follow project conventions (see `project.yaml`)
 - Ask clarifying questions when requirements are ambiguous
 - Prefer iterative changes over large rewrites
-- Check `.ai/project.yaml` for project configuration
+- Check `project.yaml` (project root) for project configuration
+
+## Enterprise-Locked Files
+
+- `jm-compliance.yml` is enterprise-locked and must **never** be modified, moved, or overridden. It is managed centrally and any local changes will be rejected.
 
 ## Context Capacity Protocol
 

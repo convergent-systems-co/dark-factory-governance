@@ -1,5 +1,5 @@
 # Go Project Configuration
-# Copy to .ai/project.yaml and customize.
+# Copy to project.yaml in your project root and customize.
 
 name: "my-go-project"
 language: "go"

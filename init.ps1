@@ -239,9 +239,11 @@ def deep_merge(base, override):
     return result
 
 script_dir = os.environ.get('AI_SCRIPT_DIR')
+project_root = os.environ.get('AI_PROJECT_ROOT')
 files = [
     os.path.join(script_dir, 'config.yaml'),
-    os.path.join(script_dir, 'project.yaml')
+    os.path.join(script_dir, 'project.yaml'),
+    os.path.join(project_root, 'project.yaml')
 ]
 
 merged = {}
@@ -256,6 +258,7 @@ print(json.dumps(merged))
 
     try {
         $env:AI_SCRIPT_DIR = $ScriptDir
+        $env:AI_PROJECT_ROOT = $ProjectRoot
         $configJson = & python -c $configScript
         if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($configJson)) {
             $script:AiMergedConfigCache = $config
@@ -272,6 +275,7 @@ print(json.dumps(merged))
     }
     finally {
         Remove-Item Env:AI_SCRIPT_DIR -ErrorAction SilentlyContinue
+        Remove-Item Env:AI_PROJECT_ROOT -ErrorAction SilentlyContinue
     }
 
     return $script:AiMergedConfigCache
@@ -599,6 +603,18 @@ else {
     }
 }
 
+# --- Migration warning: project.yaml location ---
+
+$legacyProjectYaml = Join-Path $ScriptDir "project.yaml"
+$rootProjectYaml = Join-Path $ProjectRoot "project.yaml"
+if ((Test-Path $legacyProjectYaml) -and -not (Test-Path $rootProjectYaml)) {
+    Write-Host ""
+    Write-Host "  [MIGRATE] project.yaml found at .ai\project.yaml (legacy location)" -ForegroundColor Yellow
+    Write-Host "            The preferred location is now the project root: .\project.yaml" -ForegroundColor Yellow
+    Write-Host "            Move it with: Move-Item .ai\project.yaml project.yaml" -ForegroundColor Yellow
+    Write-Host "            Both locations are read; root takes precedence." -ForegroundColor Yellow
+}
+
 # --- Done ---
 
 Write-Host ""
@@ -608,7 +624,7 @@ Write-Host "Next steps:" -ForegroundColor Cyan
 if (-not $InstallDeps -and -not (Test-Path $VenvDir)) {
     Write-Host "  0. Install dependencies:     powershell -File .ai\init.ps1 -InstallDeps"
 }
-Write-Host "  1. Copy a language template:  Copy-Item .ai\templates\python\project.yaml .ai\project.yaml"
+Write-Host "  1. Copy a language template:  Copy-Item .ai\templates\python\project.yaml project.yaml"
 Write-Host "  2. Customize personas and conventions in project.yaml"
 Write-Host "  3. Set governance profile:    governance.policy_profile: default"
 

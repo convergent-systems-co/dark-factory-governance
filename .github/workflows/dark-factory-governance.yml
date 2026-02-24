@@ -218,13 +218,20 @@ jobs:
           fi
 
           # Check if project.yaml opts out of panel validation
+          # Prefer project root project.yaml, fall back to ${GOV_ROOT}/project.yaml
           SKIP_VALIDATION="false"
-          if [ -f "${GOV_ROOT}/project.yaml" ]; then
+          PROJECT_YAML=""
+          if [ -f "project.yaml" ]; then
+            PROJECT_YAML="project.yaml"
+          elif [ -f "${GOV_ROOT}/project.yaml" ]; then
+            PROJECT_YAML="${GOV_ROOT}/project.yaml"
+          fi
+          if [ -n "$PROJECT_YAML" ]; then
             if command -v python3 &>/dev/null; then
               SKIP_VALIDATION=$(python3 -c "
           import yaml, os
           try:
-              with open('${GOV_ROOT}/project.yaml') as f:
+              with open('${PROJECT_YAML}') as f:
                   config = yaml.safe_load(f) or {}
               print(str(config.get('governance', {}).get('skip_panel_validation', False)).lower())
           except Exception:
@@ -266,9 +273,9 @@ jobs:
           1. **Run \`bash .ai/init.sh\`** to ensure the governance workflow and panel infrastructure are set up
           2. **Verify panel emissions exist** in \`governance/emissions/\` — each required panel must have a corresponding JSON file
           3. **If panels are not yet configured**, see \`.ai/governance/docs/repository-configuration.md\` for setup instructions
-          4. **If this repository intentionally opts out**, set \`governance.skip_panel_validation: true\` in \`.ai/project.yaml\`
+          4. **If this repository intentionally opts out**, set \`governance.skip_panel_validation: true\` in \`project.yaml\` (project root)
 
-          > **This check blocks the PR.** A human reviewer cannot override this without either providing panel emissions or opting out via project.yaml."
+          > **This check blocks the PR.** A human reviewer cannot override this without either providing panel emissions or opting out via \`project.yaml\`."
           exit 1
 
       - name: Warn — panel validation opted out

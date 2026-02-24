@@ -299,7 +299,7 @@ git commit -m "Pin .ai submodule to v2.0.0"
 
 ### Project-Specific Configuration
 
-1. Copy a language template: `cp .ai/templates/python/project.yaml .ai/project.yaml`
+1. Copy a language template: `cp .ai/templates/python/project.yaml project.yaml`
 2. Customize personas, panels, and conventions
 3. Set the governance policy profile:
    ```yaml

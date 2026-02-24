@@ -240,7 +240,7 @@ def deep_merge(base, override):
     return result
 
 config = {}
-for f in ['$SCRIPT_DIR/config.yaml', '$SCRIPT_DIR/project.yaml']:
+for f in ['$SCRIPT_DIR/config.yaml', '$SCRIPT_DIR/project.yaml', '$PROJECT_ROOT/project.yaml']:
     if os.path.exists(f):
         with open(f) as fh:
             data = yaml.safe_load(fh) or {}
@@ -337,7 +337,7 @@ print('OPTIONAL=' + ' '.join(opt))
     CONFIG_DIRS=$("$PYTHON_CMD" -c "
 import yaml, os
 config = {}
-for f in ['$SCRIPT_DIR/config.yaml', '$SCRIPT_DIR/project.yaml']:
+for f in ['$SCRIPT_DIR/config.yaml', '$SCRIPT_DIR/project.yaml', '$PROJECT_ROOT/project.yaml']:
     if os.path.exists(f):
         with open(f) as fh:
             data = yaml.safe_load(fh) or {}
@@ -368,6 +368,16 @@ print(' '.join(d.get('path', '') for d in dirs if d.get('path')))
   done
 else
   echo "  Skipping template/workflow/directory setup (not a submodule context)"
+fi
+
+# --- Migration warning: project.yaml location ---
+
+if [ -f "$SCRIPT_DIR/project.yaml" ] && [ ! -f "$PROJECT_ROOT/project.yaml" ]; then
+  echo ""
+  echo "  [MIGRATE] project.yaml found at .ai/project.yaml (legacy location)"
+  echo "            The preferred location is now the project root: ./project.yaml"
+  echo "            Move it with: mv .ai/project.yaml project.yaml"
+  echo "            Both locations are read; root takes precedence."
 fi
 
 echo ""
@@ -436,6 +446,7 @@ parse_yaml_field() {
   local default_value="$2"
   local config_file="${3:-$SCRIPT_DIR/config.yaml}"
   local project_file="$SCRIPT_DIR/project.yaml"
+  local root_project_file="$PROJECT_ROOT/project.yaml"
 
   # Build a Python snippet that reads config.yaml, merges project.yaml overrides,
   # and extracts the nested field.
@@ -471,7 +482,7 @@ def deep_merge(base, override):
     return result
 
 config = {}
-for f in ['$config_file', '$project_file']:
+for f in ['$config_file', '$project_file', '$root_project_file']:
     if os.path.exists(f):
         with open(f) as fh:
             data = yaml.safe_load(fh) or {}
@@ -511,7 +522,7 @@ def deep_merge(base, override):
     return result
 
 config = {}
-for f in ['$SCRIPT_DIR/config.yaml', '$SCRIPT_DIR/project.yaml']:
+for f in ['$SCRIPT_DIR/config.yaml', '$SCRIPT_DIR/project.yaml', '$PROJECT_ROOT/project.yaml']:
     if os.path.exists(f):
         with open(f) as fh:
             data = yaml.safe_load(fh) or {}
@@ -677,7 +688,7 @@ def deep_merge(base, override):
     return result
 
 config = {}
-for f in ['$SCRIPT_DIR/config.yaml', '$SCRIPT_DIR/project.yaml']:
+for f in ['$SCRIPT_DIR/config.yaml', '$SCRIPT_DIR/project.yaml', '$PROJECT_ROOT/project.yaml']:
     if os.path.exists(f):
         with open(f) as fh:
             data = yaml.safe_load(fh) or {}
@@ -740,7 +751,7 @@ echo "Next steps:"
 if [ "$INSTALL_DEPS" = "false" ] && [ ! -d "$VENV_DIR" ]; then
   echo "  0. Install dependencies:     bash .ai/init.sh --install-deps"
 fi
-echo "  1. Copy a language template:  cp .ai/templates/python/project.yaml .ai/project.yaml"
+echo "  1. Copy a language template:  cp .ai/templates/python/project.yaml project.yaml"
 echo "  2. Customize personas and conventions in project.yaml"
 echo "  3. Set governance profile:    governance.policy_profile: default"
 if [ -d "$VENV_DIR" ]; then
