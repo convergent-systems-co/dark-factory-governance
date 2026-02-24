@@ -162,7 +162,7 @@ The Phase 5 roadmap is informed by industry maturity models for autonomous softw
 ### 5d — Multi-Agent Coordination (Blocked)
 
 - [x] Conflict detection schema — JSON Schema for detecting when multiple agents modify overlapping files or governance state (PR #171)
-- [ ] Merge sequencing policy — Policy rules for ordering concurrent agent PRs to avoid conflicts and maintain governance consistency
+- [x] Merge sequencing policy — Policy rules for ordering concurrent agent PRs to avoid conflicts and maintain governance consistency (PR #TBD)
 - [ ] Parallel agent session protocol — Specification for spawning, coordinating, and reconciling multiple concurrent agent sessions
 
 > **Blocked by:** Current AI coding tools (Claude Code, GitHub Copilot) operate as single-session agents. Multi-agent coordination requires a runtime orchestrator capable of spawning parallel sessions, which does not exist in current tooling. Governance schemas can be defined now, but execution is blocked.

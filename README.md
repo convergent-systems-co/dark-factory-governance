@@ -104,6 +104,7 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
       severity-reclassification.yaml  Runtime severity reclassification rules
       component-registry.yaml  Component ownership registry
       signal-panel-mapping.yaml  Signal-to-panel routing rules
+      merge-sequencing.yaml    Multi-agent PR ordering rules — Phase 5d
       signal-adapters/         Polling adapter configurations for runtime signals
 
     emissions/                 Panel emission outputs (structured JSON)

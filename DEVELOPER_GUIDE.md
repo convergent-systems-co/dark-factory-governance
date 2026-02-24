@@ -175,8 +175,8 @@ AI context windows are finite. The framework uses tiered loading:
   templates/                 # Language-specific scaffolding (go, python, node, react, csharp)
   governance/
     personas/                # 60 persona definitions (including 2 agentic) + 16 panels
-    policy/                  # 4 policy profiles + supporting rules (14 YAML files + signal-adapters/)
-    schemas/                 # 14 JSON Schemas for emissions, manifests, metrics, and validation
+    policy/                  # 4 policy profiles + supporting rules (15 YAML files + signal-adapters/)
+    schemas/                 # 15 JSON Schemas for emissions, manifests, metrics, and validation
     prompts/                 # Reusable prompts and workflows
     docs/                    # Architecture and design documents
     emissions/               # Panel output (structured JSON)
