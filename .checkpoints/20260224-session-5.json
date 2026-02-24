@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-02-24T17:30:00Z",
+  "session": 5,
+  "branch": "main",
+  "git_state": "clean",
+  "issues_completed": [
+    {
+      "issue": 200,
+      "pr": 201,
+      "title": "Developer Guide — common usage patterns and recovery procedures"
+    },
+    {
+      "issue": 203,
+      "pr": 204,
+      "title": "Simplify Developer Guide — extract detail to linked pages"
+    },
+    {
+      "issue": 196,
+      "pr": 206,
+      "title": "Add structured emission examples to all 19 panel definitions"
+    }
+  ],
+  "housekeeping_prs": [202, 205],
+  "remaining_open_issues": [
+    {"issue": 88, "title": "Renaming", "labels": ["refine"]},
+    {"issue": 42, "title": "Agentic Monitor", "labels": ["enhancement", "refine"]},
+    {"issue": 41, "title": "Agentic Speedup", "labels": ["enhancement", "refine"]}
+  ],
+  "remaining_goals_md_items": [
+    "Cross-session state persistence (Phase 5c)",
+    "GOALS.md update for #196 (needs housekeeping PR)"
+  ],
+  "session_budget_used": "3/3"
+}
