@@ -161,7 +161,7 @@ The governance platform operates through three distinct artifact types:
 
 ### 2.2 Personas and Panels
 
-**Personas** are specialized reasoning roles defined in `governance/personas/`. There are 62 personas across 13 categories (security, architecture, testing, data, compliance, and more), including 4 agentic personas (DevOps Engineer, Code Manager, Coder, Tester). Each defines:
+**Personas** are specialized reasoning roles defined in `governance/personas/`. There are 58 core role definitions across 13 categories (security, architecture, testing, data, compliance, and more), plus 5 agentic personas (DevOps Engineer, Code Manager, Coder, IaC Engineer, Tester) for a total of 63. Each defines:
 - **Role** — What the persona evaluates
 - **Evaluate For** — Specific concerns and criteria
 - **Output Format** — Structured findings with severity levels
@@ -303,7 +303,7 @@ Labels drive agentic prioritization:
 
 ### 3.4 Agentic Issue Handling
 
-When the autonomous pipeline processes issues, four personas chain through five phases:
+When the autonomous pipeline processes issues, five personas chain through five phases:
 
 1. **Phase 1 — Pre-flight & Triage** (DevOps Engineer): Scans issues, filters (excludes blocked/wontfix/duplicate, existing branches, recent human edits), prioritizes by label (P0 → P4), routes to Code Manager
 2. **Phase 2 — Intent & Planning** (Code Manager): Validates intent clarity, ensures `project.yaml` reflects repo state, selects context-appropriate review panels, creates branch (`itsfwcp/{type}/{issue-number}/{description}`) and plan in `.plans/`

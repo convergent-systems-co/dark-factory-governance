@@ -43,13 +43,13 @@ git add .ai && git commit -m "Update .ai submodule"
 
 ## Starting the Agentic Loop
 
-Run `/startup` in your AI tool (Claude Code, Copilot, Cursor). This activates the 4-agent pipeline:
+Run `/startup` in your AI tool (Claude Code, Copilot, Cursor). This activates the 5-agent pipeline:
 
 ```
 /startup
 ```
 
-The pipeline chains four agents through five phases, looping until the session cap is hit:
+The pipeline chains five agents through five phases, looping until the session cap is hit:
 
 ```mermaid
 flowchart TD
@@ -57,7 +57,9 @@ flowchart TD
     PF -->|Submodule check, repo config,<br/>resolve open PRs| SCAN[Scan & prioritize issues]
     SCAN -->|ASSIGN highest priority| INTENT[Phase 2: Intent & Planning<br/>Code Manager]
     INTENT -->|Validate intent, ensure project.yaml,<br/>select panels, create plan| IMPL[Phase 3: Implementation<br/>Coder]
+    INTENT -->|Infrastructure changes only| IAC[Phase 3: Infrastructure<br/>IaC Engineer]
     IMPL -->|Code, tests, structured RESULT| EVAL[Phase 4: Evaluation & Review<br/>Tester + Code Manager]
+    IAC -->|Infrastructure RESULT| EVAL
 
     EVAL --> TEST{Tester evaluates}
     TEST -->|FEEDBACK| IMPL
@@ -83,7 +85,7 @@ flowchart TD
 
 1. **DevOps Engineer** checks submodule freshness, verifies repo configuration, resolves any open PRs, then scans and prioritizes issues
 2. **Code Manager** validates the issue's intent, auto-manages `project.yaml`, selects review panels based on codebase type, and creates a plan
-3. **Coder** implements the plan, writes tests, and emits a structured RESULT
+3. **Coder** implements the plan, writes tests, and emits a structured RESULT. **IaC Engineer** handles infrastructure changes (conditional — infrastructure changes only)
 4. **Tester** independently evaluates the work — sends FEEDBACK (up to 3 cycles) or APPROVE
 5. **Code Manager** runs security review, context-specific panels, pushes the PR, monitors CI/Copilot
 6. After merge, loops back to Phase 1 for the next batch — checkpoints only on hard-stop (max 5 per session)
@@ -198,7 +200,7 @@ If the agent repeats itself, forgets decisions, or re-reads files it already rea
 - [README.md](../../README.md) — Full architecture, governance layers, file structure, and [Documentation Index](../../README.md#documentation-index)
 - [GOALS.md](../../GOALS.md) — Phase status and completed work
 - [governance/prompts/reviews/](../../governance/prompts/reviews/) — 19 consolidated review prompts (preferred, replaces individual persona/panel files)
-- [governance/personas/index.md](../../governance/personas/index.md) — All 62 personas (including 4 agentic: DevOps Engineer, Code Manager, Coder, Tester) and 19 panels _(deprecated — see consolidated review prompts)_
+- [governance/personas/index.md](../../governance/personas/index.md) — All 63 personas (including 5 agentic: DevOps Engineer, Code Manager, Coder, IaC Engineer, Tester) and 19 panels _(deprecated — see consolidated review prompts)_
 - [docs/architecture/governance-model.md](../architecture/governance-model.md) — Governance layers, policy profiles, and how changes flow through the system
 - [docs/configuration/repository-setup.md](../configuration/repository-setup.md) — Repository settings, CODEOWNERS, per-project overrides
 - [docs/architecture/context-management.md](../architecture/context-management.md) — Context tiers, capacity detection, shutdown protocol

@@ -10,7 +10,7 @@ Current maturity: **Phase 4b (Autonomous Remediation)** — all governance artif
 
 ## Repository Commands
 
-There is no build system, test runner, or linter. This is a configuration-only repo.
+There is no build system or linter. The policy engine has a pytest test suite in `tests/`.
 
 **Bootstrap (for consuming repos):**
 ```bash
@@ -52,7 +52,7 @@ Every code change flows through these layers in order:
 
 - **Consolidated review prompts** (`governance/prompts/reviews/`) — 19 self-contained review prompts implementing Anthropic's Parallelization (Voting) pattern. Each prompt inlines its participant perspectives with full evaluation criteria, scoring, and output schema. This is the primary location for review definitions.
 - **Shared perspectives** (`governance/prompts/shared-perspectives.md`) — Canonical definitions for the 19 perspectives appearing in 2+ review prompts. Serves as the authoring-time DRY mechanism; compiled prompts have full locality at runtime.
-- **Personas** (`governance/personas/`) — _Deprecated._ 58 role definitions across 13 categories. Superseded by consolidated review prompts. Will be removed in a future release.
+- **Personas** (`governance/personas/`) — _Deprecated._ 58 core role definitions across 13 categories. Superseded by consolidated review prompts. Will be removed in a future release.
 - **Panels** (`governance/personas/panels/`) — _Deprecated._ 19 multi-persona review workflows. Superseded by consolidated review prompts. Will be removed in a future release.
 - **Agentic personas** (`governance/personas/agentic/`) — Five-agent prompt-chained architecture:
   - **DevOps Engineer** — Session entry point: pre-flight, triage, routing (Anthropic's Routing pattern)
@@ -105,14 +105,14 @@ All panel output must include JSON between `<!-- STRUCTURED_EMISSION_START -->` 
 
 ## Agentic Startup Sequence
 
-When operating autonomously (via `governance/prompts/startup.md`), the pipeline chains four personas through five phases with **parallel Coder dispatch**:
+When operating autonomously (via `governance/prompts/startup.md`), the pipeline chains five personas through five phases with **parallel Coder dispatch**:
 
 | Phase | Persona | What Happens |
 |-------|---------|-------------|
 | 1 | DevOps Engineer | Pre-flight (submodule, repo config — respects `project.yaml` pin), resolve open PRs, triage and route issues |
 | 2 | Code Manager | Validate intent, select review panels, and create plans for **all issues** (up to N = `governance.parallel_coders`) |
-| 3 | Code Manager | **Parallel dispatch**: spawn up to N Coder agents via `Task` tool with `isolation: "worktree"` (N = `governance.parallel_coders`, default 5) |
-| 4 | Code Manager + Tester | Collect results as each Coder finishes → Tester evaluates → Security review → PR monitoring |
+| 3 | Code Manager | **Parallel dispatch**: spawn up to N Coder agents via `Task` tool with `isolation: "worktree"` (N = `governance.parallel_coders`, default 5). IaC Engineer dispatched for infrastructure changes (conditional — infrastructure changes only) |
+| 4 | Code Manager + Tester | Collect results as each Coder/IaC Engineer finishes → Tester evaluates → Security review → PR monitoring |
 | 5 | Code Manager + DevOps Engineer | Merge all PRs, retrospective, loop or shutdown |
 
 Max N issues per session where N = `governance.parallel_coders` (default 5; parallel execution is context-efficient — Coder subagents use their own context windows); **hard stop at 80% context capacity** — executes shutdown protocol (clean git, write checkpoint, request `/clear`)

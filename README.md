@@ -11,7 +11,7 @@ The Dark Factory Governance Platform exists to:
 1. **Automate software delivery governance** — Replace manual code review gates with structured, auditable AI-driven review panels that produce deterministic merge decisions.
 2. **Enforce policy without human bottlenecks** — Deterministic policy profiles (default, financial/PII, infrastructure-critical) evaluate every change programmatically. AI models never interpret policy rules.
 3. **Maintain compliance at scale** — Embed SOC2, PCI-DSS, HIPAA, and GDPR compliance into the review pipeline so regulated changes are caught at intake, not after merge.
-4. **Enable autonomous agentic operation** — A 4-agent prompt-chained pipeline (DevOps Engineer → Code Manager → Coder → Tester) orchestrates the full lifecycle (session management, issue triage, planning, implementation, evaluation, review, merge) with human oversight only where policy requires it.
+4. **Enable autonomous agentic operation** — A 5-agent prompt-chained pipeline (DevOps Engineer → Code Manager → Coder → IaC Engineer → Tester) orchestrates the full lifecycle (session management, issue triage, planning, implementation, evaluation, review, merge) with human oversight only where policy requires it.
 5. **Distribute governance as infrastructure** — Ship as a git submodule so any repository gets personas, panels, policies, and CI workflows by adding a single dependency.
 6. **Reach full Dark Factory** — Progress through defined maturity phases toward fully autonomous software delivery with runtime feedback loops and self-evolving governance.
 
@@ -61,7 +61,7 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
       leadership/              Technical leadership, product, mentoring personas
       specialist/              Legacy, incidents, migrations personas
       governance/              Governance Auditor, Policy Evaluator
-      agentic/                 DevOps Engineer, Code Manager, Coder, Tester
+      agentic/                 DevOps Engineer, Code Manager, Coder, IaC Engineer, Tester
       panels/                  Multi-persona review panels — DEPRECATED, see prompts/reviews/
       index.md                 Persona and panel reference grid
 
@@ -127,7 +127,11 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
 
     emissions/                 Panel emission outputs (structured JSON)
     manifests/                 Run manifests (audit trail, append-only)
+    bin/
+      policy-engine.py         Deterministic evaluation engine (Phase 4b)
+      requirements.txt         Python dependencies for policy engine
 
+  tests/                       Policy engine test suite (pytest)
   docs/                        Documentation (architecture, configuration, operations, research)
     README.md                    Navigation hub and documentation index
     architecture/                Architecture and design documents
@@ -165,11 +169,6 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
     tutorials/                   End-to-end guides
       end-to-end-walkthrough.md  Complete walkthrough of the governance pipeline
 
-  governance/
-    bin/
-      policy-engine.py         Deterministic evaluation engine (Phase 4b)
-      requirements.txt         Python dependencies for policy engine
-
   .plans/                      Implementation plans (archived to releases after merge)
   .checkpoints/                Context capacity checkpoints (session state)
   .github/
@@ -188,15 +187,16 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
 
 ## How It Works
 
-### Agentic Pipeline (4-Agent Prompt Chain)
+### Agentic Pipeline (5-Agent Prompt Chain)
 
-The platform uses a 4-agent prompt-chained pipeline implementing Anthropic's orchestration patterns:
+The platform uses a 5-agent prompt-chained pipeline implementing Anthropic's orchestration patterns:
 
 | Agent | Pattern | Role |
 |-------|---------|------|
 | **DevOps Engineer** | Routing | Session entry, pre-flight checks, issue triage, routing |
 | **Code Manager** | Orchestrator-Workers | Intent validation, panel selection, review coordination, merge |
 | **Coder** | Worker | Implementation, test coverage, structured output |
+| **IaC Engineer** | Worker | Infrastructure execution: Bicep/Terraform, security-first defaults |
 | **Tester** | Evaluator-Optimizer | Independent evaluation, test verification, structured feedback |
 
 ```mermaid
@@ -204,7 +204,9 @@ flowchart LR
     A[Issue] --> B[DevOps Engineer<br/>Routing]
     B --> C[Code Manager<br/>Orchestrator]
     C --> D[Coder<br/>Worker]
+    C -->|Infrastructure changes only| IAC[IaC Engineer<br/>Worker]
     D --> E[Tester<br/>Evaluator]
+    IAC --> E
     E -->|Feedback| D
     E -->|Approve| F[Security Review]
     F --> G[Context Reviews]
@@ -374,10 +376,11 @@ Quick navigation to all documentation in this repository.
 |----------|-------------|
 | [Consolidated Review Prompts](governance/prompts/reviews/) | 19 self-contained review prompts (preferred) |
 | [Shared Perspectives](governance/prompts/shared-perspectives.md) | Canonical definitions for cross-cutting perspectives |
-| [Persona/Panel Index](governance/personas/index.md) | Legacy reference grid — 62 personas and 19 panels _(deprecated)_ |
+| [Persona/Panel Index](governance/personas/index.md) | Legacy reference grid — 63 personas (including 5 agentic: DevOps Engineer, Code Manager, Coder, IaC Engineer, Tester) and 19 panels _(deprecated)_ |
 | [DevOps Engineer](governance/personas/agentic/devops-engineer.md) | Routing agent — session lifecycle, pre-flight, issue triage |
 | [Code Manager](governance/personas/agentic/code-manager.md) | Orchestrator agent — intent validation, panel selection, review coordination, merge |
 | [Coder](governance/personas/agentic/coder.md) | Worker agent — implementation, tests, structured output |
+| [IaC Engineer](governance/personas/agentic/iac-engineer.md) | Worker agent — infrastructure execution, Bicep/Terraform, security-first defaults |
 | [Tester](governance/personas/agentic/tester.md) | Evaluator agent — independent evaluation, test coverage gate, feedback |
 
 ## Why a Git Submodule?
