@@ -61,8 +61,6 @@ def find_schema_dir():
         here.parent / "governance" / "schemas",
         here.parent / "schemas",
         here / "schemas",
-        Path("governance") / "schemas",
-        Path("schemas"),
     ]
     for c in candidates:
         if c.is_dir():

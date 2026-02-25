@@ -1,7 +1,9 @@
 """Unit tests for every evaluation function in the policy engine."""
 
 import io
+import os
 import pytest
+from pathlib import Path
 
 from conftest import policy_engine, make_emission, make_profile, all_required_emissions
 
@@ -1230,3 +1232,29 @@ class TestOptionalEmissionValidation:
         assert len(emissions) == 1
         assert emissions[0]["panel_name"] == "code-review"
         assert sorted(failed_panels) == ["bad-panel-a", "bad-panel-b"]
+
+
+# ===========================================================================
+# find_schema_dir / load_schema
+# ===========================================================================
+
+
+class TestFindSchemaDir:
+    def test_find_schema_dir_returns_path(self):
+        result = policy_engine.find_schema_dir()
+        assert result is not None
+        assert isinstance(result, Path)
+        assert result.is_dir()
+
+    def test_find_schema_dir_works_from_different_cwd(self, monkeypatch):
+        monkeypatch.chdir("/tmp")
+        result = policy_engine.find_schema_dir()
+        assert result is not None
+        assert isinstance(result, Path)
+        assert result.is_dir()
+
+    def test_load_schema_loads_panel_output_schema(self):
+        schema = policy_engine.load_schema("panel-output.schema.json")
+        assert isinstance(schema, dict)
+        assert "$schema" in schema or "type" in schema
+        assert "properties" in schema
