@@ -1,4 +1,4 @@
-# Policy Engine Framework
+# Governance Policy Profiles
 
 Policy profiles define deterministic rules for merge decisions. The policy engine evaluates structured panel emissions against these rules to produce one of four outcomes:
 
@@ -16,6 +16,7 @@ Policy profiles define deterministic rules for merge decisions. The policy engin
 | Default | `default.yaml` | Standard internal repositories with moderate risk tolerance. |
 | Financial PII High | `fin_pii_high.yaml` | Repositories handling financial data, PII, or regulated information (SOC2, PCI-DSS, HIPAA, GDPR). |
 | Infrastructure Critical | `infrastructure_critical.yaml` | Infrastructure-as-code, CI/CD, deployment configs, platform services. |
+| Reduced Touchpoint | `reduced_touchpoint.yaml` | Near-full autonomy, human approval only for policy overrides and dismissed security-critical findings (Phase 5e). |
 
 ## Profile Structure
 
@@ -49,3 +50,33 @@ governance:
 - **Auditable**: Every rule evaluation is logged in the run manifest.
 - **Composable**: Profiles can be extended by overriding specific sections.
 - **Backward Compatible**: New rules must not break existing profiles. Use additive changes only.
+
+## Version History
+
+| Profile | Current Version | Changes |
+|---------|----------------|---------|
+| default | 1.3.1 | Added parallel session support, reduced_touchpoint reference |
+| fin_pii_high | 1.0.1 | Initial SOC2/PCI-DSS/HIPAA/GDPR compliance profile |
+| infrastructure_critical | 1.0.1 | Initial mandatory architecture and SRE review profile |
+| reduced_touchpoint | 1.0.1 | Initial near-full autonomy profile |
+
+## Schema Versioning Policy
+
+Enforcement artifacts use **semantic versioning** (MAJOR.MINOR.PATCH):
+
+- **MAJOR**: Breaking schema changes requiring migration. Consuming repos must update their configurations.
+- **MINOR**: New optional fields, backward-compatible. No action required by consuming repos.
+- **PATCH**: Documentation fixes, clarifications. No functional impact.
+
+Cognitive artifacts (personas, prompts, workflows) version by **git SHA**. They evolve with the submodule and do not carry explicit version numbers.
+
+Manifests are **immutable audit artifacts** -- never edited after creation. Each manifest carries a unique `manifest_id` and references the versions of all artifacts used in the governance decision.
+
+## Breaking Change Process
+
+When introducing a breaking change to a policy profile or schema:
+
+1. Increment the **MAJOR** version in the `profile_version` field.
+2. Document the change in the Version History table above.
+3. Update consuming repo migration notes in `docs/governance/` or release notes.
+4. Ensure backward compatibility is maintained for at least one major version (deprecate, then remove).

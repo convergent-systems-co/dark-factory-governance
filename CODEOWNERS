@@ -19,3 +19,6 @@
 
 # Governance submodule changes
 /.ai @SET-Apps/approvers @github-actions[bot]
+
+# Manifest immutability — require approver review for any manifest changes
+/governance/manifests/ @SET-Apps/approvers

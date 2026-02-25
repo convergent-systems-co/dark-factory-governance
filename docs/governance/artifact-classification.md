@@ -72,6 +72,9 @@ All artifacts in the `.ai/` system fall into three categories. Each category has
 - Must be reproducible from inputs alone
 - Stored per-run, not edited after creation
 - Retained for compliance audit periods
+- Manifests are protected via CODEOWNERS. See [manifest-lifecycle.md](manifest-lifecycle.md) for enforcement details.
+
+For detailed retention policy, immutability enforcement mechanisms, and panel name validation notes, see [Manifest Lifecycle](manifest-lifecycle.md).
 
 **Directory Mapping:**
 
