@@ -14,12 +14,12 @@ Watch for these signals that context is filling up:
 
 1. **Token count warnings** — Claude Code shows token usage in verbose mode (right side). Copilot surfaces similar warnings. When total tokens exceed 80% of the model's context window, stop immediately.
 2. **System warnings** — The runtime emits warnings when approaching context limits. These are non-negotiable stop signals.
-3. **Conversation length heuristic** — If you have completed 5 issues, or made more than 80 tool calls, or the conversation exceeds ~150 exchanges, assume you are at or near 80% regardless of other signals.
+3. **Conversation length heuristic** — If you have completed N issues (where N = `governance.parallel_coders`), or made more than 80 tool calls, or the conversation exceeds ~150 exchanges, assume you are at or near 80% regardless of other signals.
 4. **Degraded recall** — If you find yourself re-reading files you already read, forgetting earlier decisions, or producing inconsistent output, context pressure is likely the cause.
 
 ### Hard Limits
 
-- **Maximum 5 issues per session** — parallel dispatch means Coder subagents use their own context, not the main session's
+- **Maximum N issues per session** (where N = `governance.parallel_coders` from `project.yaml`, default 5) — parallel dispatch means Coder subagents use their own context, not the main session's
 - **Mandatory checkpoint after completing all parallel work** — write a single checkpoint covering all issues before requesting `/clear`
 - **Two-tier capacity threshold**: at ~70%, do not dispatch new Coder agents (wait for in-flight ones to complete, merge, checkpoint, request `/clear`); at ~80%, stop immediately and execute the full shutdown protocol regardless of current step
 
@@ -79,7 +79,7 @@ flowchart TD
 |-------|---------|---------|---------------|
 | 1 | DevOps Engineer | Routing | Pre-flight, triage, issue routing |
 | 2 | Code Manager | Orchestrator | Validate intent and create plans for **all** selected issues |
-| 3 | Code Manager | Parallelization | Spawn up to 5 Coder agents via `Task` tool with `isolation: "worktree"` |
+| 3 | Code Manager | Parallelization | Spawn up to N Coder agents via `Task` tool with `isolation: "worktree"` (N = `governance.parallel_coders`, default 5) |
 | 4 | Code Manager + Tester | Evaluator-Optimizer | Collect results as each Coder finishes; evaluate, push PR, monitor CI |
 | 5 | Code Manager + DevOps Engineer | — | Merge all PRs, retrospective, checkpoint |
 
@@ -162,7 +162,7 @@ An issue is **actionable** if:
 
 ### 1e: Route to Code Manager
 
-Emit an ASSIGN message per `governance/prompts/agent-protocol.md` for **all actionable issues up to the session cap** (max 5). If no actionable issues remain, fall back to GOALS.md (see Phase 5 fallback).
+Emit an ASSIGN message per `governance/prompts/agent-protocol.md` for **all actionable issues up to the session cap** (max N, where N = `governance.parallel_coders`). If no actionable issues remain, fall back to GOALS.md (see Phase 5 fallback).
 
 ---
 
@@ -230,6 +230,8 @@ The Code Manager spawns **parallel Coder agents** using the `Task` tool with `is
 
 ### 3a: Spawn Coder Agents
 
+Read `governance.parallel_coders` from `project.yaml` (default: 5) to determine the maximum number of concurrent Coder agents.
+
 For each planned issue, spawn a background Task agent:
 
 ```
@@ -249,7 +251,7 @@ Task(
 5. Instructions to commit, run tests, and report results — but NOT push (the Code Manager pushes)
 
 **Dispatch rules:**
-- Spawn up to 5 Coder agents concurrently
+- Spawn up to N Coder agents concurrently (N = `governance.parallel_coders` from `project.yaml`, default 5)
 - All independent issues are dispatched in a **single message** with multiple Task tool calls
 - Each agent gets `run_in_background: true` so they execute concurrently
 - The Code Manager continues to the next phase without waiting
@@ -409,7 +411,7 @@ Per `governance/prompts/retrospective.md`:
 
 1. Write checkpoint to `.checkpoints/{timestamp}-session.json`
 2. Record all completed issues in `issues_completed` array
-3. **If 5 issues completed**: execute Shutdown Protocol.
+3. **If N issues completed** (where N = `governance.parallel_coders`): execute Shutdown Protocol.
 4. **If context pressure**: execute Shutdown Protocol regardless of count.
 5. **Otherwise**: return to Phase 1 for the next batch.
 
@@ -429,11 +431,11 @@ If no actionable issues remain after Phase 1d:
 ## Constraints
 
 - **Resolve all open PRs before new issues** — Phase 1c is mandatory
-- **Parallel execution by default** — spawn up to 5 Coder agents concurrently via `Task` tool with `isolation: "worktree"`. Fall back to sequential only if worktree creation fails.
+- **Parallel execution by default** — spawn up to N Coder agents concurrently (N = `governance.parallel_coders`, default 5) via `Task` tool with `isolation: "worktree"`. Fall back to sequential only if worktree creation fails.
 - **Plan before code** — always (plans are written by Code Manager in main session before dispatch)
 - **Documentation with every change** — mandatory
 - **Issue for every work item** — issues are the audit trail
-- **Maximum 5 issues per session** — parallel execution is more context-efficient since Coder subagents have their own context windows
+- **Maximum N issues per session** (where N = `governance.parallel_coders`, default 5) — parallel execution is more context-efficient since Coder subagents have their own context windows
 - **Maximum 3 review cycles per PR** — then escalate
 - **Mandatory checkpoint after all issues complete** — write one checkpoint covering all parallel work
 - **Context capacity is a hard constraint** — shutdown immediately on any signal
@@ -448,7 +450,7 @@ If no actionable issues remain after Phase 1d:
 **Trigger conditions** (any one is sufficient):
 - Token count at or above 80% of context window
 - System warning about context limits
-- 5 issues completed this session
+- N issues completed this session (where N = `governance.parallel_coders`)
 - Conversation exceeds ~150 exchanges or ~80 tool calls
 - Degraded recall or inconsistent output
 
@@ -483,6 +485,6 @@ When triggered:
 
 Stop the loop when:
 - No open PRs **and** no actionable issues **and** no GOALS.md items can be converted to issues
-- **5 issues/PRs completed** — shutdown protocol, checkpoint, request `/clear`
+- **N issues/PRs completed** (where N = `governance.parallel_coders`) — shutdown protocol, checkpoint, request `/clear`
 - **Any context pressure signal** — shutdown protocol immediately
 - A human sends a message (human input takes priority)

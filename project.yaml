@@ -1,0 +1,15 @@
+# Project AI Configuration — ai-submodule (governance platform)
+
+name: "ai-submodule"
+language: "python"
+framework: null
+
+governance:
+  policy_profile: "default"
+  parallel_coders: 5
+
+conventions:
+  git:
+    branch_pattern: "itsfwcp/{type}/{number}/{name}"
+    commit_style: "conventional"
+    pr_template: true
