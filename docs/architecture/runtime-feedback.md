@@ -1446,7 +1446,5 @@ The following files are defined or referenced by this architecture. Files marked
 | `governance/prompts/remediation-workflow.md` | Implemented (PR #83) | Agentic workflow for autonomous drift remediation |
 | `governance/schemas/panel-output.schema.json` | Defined in Phase 4 | Structured panel emission schema |
 | `governance/schemas/run-manifest.schema.json` | Defined in Phase 4 | Merge manifest schema |
-| `governance/personas/panels/*.md` | Existing | Panel definitions consumed by re-execution |
-| `governance/personas/operations/*.md` | Existing | Personas involved in runtime review |
-| `governance/personas/compliance/*.md` | Existing | Personas involved in compliance drift |
+| `governance/prompts/reviews/*.md` | Existing | Consolidated review prompts consumed by re-execution |
 | `governance/prompts/workflows/incident-response.md` | Existing | Incident response workflow (input to DI Generator) |

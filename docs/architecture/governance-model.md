@@ -73,7 +73,7 @@ It does NOT govern:
 | **Dark Factory** | An autonomous software delivery system where agentic processes handle the full lifecycle from intent to production, with policy-bound constraints replacing manual gates. |
 | **Design Intent (DI)** | A structured request that describes a desired change to the system. The atomic unit of work intake. |
 | **Persona** | A Markdown-defined cognitive role that constrains the reasoning approach of an agentic process. Defined in `governance/personas/`. |
-| **Panel** | A multi-persona review panel where several personas evaluate an artifact from different perspectives. Defined in `governance/personas/panels/`. |
+| **Panel** | A multi-persona review panel where several personas evaluate an artifact from different perspectives. Defined in `governance/prompts/reviews/`. |
 | **Panel** (governance context) | Panels produce structured emissions. The term "panel" is used in both the multi-persona review definition above and in the governance context. |
 | **Structured Emission** | A JSON object conforming to `panel-output.schema.json` that accompanies the Markdown reasoning output of a panel. The machine-readable governance interface. |
 | **Cognitive Artifact** | A Markdown document produced by persona reasoning. Human-readable, not machine-evaluated for governance decisions. |
@@ -271,7 +271,7 @@ Cognitive Governance controls how the system thinks. It ensures that the correct
 |-----------|--------|--------|
 | Validated Intent Package | Layer 1 | Structured JSON (intent package schema) |
 | Panel Graph Configuration | `project.yaml` | YAML panel routing rules |
-| Persona Registry | `governance/personas/index.md` + persona directory | Markdown persona definitions |
+| Persona Registry | `governance/prompts/reviews/` + `governance/personas/agentic/` | Review prompts and agentic persona definitions |
 | Workflow Definitions | `governance/prompts/workflows/` | Markdown workflow specifications |
 
 ### 6.3 Outputs
@@ -1484,7 +1484,7 @@ flowchart TD
 | Directory | Artifact Type | Description |
 |-----------|--------------|-------------|
 | `governance/personas/` | Cognitive | Persona definitions (Markdown) |
-| `governance/personas/panels/` | Cognitive | Panel definitions (Markdown) |
+| `governance/prompts/reviews/` | Cognitive | Consolidated review prompts (Markdown) |
 | `governance/prompts/` | Cognitive | Prompt templates (Markdown) |
 | `governance/prompts/workflows/` | Cognitive | Workflow definitions (Markdown) |
 | `governance/templates/` | Cognitive | Language-specific scaffolding |

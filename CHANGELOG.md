@@ -8,6 +8,16 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/) a
 
 ## [Unreleased]
 
+### Removed
+
+- **78 deprecated persona and panel files removed** (#257)
+  - 58 individual persona files across 13 category directories (`architecture/`, `compliance/`, `documentation/`, `domain/`, `engineering/`, `finops/`, `governance/`, `language/`, `leadership/`, `operations/`, `platform/`, `quality/`, `specialist/`)
+  - 19 panel files from `governance/personas/panels/`
+  - `governance/personas/index.md` persona reference grid
+  - Consolidated review prompts at `governance/prompts/reviews/` are the canonical location
+  - Agentic personas (`governance/personas/agentic/`) are preserved (5 files)
+  - All documentation references updated to point to `governance/prompts/reviews/`
+
 ### Breaking Changes
 
 - **`init.sh` and `init.ps1` moved to `bin/`** (#226)

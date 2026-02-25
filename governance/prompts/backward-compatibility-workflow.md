@@ -15,7 +15,7 @@ This workflow should be invoked by the Code Manager during **Phase 3** (Implemen
 - A schema file (`governance/schemas/*.json`) is modified (not created)
 - A policy file (`governance/policy/*.yaml`) is modified
 - A prompt or workflow file (`governance/prompts/*.md`) is modified in a way that changes expected inputs/outputs
-- A panel definition (`governance/personas/panels/*.md`) changes its structured emission format
+- A review prompt (`governance/prompts/reviews/*.md`) changes its structured emission format
 - A configuration file (`config.yaml`, `panels.local.json`, `panels.defaults.json`) changes its structure
 - An instruction file (`instructions.md`, `instructions/*.md`) changes in a way that alters agent behavior contracts
 
@@ -37,7 +37,7 @@ For each modified file in the PR, classify it:
 | `governance/policy/*.yaml` | policy | enforcement | `profile_version` or `version` field |
 | `governance/prompts/*.md` | prompt | cognitive | Git SHA (no semantic version) |
 | `governance/prompts/templates/*.md` | template | cognitive | Git SHA |
-| `governance/personas/panels/*.md` | prompt | cognitive | Git SHA |
+| `governance/prompts/reviews/*.md` | prompt | cognitive | Git SHA |
 | `governance/schemas/panels.*.json` | configuration | enforcement | Internal semantic version field if present; otherwise diff-based |
 | `config.yaml` | configuration | enforcement | Git SHA |
 | `instructions*.md` | convention | cognitive | Git SHA |

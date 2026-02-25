@@ -42,8 +42,8 @@ Then re-run `bash .ai/bin/init.sh` if the symlink configuration has changed.
 
 | Directory | Contents |
 |-----------|----------|
-| `governance/personas/` | 58 AI reasoning roles + 4 agentic personas (DevOps Engineer, Code Manager, Coder, Tester) |
-| `governance/personas/panels/` | 15 multi-persona review workflows |
+| `governance/prompts/reviews/` | 19 consolidated review prompts (canonical location for all reviews) |
+| `governance/personas/agentic/` | 5 agentic personas (DevOps Engineer, Code Manager, Coder, IaC Engineer, Tester) |
 | `governance/policy/` | 3 deterministic policy profiles (default, fin_pii_high, infrastructure_critical) |
 | `governance/schemas/` | JSON schemas for structured emissions and panel configuration |
 | `governance/prompts/` | Workflow prompts, templates (plan, runtime DI), startup loop |

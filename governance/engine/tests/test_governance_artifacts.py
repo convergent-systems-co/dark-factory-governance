@@ -1,4 +1,4 @@
-"""Structural integrity tests for personas, panels, prompts, and profiles."""
+"""Structural integrity tests for review prompts, agentic personas, and profiles."""
 
 import json
 import re
@@ -12,74 +12,58 @@ from conftest import REPO_ROOT
 
 GOVERNANCE_DIR = REPO_ROOT / "governance"
 PERSONAS_DIR = GOVERNANCE_DIR / "personas"
-PANELS_DIR = PERSONAS_DIR / "panels"
+REVIEWS_DIR = GOVERNANCE_DIR / "prompts" / "reviews"
 SCHEMAS_DIR = GOVERNANCE_DIR / "schemas"
 PROMPTS_DIR = GOVERNANCE_DIR / "prompts"
 POLICY_DIR = GOVERNANCE_DIR / "policy"
 
 
 # ===========================================================================
-# Persona files
+# Agentic persona files
 # ===========================================================================
 
 
-class TestPersonaFiles:
-    # Panel files (panels/) use different sections (Purpose/Participants),
-    # so we only check individual persona files (category/persona.md), not panels.
-    PANEL_CATEGORIES = {"panels"}
+class TestAgenticPersonaFiles:
+    EXPECTED_AGENTIC = [
+        "code-manager.md",
+        "coder.md",
+        "devops-engineer.md",
+        "iac-engineer.md",
+        "tester.md",
+    ]
 
-    @pytest.fixture
-    def persona_index_entries(self):
-        """Parse persona file references from index.md, excluding panel files."""
-        index_path = PERSONAS_DIR / "index.md"
-        content = index_path.read_text()
-        # Match patterns like `quality/style-reviewer.md`
-        matches = re.findall(r'`([a-z-]+/[a-z-]+\.md)`', content)
-        # Exclude panel entries — they have different structure
-        return [m for m in matches if m.split("/")[0] not in self.PANEL_CATEGORIES]
+    def test_agentic_personas_exist(self):
+        """All 5 agentic persona files must exist."""
+        agentic_dir = PERSONAS_DIR / "agentic"
+        assert agentic_dir.exists(), "governance/personas/agentic/ directory missing"
+        for name in self.EXPECTED_AGENTIC:
+            path = agentic_dir / name
+            assert path.exists(), f"Missing agentic persona: {name}"
 
-    def test_all_persona_files_exist(self, persona_index_entries):
-        """Every persona referenced in index.md must have a corresponding file."""
-        missing = []
-        for ref in persona_index_entries:
-            path = PERSONAS_DIR / ref
-            if not path.exists():
-                missing.append(ref)
-        assert not missing, f"Missing persona files: {missing}"
-
-    def test_persona_files_have_required_sections(self, persona_index_entries):
-        """Each persona markdown must contain Role, Evaluate For, Output Format."""
-        required_sections = ["## Role", "## Evaluate For", "## Output Format"]
-        failures = []
-        for ref in persona_index_entries:
-            path = PERSONAS_DIR / ref
-            if not path.exists():
-                continue
-            content = path.read_text()
-            for section in required_sections:
-                if section not in content:
-                    failures.append(f"{ref} missing '{section}'")
-        assert not failures, f"Section failures:\n" + "\n".join(failures)
+    def test_no_deprecated_persona_dirs(self):
+        """Only agentic/ should remain under governance/personas/."""
+        subdirs = sorted([d.name for d in PERSONAS_DIR.iterdir() if d.is_dir()])
+        assert subdirs == ["agentic"], f"Unexpected persona directories: {subdirs}"
 
 
 # ===========================================================================
-# Panel definitions
+# Consolidated review prompts
 # ===========================================================================
 
 
-class TestPanelDefinitions:
-    def test_panel_definitions_exist(self):
-        """Every file in governance/personas/panels/ must be a valid markdown file."""
-        panel_files = sorted(PANELS_DIR.glob("*.md"))
-        assert len(panel_files) > 0, "No panel definitions found"
-        for fpath in panel_files:
+class TestReviewPrompts:
+    def test_review_prompts_exist(self):
+        """Every file in governance/prompts/reviews/ must be a valid markdown file."""
+        review_files = sorted(REVIEWS_DIR.glob("*.md"))
+        assert len(review_files) > 0, "No review prompts found"
+        for fpath in review_files:
             content = fpath.read_text()
-            assert len(content) > 50, f"{fpath.name} is too short to be a valid panel definition"
+            assert len(content) > 50, f"{fpath.name} is too short to be a valid review prompt"
 
-    def test_required_panels_have_definitions(self):
-        """Every panel name in each profile's required_panels has a panel definition."""
+    def test_required_panels_have_review_prompts(self):
+        """Every panel name in each profile's required_panels has a review prompt."""
         evaluation_profiles = ["default.yaml", "fin_pii_high.yaml", "infrastructure_critical.yaml", "reduced_touchpoint.yaml"]
-        panel_files = {p.stem for p in PANELS_DIR.glob("*.md")}
+        review_files = {p.stem for p in REVIEWS_DIR.glob("*.md")}
 
         missing = []
         for profile_name in evaluation_profiles:
@@ -87,10 +71,10 @@ class TestPanelDefinitions:
             with open(path) as f:
                 profile = yaml.safe_load(f)
             for panel in profile.get("required_panels", []):
-                if panel not in panel_files:
+                if panel not in review_files:
                     missing.append(f"{profile_name}: {panel}")
 
-        assert not missing, f"Missing panel definitions for required panels: {missing}"
+        assert not missing, f"Missing review prompts for required panels: {missing}"
 
 
 # ===========================================================================

@@ -23,8 +23,8 @@ All artifacts in the `.ai/` system fall into three categories. Each category has
 
 | Directory | Contents | Loading Strategy |
 |-----------|----------|-----------------|
-| `governance/personas/` | Role definitions for AI agents | Load only activated personas per `project.yaml` |
-| `governance/personas/panels/` | Multi-persona review panel definitions | Load only when panel is invoked |
+| `governance/personas/agentic/` | Agentic persona definitions | Load only activated personas per `project.yaml` |
+| `governance/prompts/reviews/` | Consolidated review prompts | Load only when panel is invoked |
 | `governance/prompts/` | Single-task prompt templates | Load on-demand per workflow phase |
 | `governance/prompts/workflows/` | Multi-phase orchestration workflows | Load one phase at a time |
 | `governance/templates/` | Language-specific conventions | Load once at session start based on project language |

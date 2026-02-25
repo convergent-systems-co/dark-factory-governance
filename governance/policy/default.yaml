@@ -173,7 +173,7 @@ optional_panels:
   - panel: ai-expert-review
     trigger: files_changed_in ["governance/personas/", "governance/prompts/", "governance/policy/", "governance/schemas/", "instructions/"]
   - panel: architecture-review
-    trigger: files_changed_in ["src/", "lib/", "pkg/", "governance/personas/panels/", "governance/prompts/workflows/", ".github/workflows/"]
+    trigger: files_changed_in ["src/", "lib/", "pkg/", "governance/prompts/reviews/", "governance/prompts/workflows/", ".github/workflows/"]
   - panel: performance-review
     trigger: files_changed_in ["src/", "bench/"]
   - panel: testing-review
@@ -229,7 +229,7 @@ cross_repo_escalation:
       condition: issue_affects_paths_matching ".ai/governance/**"
       default_severity: medium
       severity_override:
-        condition: affected_path_matches "governance/personas/panels/*" or affected_path_matches "governance/schemas/*"
+        condition: affected_path_matches "governance/prompts/reviews/*" or affected_path_matches "governance/schemas/*"
         severity: high
 
     - name: governance_workflow_failure

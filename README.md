@@ -52,20 +52,8 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
       node/                    Node.js/TypeScript conventions
       react/                   React conventions
       csharp/                  C#/.NET conventions
-    personas/                  AI persona definitions (Markdown) — DEPRECATED, see prompts/reviews/
-      architecture/            System design personas
-      quality/                 Code review personas
-      compliance/              Security, regulatory, accessibility personas
-      documentation/           Content creation and review personas
-      domain/                  Frontend, backend, data, ML, mobile personas
-      engineering/             Testing, performance, debugging personas
-      operations/              SRE, DevOps, infrastructure personas
-      leadership/              Technical leadership, product, mentoring personas
-      specialist/              Legacy, incidents, migrations personas
-      governance/              Governance Auditor, Policy Evaluator
+    personas/                  AI persona definitions (Markdown)
       agentic/                 DevOps Engineer, Code Manager, Coder, IaC Engineer, Tester
-      panels/                  Multi-persona review panels — DEPRECATED, see prompts/reviews/
-      index.md                 Persona and panel reference grid
 
     prompts/                   Reusable prompt templates
       reviews/                 19 consolidated review prompts (replaces personas/panels/)
@@ -370,18 +358,16 @@ Quick navigation to all documentation in this repository.
 | [Checkpoint Resumption](governance/prompts/checkpoint-resumption-workflow.md) | Session resumption from checkpoints (Phase 5c) |
 | [Plan Template](governance/prompts/templates/plan-template.md) | Standardized plan template for AI and humans |
 
-### Personas & Panels
+### Review Prompts & Agentic Personas
 
-> **Note:** As of Issue #220, personas and panels have been consolidated into self-contained
-> review prompts in `governance/prompts/reviews/`. The individual persona and panel files in
-> `governance/personas/` are deprecated. See `docs/research/README.md` for the research
-> supporting this decision.
+> **Note:** As of Issue #220, individual persona and panel files have been consolidated into
+> self-contained review prompts in `governance/prompts/reviews/`. The deprecated files were
+> removed in Issue #257. See `docs/research/README.md` for the research supporting this decision.
 
 | Resource | Description |
 |----------|-------------|
-| [Consolidated Review Prompts](governance/prompts/reviews/) | 19 self-contained review prompts (preferred) |
+| [Consolidated Review Prompts](governance/prompts/reviews/) | 19 self-contained review prompts (canonical location) |
 | [Shared Perspectives](governance/prompts/shared-perspectives.md) | Canonical definitions for cross-cutting perspectives |
-| [Persona/Panel Index](governance/personas/index.md) | Legacy reference grid — 63 personas (including 5 agentic: DevOps Engineer, Code Manager, Coder, IaC Engineer, Tester) and 19 panels _(deprecated)_ |
 | [DevOps Engineer](governance/personas/agentic/devops-engineer.md) | Routing agent — session lifecycle, pre-flight, issue triage |
 | [Code Manager](governance/personas/agentic/code-manager.md) | Orchestrator agent — intent validation, panel selection, review coordination, merge |
 | [Coder](governance/personas/agentic/coder.md) | Worker agent — implementation, tests, structured output |

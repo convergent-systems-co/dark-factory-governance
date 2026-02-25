@@ -1,5 +1,7 @@
 # Persona and Panel Naming Review
 
+> **Note:** This is a historical decision record. The individual persona and panel files referenced below were deprecated (Issue #220) and removed (Issue #257). Review prompts are now consolidated at `governance/prompts/reviews/`.
+
 ## Review Criteria
 
 Names should be:

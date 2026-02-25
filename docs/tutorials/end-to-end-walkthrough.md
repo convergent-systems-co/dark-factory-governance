@@ -162,16 +162,11 @@ The governance platform operates through three distinct artifact types:
 
 ### 2.2 Personas and Panels
 
-**Personas** are specialized reasoning roles defined in `governance/personas/`. There are 58 core role definitions across 13 categories (security, architecture, testing, data, compliance, and more), plus 5 agentic personas (DevOps Engineer, Code Manager, Coder, IaC Engineer, Tester) for a total of 63. Each defines:
-- **Role** — What the persona evaluates
-- **Evaluate For** — Specific concerns and criteria
-- **Output Format** — Structured findings with severity levels
-- **Principles** — Guiding rules for evaluation
-- **Anti-patterns** — What to reject or flag
+**Review prompts** are consolidated, self-contained review definitions in `governance/prompts/reviews/`. There are 19 review prompts implementing Anthropic's Parallelization (Voting) pattern. Each prompt inlines its participant perspectives with full evaluation criteria, scoring, and output schema. Additionally, 5 agentic personas (DevOps Engineer, Code Manager, Coder, IaC Engineer, Tester) in `governance/personas/agentic/` drive the autonomous pipeline.
 
-**Panels** coordinate multiple personas into review workflows. There are 19 panels in `governance/personas/panels/`. Each panel:
-1. Activates relevant personas for the review type
-2. Evaluates changes against persona-specific criteria
+**Panels** (review prompts) coordinate multiple perspectives into review workflows. Each panel:
+1. Activates relevant perspectives for the review type
+2. Evaluates changes against perspective-specific criteria
 3. Emits structured JSON between `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers
 4. Conforms to `governance/schemas/panel-output.schema.json`
 

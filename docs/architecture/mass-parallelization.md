@@ -77,10 +77,10 @@ Collision domains group related paths to reduce merge risk. Workers in the same 
 | Domain | Paths | Max Workers | Risk |
 |--------|-------|-------------|------|
 | policy-core | `governance/policy/**`, `governance/schemas/**` | 1 | Critical |
-| panel-definitions | `governance/personas/panels/**`, `governance/personas/agentic/**` | 1 | High |
+| panel-definitions | `governance/prompts/reviews/**`, `governance/personas/agentic/**` | 1 | High |
 | workflows | `.github/workflows/**`, `config.yaml` | 1 | High |
 | bootstrap | `init.sh`, `init.ps1`, `instructions/**` | 1 | High |
-| persona-catalog | `governance/personas/**` (excl. panels/agentic) | 2 | Medium |
+| persona-catalog | `governance/personas/agentic/**` | 2 | Medium |
 | prompts | `governance/prompts/**` | 2 | Medium |
 | documentation | `docs/**`, `README.md`, etc. | 3 | Low |
 | templates | `governance/templates/**` | 3 | Low |

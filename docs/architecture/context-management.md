@@ -51,8 +51,7 @@ Content loaded and unloaded as the agent moves through workflow phases. Previous
 |---------|--------|-------------|
 | Workflow phase definition | `governance/prompts/workflows/{workflow}.md` (single phase) | Phase entry |
 | Phase-specific prompt | `governance/prompts/{prompt}.md` | When the phase invokes it |
-| Panel definition | `governance/personas/panels/{panel}.md` | Panel invocation |
-| Panel persona details | Individual persona files | Panel invocation |
+| Panel definition | `governance/prompts/reviews/{panel}.md` | Panel invocation |
 
 **Total Tier 2 budget: ~3,000 tokens**
 
@@ -68,7 +67,7 @@ Content accessed via tool calls or file reads, never pre-loaded.
 | JSON schemas | `governance/schemas/*.schema.json` | Schema validation tool |
 | Run manifests | `governance/manifests/*.json` | File read on-demand |
 | Architecture docs | `docs/**/*.md` | File read when referenced |
-| Other personas | `governance/personas/**/*.md` not in active set | File read when invoked |
+| Review prompts | `governance/prompts/reviews/*.md` not in active set | File read when invoked |
 
 **Tier 3 budget: 0 tokens (no context cost)**
 

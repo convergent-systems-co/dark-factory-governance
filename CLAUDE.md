@@ -50,10 +50,8 @@ Every code change flows through these layers in order:
 
 ### Persona and Panel System
 
-- **Consolidated review prompts** (`governance/prompts/reviews/`) — 19 self-contained review prompts implementing Anthropic's Parallelization (Voting) pattern. Each prompt inlines its participant perspectives with full evaluation criteria, scoring, and output schema. This is the primary location for review definitions.
+- **Consolidated review prompts** (`governance/prompts/reviews/`) — 19 self-contained review prompts implementing Anthropic's Parallelization (Voting) pattern. Each prompt inlines its participant perspectives with full evaluation criteria, scoring, and output schema. This is the canonical location for review definitions.
 - **Shared perspectives** (`governance/prompts/shared-perspectives.md`) — Canonical definitions for the 19 perspectives appearing in 2+ review prompts. Serves as the authoring-time DRY mechanism; compiled prompts have full locality at runtime.
-- **Personas** (`governance/personas/`) — _Deprecated._ 58 core role definitions across 13 categories. Superseded by consolidated review prompts. Will be removed in a future release.
-- **Panels** (`governance/personas/panels/`) — _Deprecated._ 19 multi-persona review workflows. Superseded by consolidated review prompts. Will be removed in a future release.
 - **Agentic personas** (`governance/personas/agentic/`) — Five-agent prompt-chained architecture:
   - **DevOps Engineer** — Session entry point: pre-flight, triage, routing (Anthropic's Routing pattern)
   - **Code Manager** — Pipeline orchestrator: intent validation, panel selection, review coordination, merge (Orchestrator-Workers pattern)

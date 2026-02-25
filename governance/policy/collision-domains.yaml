@@ -34,31 +34,16 @@ domains:
 
   - name: panel-definitions
     description: >
-      Panel and persona definitions. Changes affect review behavior
-      across all consuming repos.
+      Review prompts and agentic persona definitions. Changes affect
+      review behavior across all consuming repos.
     paths:
-      - "governance/personas/panels/**"
+      - "governance/prompts/reviews/**"
       - "governance/personas/agentic/**"
     max_concurrent_workers: 1
     risk_level: high
     rationale: >
-      Panel changes affect review quality and scoring. Two workers
-      modifying panels simultaneously could produce inconsistent review criteria.
-
-  - name: persona-catalog
-    description: >
-      Persona definitions (excluding panels and agentic). Lower risk
-      because personas are independent of each other.
-    paths:
-      - "governance/personas/**"
-    exclude_paths:
-      - "governance/personas/panels/**"
-      - "governance/personas/agentic/**"
-    max_concurrent_workers: 2
-    risk_level: medium
-    rationale: >
-      Individual persona files are generally independent. Two workers
-      can safely add or modify different personas simultaneously.
+      Review prompt changes affect review quality and scoring. Two workers
+      modifying prompts simultaneously could produce inconsistent review criteria.
 
   - name: documentation
     description: >

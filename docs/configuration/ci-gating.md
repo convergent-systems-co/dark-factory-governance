@@ -208,7 +208,7 @@ The checks must be configured with `strict: true` to require branches to be up t
 
 GitHub Copilot is designated as a formal review panel within the Dark Factory governance model. Its review feedback on pull requests is consumed programmatically, not treated as advisory.
 
-The Copilot review panel definition resides at `governance/personas/panels/copilot-review.md`. The governance workflow parses Copilot's output and produces a structured emission conforming to the same `panel-output.schema.json` as all other panels.
+The Copilot review panel definition resides at `governance/prompts/reviews/copilot-review.md`. The governance workflow parses Copilot's output and produces a structured emission conforming to the same `panel-output.schema.json` as all other panels.
 
 ### 3.2 Consuming Copilot Review Feedback
 

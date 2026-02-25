@@ -200,7 +200,7 @@ If the agent repeats itself, forgets decisions, or re-reads files it already rea
 - [README.md](../../README.md) — Full architecture, governance layers, file structure, and [Documentation Index](../../README.md#documentation-index)
 - [GOALS.md](../../GOALS.md) — Phase status and completed work
 - [governance/prompts/reviews/](../../governance/prompts/reviews/) — 19 consolidated review prompts (preferred, replaces individual persona/panel files)
-- [governance/personas/index.md](../../governance/personas/index.md) — All 63 personas (including 5 agentic: DevOps Engineer, Code Manager, Coder, IaC Engineer, Tester) and 19 panels _(deprecated — see consolidated review prompts)_
+- [governance/personas/agentic/](../../governance/personas/agentic/) — 5 agentic personas (DevOps Engineer, Code Manager, Coder, IaC Engineer, Tester)
 - [docs/architecture/governance-model.md](../architecture/governance-model.md) — Governance layers, policy profiles, and how changes flow through the system
 - [docs/configuration/repository-setup.md](../configuration/repository-setup.md) — Repository settings, CODEOWNERS, per-project overrides
 - [docs/architecture/context-management.md](../architecture/context-management.md) — Context tiers, capacity detection, shutdown protocol

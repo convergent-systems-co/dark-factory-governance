@@ -210,8 +210,8 @@ Route the generated DI to the appropriate governance panels.
 1. Look up the signal `category` in `governance/policy/signal-panel-mapping.yaml`
 2. Set `proposed_panel` to the `primary` panel for that category
 3. Set `proposed_panels_secondary` to the `secondary` panels
-4. Verify all proposed panels exist as files in `governance/personas/panels/`
-5. If a panel file does not exist, log a warning and fall back to `panels/code-review.md`
+4. Verify all proposed panels exist as files in `governance/prompts/reviews/`
+5. If a panel file does not exist, log a warning and fall back to `governance/prompts/reviews/code-review.md`
 
 ### Panel Execution Triggers
 
@@ -240,7 +240,7 @@ The generated DI (markdown + structured emission) is:
 |-------|--------|
 | Signal fails schema validation | Reject signal. Log error with signal_id and validation details. |
 | Component not in registry | Proceed with default criticality (0.5). Log warning. |
-| Panel mapping not found for category | Fall back to `panels/code-review.md`. Log warning. |
+| Panel mapping not found for category | Fall back to `governance/prompts/reviews/code-review.md`. Log warning. |
 | Template hydration produces invalid JSON | Abort DI generation. Log error. Signal remains in dead-letter queue. |
 | DI store unavailable for correlation | Skip correlation (Step 3). Generate new DI. Log warning. |
 | Priority calculation produces out-of-range value | Clamp to 0-100 range. Log warning. |
