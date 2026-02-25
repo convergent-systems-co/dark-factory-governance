@@ -63,6 +63,8 @@ Every code change flows through these layers in order:
 
 > See `docs/research/README.md` for the research supporting the persona consolidation decision (Issue #220).
 
+> For the full agent architecture — including protocol details, transport phases, failure modes, and extension points — see `docs/architecture/agent-architecture.md`.
+
 ### Policy Engine
 
 Four deterministic YAML profiles in `governance/policy/`:
