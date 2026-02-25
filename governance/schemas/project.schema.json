@@ -4,7 +4,95 @@
   "title": "Project Configuration",
   "description": "Schema for project.yaml configuration, including repository settings applied by init.sh. The repository section declares GitHub repo settings (auto-merge, branch protection, CODEOWNERS) as code.",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
+    "name": {
+      "type": "string",
+      "description": "Project name identifier."
+    },
+    "language": {
+      "type": "string",
+      "description": "Primary programming language.",
+      "examples": ["python", "typescript", "go", "java"]
+    },
+    "framework": {
+      "type": ["string", "null"],
+      "description": "Framework used, or null if none.",
+      "examples": ["react", "django", "spring-boot", null]
+    },
+    "governance": {
+      "type": "object",
+      "description": "Governance configuration overrides.",
+      "properties": {
+        "policy_profile": {
+          "type": "string",
+          "description": "Policy profile to use. Maps to a file in governance/policy/.",
+          "default": "default",
+          "examples": ["default", "fin_pii_high", "infrastructure_critical", "reduced_touchpoint"]
+        },
+        "skip_panel_validation": {
+          "type": "boolean",
+          "default": false,
+          "description": "Opt out of mandatory panel validation. Use with caution."
+        },
+        "ai_submodule_pin": {
+          "type": ["string", "null"],
+          "description": "Pin the .ai submodule to a specific commit SHA or tag.",
+          "examples": ["v2.1.0", "abc123def456"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "personas": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of persona file paths to activate.",
+      "examples": [["agentic/devops-engineer.md", "agentic/code-manager.md"]]
+    },
+    "panels": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of panel file paths to activate.",
+      "examples": [["code-review.md", "security-review.md"]]
+    },
+    "conventions": {
+      "type": "object",
+      "description": "Project coding conventions.",
+      "properties": {
+        "testing": {
+          "type": "object",
+          "properties": {
+            "framework": { "type": "string", "examples": ["pytest", "jest", "junit"] },
+            "coverage_target": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "naming": { "type": "string", "examples": ["test_", "Test", "spec."] }
+          },
+          "additionalProperties": false
+        },
+        "style": {
+          "type": "object",
+          "properties": {
+            "max_line_length": { "type": "integer" },
+            "indent": { "type": "string", "enum": ["spaces", "tabs"] },
+            "indent_size": { "type": "integer" }
+          },
+          "additionalProperties": false
+        },
+        "git": {
+          "type": "object",
+          "properties": {
+            "branch_pattern": { "type": "string" },
+            "commit_style": { "type": "string", "enum": ["conventional", "freeform"] },
+            "pr_template": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "instructions": {
+      "type": "string",
+      "description": "Freeform project-specific instructions for AI assistants."
+    },
     "repository": {
       "type": "object",
       "description": "GitHub repository settings applied by init.sh via gh api. All fields are optional; defaults come from config.yaml.",
