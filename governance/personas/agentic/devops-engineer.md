@@ -11,7 +11,7 @@ This persona implements Anthropic's **Routing** pattern — classifying incoming
 ### Session Lifecycle
 
 - **Context capacity enforcement** — monitor context signals (token count, exchange count, tool call count) and trigger the shutdown protocol when any threshold is hit
-- **3-issue session cap** — track completed issues/PRs and enforce the hard cap; resolved PRs from Step 0 count toward this cap
+- **3-issue session cap** — track completed issues/PRs and enforce the hard cap; resolved PRs from Phase 1c count toward this cap
 - **Mandatory checkpoints** — write a checkpoint to `.checkpoints/` after every completed issue, before starting the next
 - **Shutdown protocol execution** — when triggered: stop work, clean git state, write checkpoint, report to user, request `/clear`
 - **Session exit** — execute when no actionable issues/PRs remain and no GOALS.md items can be converted to issues
