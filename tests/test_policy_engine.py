@@ -1463,3 +1463,130 @@ class TestDryRun:
         output = log_stream.getvalue()
         assert "code-review" in output
         assert "security-review" in output
+
+
+# ===========================================================================
+# Boundary confidence values (issue #263)
+# ===========================================================================
+
+
+class TestBoundaryConfidenceValues:
+    """Test confidence exactly at 0.0 and 1.0 against thresholds."""
+
+    def test_confidence_zero_fails_auto_merge(self):
+        """Confidence exactly 0.0 should fail auto-merge threshold (>= 0.85)."""
+        log = _log()
+        emissions = [make_emission()]
+        profile = make_profile()
+        result = policy_engine.evaluate_auto_merge(0.0, "low", [], emissions, True, profile, log)
+        assert result is False
+
+    def test_confidence_one_passes_auto_merge(self):
+        """Confidence exactly 1.0 should pass auto-merge threshold (>= 0.85)."""
+        log = _log()
+        emissions = [make_emission()]
+        profile = make_profile()
+        result = policy_engine.evaluate_auto_merge(1.0, "low", [], emissions, True, profile, log)
+        assert result is True
+
+    def test_confidence_zero_fails_auto_remediate(self):
+        """Confidence exactly 0.0 should fail auto-remediate threshold (>= 0.60)."""
+        log = _log()
+        profile = make_profile()
+        result = policy_engine.evaluate_auto_remediate(0.0, "low", [], [], profile, log)
+        assert result is False
+
+    def test_confidence_one_passes_auto_remediate(self):
+        """Confidence exactly 1.0 should pass auto-remediate threshold (>= 0.60)."""
+        log = _log()
+        profile = make_profile()
+        result = policy_engine.evaluate_auto_remediate(1.0, "low", [], [], profile, log)
+        assert result is True
+
+    def test_confidence_zero_triggers_escalation(self):
+        """Confidence 0.0 should trigger escalation when threshold is < 0.70."""
+        log = _log()
+        profile = make_profile(escalation_rules=[
+            {"name": "low_conf", "condition": "aggregate_confidence < 0.70", "action": "human_review_required"}
+        ])
+        result, _ = policy_engine.evaluate_escalation_rules(0.0, "low", [], [], profile, log)
+        assert result == "human_review_required"
+
+    def test_confidence_one_no_escalation(self):
+        """Confidence 1.0 should not trigger escalation when threshold is < 0.70."""
+        log = _log()
+        profile = make_profile(escalation_rules=[
+            {"name": "low_conf", "condition": "aggregate_confidence < 0.70", "action": "human_review_required"}
+        ])
+        result, _ = policy_engine.evaluate_escalation_rules(1.0, "low", [], [], profile, log)
+        assert result is None
+
+
+# ===========================================================================
+# Malformed YAML profile (issue #263)
+# ===========================================================================
+
+
+class TestMalformedYamlProfile:
+    """Test that loading invalid YAML (bad syntax) is handled gracefully."""
+
+    def test_malformed_yaml_produces_block(self, tmp_path):
+        """Invalid YAML syntax in profile file should produce a block decision."""
+        emissions = all_required_emissions(confidence=0.92, risk_level="low")
+        emissions_dir = tmp_path / "emissions"
+        emissions_dir.mkdir()
+        for e in emissions:
+            with open(str(emissions_dir / f"{e['panel_name']}.json"), "w") as f:
+                import json
+                json.dump(e, f)
+
+        # Write invalid YAML
+        profile_path = tmp_path / "bad-profile.yaml"
+        profile_path.write_text(":\n  invalid: yaml: [unclosed\n  - bad: {syntax")
+
+        manifest, exit_code = policy_engine.evaluate(
+            str(emissions_dir),
+            str(profile_path),
+            ci_passed=True,
+            log_stream=io.StringIO(),
+        )
+        assert exit_code == 1
+        assert manifest["decision"]["action"] == "block"
+
+
+# ===========================================================================
+# Timestamp parsing exception (issue #263)
+# ===========================================================================
+
+
+class TestTimestampParsingException:
+    """Test validate_emission_freshness() with malformed timestamps."""
+
+    def test_malformed_timestamp_no_crash(self):
+        """Non-parseable timestamp string should not crash, should pass freshness."""
+        log = _log()
+        emission = make_emission()
+        emission["timestamp"] = "not-a-real-timestamp"
+        warnings = policy_engine.validate_emission_freshness(emission, "", log)
+        # Malformed timestamps are silently ignored (not a freshness issue)
+        # Only commit_sha mismatch or stale timestamps produce warnings
+        assert warnings == []
+
+    def test_empty_timestamp_no_crash(self):
+        """Empty timestamp string should not crash."""
+        log = _log()
+        emission = make_emission()
+        emission["timestamp"] = ""
+        warnings = policy_engine.validate_emission_freshness(emission, "", log)
+        assert warnings == []
+
+    def test_partial_timestamp_no_crash(self):
+        """Partial timestamp (e.g. just a date) should not crash."""
+        log = _log()
+        emission = make_emission()
+        emission["timestamp"] = "2026-02-25"
+        # fromisoformat can parse date-only, but it may produce a naive datetime
+        # which would fail subtraction with aware datetime. Should be caught by except.
+        warnings = policy_engine.validate_emission_freshness(emission, "", log)
+        # Should not crash — may or may not produce a warning depending on parse result
+        assert isinstance(warnings, list)

@@ -882,3 +882,102 @@ class TestScenarioEscalationUnknown:
         ])
         result, _ = policy_engine.evaluate_escalation_rules(0.90, "low", [], [], profile, log)
         assert result is None
+
+
+# ===========================================================================
+# Scenario 32: Escalation compound with NOT (issue #263)
+# ===========================================================================
+
+
+class TestScenarioEscalationCompoundWithNot:
+    """Exercise compound escalation conditions using 'condition and not sub_condition' pattern."""
+
+    def test_compound_not_both_true_escalates(self):
+        """'risk_level == "critical" and not aggregate_confidence >= 0.90' — both sub-conditions
+        are true (risk IS critical AND confidence is NOT >= 0.90) → escalation fires."""
+        log = policy_engine.EvaluationLog(stream=io.StringIO())
+        profile = make_profile(escalation_rules=[
+            {
+                "name": "critical_low_conf",
+                "condition": 'risk_level == "critical" and not aggregate_confidence >= 0.90',
+                "action": "human_review_required",
+            }
+        ])
+        result, reason = policy_engine.evaluate_escalation_rules(
+            0.70, "critical", [], [], profile, log
+        )
+        assert result == "human_review_required"
+
+    def test_compound_not_negation_prevents_escalation(self):
+        """'risk_level == "critical" and not aggregate_confidence >= 0.90' — confidence IS >= 0.90,
+        so 'not aggregate_confidence >= 0.90' is False → no escalation."""
+        log = policy_engine.EvaluationLog(stream=io.StringIO())
+        profile = make_profile(escalation_rules=[
+            {
+                "name": "critical_low_conf",
+                "condition": 'risk_level == "critical" and not aggregate_confidence >= 0.90',
+                "action": "human_review_required",
+            }
+        ])
+        result, _ = policy_engine.evaluate_escalation_rules(
+            0.95, "critical", [], [], profile, log
+        )
+        assert result is None
+
+    def test_compound_not_first_false_no_escalation(self):
+        """'risk_level == "critical" and not aggregate_confidence >= 0.90' — risk is low,
+        so first sub-condition is False → no escalation regardless of confidence."""
+        log = policy_engine.EvaluationLog(stream=io.StringIO())
+        profile = make_profile(escalation_rules=[
+            {
+                "name": "critical_low_conf",
+                "condition": 'risk_level == "critical" and not aggregate_confidence >= 0.90',
+                "action": "human_review_required",
+            }
+        ])
+        result, _ = policy_engine.evaluate_escalation_rules(
+            0.50, "low", [], [], profile, log
+        )
+        assert result is None
+
+    def test_compound_not_with_block_action(self):
+        """Escalation compound NOT pattern with action='block' should produce block result."""
+        log = policy_engine.EvaluationLog(stream=io.StringIO())
+        flags = [
+            {"flag": "vuln_found", "severity": "critical", "description": "CVE",
+             "dismissed": True}
+        ]
+        emissions = [
+            make_emission(panel_name="security-review", policy_flags=flags),
+        ]
+        profile = make_profile(escalation_rules=[
+            {
+                "name": "dismissed_critical_block",
+                "condition": 'dismissed_finding_severity in ["critical"] and not aggregate_confidence >= 0.95',
+                "action": "block",
+            }
+        ])
+        result, reason = policy_engine.evaluate_escalation_rules(
+            0.80, "low", [], emissions, profile, log
+        )
+        assert result == "block"
+
+    def test_compound_not_context_dependent_returns_false(self):
+        """Compound with a NOT negated context-dependent sub-condition returns False.
+
+        'risk_level == "critical" and not files_changed_in ["deploy/"]'
+        The second sub-condition is context-dependent (returns None) → compound returns False.
+        """
+        log = policy_engine.EvaluationLog(stream=io.StringIO())
+        profile = make_profile(escalation_rules=[
+            {
+                "name": "critical_deploy",
+                "condition": 'risk_level == "critical" and not files_changed_in ["deploy/"]',
+                "action": "block",
+            }
+        ])
+        result, _ = policy_engine.evaluate_escalation_rules(
+            0.80, "critical", [], [], profile, log
+        )
+        # Context-dependent sub-condition returns None → compound returns False → no escalation
+        assert result is None
