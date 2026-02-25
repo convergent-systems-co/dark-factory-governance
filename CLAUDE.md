@@ -98,6 +98,7 @@ All panel output must include JSON between `<!-- STRUCTURED_EMISSION_START -->` 
 - **Enforcement artifacts use semantic versioning** in their `profile_version` or `version` field
 - **Cognitive artifacts version by git SHA** — they evolve with the submodule
 - **Manifests are immutable** — never edit after creation
+- **Slash commands**: `/startup` begins the agentic loop, `/checkpoint` saves state and offers context reset. Copilot equivalents are in `.github/copilot-chat/`.
 
 ## Agentic Startup Sequence
 
