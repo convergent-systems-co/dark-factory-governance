@@ -400,6 +400,23 @@ Confidence score calculation:
 
 If **any** criterion fails, the aggregate verdict must be `request_changes`. Critical or high findings block merge unconditionally. A threat model that cannot achieve 0.75 confidence indicates the change has unresolved security concerns requiring redesign or additional controls.
 
+## Data Sensitivity and Redaction
+
+When producing threat model findings, apply these redaction rules:
+
+1. **Never include raw secrets** — API keys, tokens, passwords, or credentials discovered during analysis must be redacted. Use `[REDACTED]` placeholder and describe the type of secret (e.g., "AWS access key found in config.py:42")
+2. **Redact PII** — Personal identifiable information (emails, names, addresses, SSNs) must be replaced with `[PII-REDACTED]`
+3. **Sanitize file paths** — If file paths reveal infrastructure details (server names, internal network paths), generalize them
+4. **Describe attack techniques generically** — Reference ATT&CK technique IDs and describe attack vectors at a conceptual level. Do not include working exploit code, payloads, or step-by-step exploitation instructions in the emission
+5. **Threat scenarios over exploit recipes** — Threat models should describe *what* an attacker could achieve and *why* it matters, not provide a cookbook for reproducing the attack
+6. **Set data_classification** — Include the `data_classification` block in your structured emission:
+   - `"public"` — No sensitive content in findings
+   - `"internal"` — Contains internal file paths, architecture details
+   - `"confidential"` — Contains vulnerability evidence, security configurations, ATT&CK mappings with specific system details
+   - `"restricted"` — Contains credential exposure evidence, PII findings, or detailed kill chain analysis of production systems
+
+---
+
 ## Structured Emission
 
 All output must include a JSON block between emission markers, validated against [`governance/schemas/panel-output.schema.json`](../../schemas/panel-output.schema.json).

@@ -149,6 +149,29 @@
       },
       "additionalProperties": false
     },
+    "data_classification": {
+      "type": "object",
+      "description": "Optional classification of the emission's data sensitivity. Helps identify emissions that may contain sensitive content requiring redaction or access controls.",
+      "properties": {
+        "level": {
+          "type": "string",
+          "description": "Data sensitivity level of this emission's content.",
+          "enum": ["public", "internal", "confidential", "restricted"]
+        },
+        "contains_sensitive_evidence": {
+          "type": "boolean",
+          "description": "Whether findings contain sensitive evidence (credentials, PII, vulnerability details).",
+          "default": false
+        },
+        "redaction_applied": {
+          "type": "boolean",
+          "description": "Whether sensitive content has been redacted from this emission.",
+          "default": false
+        }
+      },
+      "required": ["level"],
+      "additionalProperties": false
+    },
     "duration_ms": {
       "type": "integer",
       "description": "Panel execution duration in milliseconds.",
