@@ -4,7 +4,7 @@
 # Part of Phase 5e — Spec-Driven Interface.
 
 profile_name: reduced_touchpoint
-profile_version: "1.0.0"
+profile_version: "1.0.1"
 description: >
   Near-full-autonomy policy profile that requires human approval only for
   policy-override scenarios, dismissed security-critical findings, or
@@ -181,6 +181,14 @@ optional_panels:
     trigger: files_changed_in ["src/", "lib/", "pkg/", "app/"]
   - panel: copilot-review
     trigger: always
+  - panel: api-design-review
+    trigger: files_changed_in ["api/", "openapi/", "swagger/", "graphql/"]
+  - panel: migration-review
+    trigger: files_changed_in ["db/", "migrations/", "alembic/", "flyway/"]
+  - panel: incident-post-mortem
+    trigger: files_changed_in ["incident/", "postmortem/", ".incidents/"]
+  - panel: technical-debt-review
+    trigger: files_changed_in ["src/", "lib/", "pkg/"]
 
 # Proof-of-Correctness Rules (Phase 5a)
 # Same as default — verification standards are not reduced.

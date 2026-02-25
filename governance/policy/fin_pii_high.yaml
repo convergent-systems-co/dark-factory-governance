@@ -3,7 +3,7 @@
 # Stricter thresholds, mandatory security and compliance panels, no auto-merge by default.
 
 profile_name: fin_pii_high
-profile_version: "1.0.0"
+profile_version: "1.0.1"
 description: >
   High-security policy profile for financial services and PII-handling
   repositories. Enforces strict compliance gating, mandatory security
@@ -159,3 +159,5 @@ optional_panels:
     trigger: files_changed_in ["src/", "bench/"]
   - panel: copilot-review
     trigger: always
+  - panel: migration-review
+    trigger: files_changed_in ["db/", "migrations/", "alembic/", "flyway/"]

@@ -3,7 +3,7 @@
 # deployment configurations, and platform services.
 
 profile_name: infrastructure_critical
-profile_version: "1.0.0"
+profile_version: "1.0.1"
 description: >
   Policy profile for infrastructure and platform repositories. Emphasizes
   production stability, blast radius assessment, and rollback capability.
@@ -147,3 +147,7 @@ optional_panels:
     trigger: always
   - panel: data-governance-review
     trigger: files_changed_in ["db/", "migrations/", "schema/", "data/"]
+  - panel: api-design-review
+    trigger: files_changed_in ["api/", "openapi/", "swagger/", "graphql/"]
+  - panel: incident-post-mortem
+    trigger: files_changed_in ["incident/", "postmortem/", ".incidents/"]
