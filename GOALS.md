@@ -77,7 +77,7 @@ This document tracks the maturity phases, completed work, and open enhancements 
 | #105 | #106 | Opt-in auto-merge repository config | Changed auto_merge default to opt-in (false) in config.yaml |
 | #107 | #108 | Governance workflow symlinks for consuming repos | init.sh copies governance workflows to consuming repo .github/workflows/ |
 | #109 | #111 | Agentic bootstrap prompt (init.md) | Interactive setup prompt for consuming repos — language template, repo settings, dependencies |
-| #110 | #121 | .plans/ and .panels/ project directories | init.sh creates .plans/ and .panels/ directories in consuming repos |
+| #110 | #121 | governance/plans/ and .panels/ project directories | init.sh creates governance/plans/ and .panels/ directories in consuming repos |
 | #112 | #125 | Copilot auto-fix configuration guide | Documentation for configuring GitHub Copilot auto-fix in governance workflow |
 | #113 | #115 | Retrospective aggregation schema | JSON Schema for aggregating panel accuracy and override frequency (Phase 5b) |
 | #116 | #123 | Auto-update .ai submodule | Startup and init.sh auto-update .ai submodule when behind remote |

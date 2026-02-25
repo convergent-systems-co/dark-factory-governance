@@ -75,7 +75,7 @@ When `init.sh` runs, after creating symlinks it:
 1. **Checks prerequisites** -- `gh` CLI installed and authenticated
 2. **Detects the GitHub repository** from git remotes
 3. **Reads configuration** from `config.yaml` (defaults) and `project.yaml` (overrides)
-4. **Creates project directories** (`.plans/`, `.panels/`) with `.gitkeep` files
+4. **Creates project directories** (`governance/plans/`, `.panels/`, `governance/checkpoints/`) with `.gitkeep` files
 5. **Applies repository settings** via `gh api repos/{owner}/{repo} -X PATCH`
 6. **Generates or merges CODEOWNERS** — if the file is empty or missing, generates from config; if it already exists, merges governance-required entries (adds missing patterns and owners)
 7. **Validates branch protection** by checking expected rulesets exist (warns on mismatch, does not apply)
@@ -179,7 +179,7 @@ This catches misconfiguration before the agentic loop starts, preventing silent 
 
 | Directory | Purpose | Retention |
 |-----------|---------|-----------|
-| `.plans/` | Implementation plans for issues and features | Accumulated — all plans retained |
+| `governance/plans/` | Implementation plans for issues and features | Accumulated — all plans retained |
 | `.panels/` | Panel review reports | Latest only — overwrite per panel type |
 
 ### Configuration
@@ -188,7 +188,7 @@ Directories are declared in `config.yaml` under `project_directories`:
 
 ```yaml
 project_directories:
-  - path: .plans
+  - path: governance/plans
     description: "Implementation plans for issues and features"
   - path: .panels
     description: "Panel reports — only latest per panel type"
@@ -201,7 +201,7 @@ Consuming projects can add additional directories in their `project.yaml`. Direc
 - Directories are only created in submodule context (consuming repos, not the ai-submodule itself)
 - Each directory gets a `.gitkeep` file so git tracks the empty directory
 - Idempotent — existing directories are left untouched
-- If Python is not available, falls back to the hardcoded defaults (`.plans/` and `.panels/`)
+- If Python is not available, falls back to the hardcoded defaults (`governance/plans/`, `.panels/`, and `governance/checkpoints/`)
 
 ### Panel Report Convention
 
@@ -251,4 +251,4 @@ The governance workflow runs as `github-actions[bot]`, which is a GitHub system 
 
 The `repository` section is fully optional. If absent from `config.yaml`, `init.sh` skips repository configuration entirely. Existing consuming repos are unaffected until they add the section.
 
-The `project_directories` section is also optional. If absent, `init.sh` falls back to creating `.plans/` and `.panels/` with hardcoded defaults. Existing consuming repos that already have these directories are unaffected (idempotent).
+The `project_directories` section is also optional. If absent, `init.sh` falls back to creating `governance/plans/`, `.panels/`, and `governance/checkpoints/` with hardcoded defaults. Existing consuming repos that already have these directories are unaffected (idempotent).

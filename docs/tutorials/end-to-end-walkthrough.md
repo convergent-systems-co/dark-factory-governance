@@ -64,7 +64,7 @@ bash .ai/bin/init.sh --install-deps
 | 7 | Links governance workflows | `dark-factory-governance.yml` and optional workflows to `.github/workflows/` |
 | 8 | Creates GOALS.md | Copies template if file does not exist |
 | 9 | Validates panel emissions | Warns if required panels lack baseline emissions |
-| 10 | Creates project directories | `.plans/` and `.panels/` with `.gitkeep` files |
+| 10 | Creates project directories | `governance/plans/`, `.panels/`, and `governance/checkpoints/` with `.gitkeep` files |
 | 11 | Installs dependencies | (with `--install-deps`) Creates Python venv, installs `jsonschema` and `pyyaml` |
 | 12 | Configures repository settings | (if `gh` authenticated) Applies merge strategies, CODEOWNERS, rulesets |
 
@@ -80,7 +80,7 @@ bash .ai/bin/init.sh --install-deps
 [INFO] Copying issue templates...
 [INFO] Linking governance workflows...
 [INFO] Creating GOALS.md from template
-[INFO] Creating directory: .plans/
+[INFO] Creating directory: governance/plans/
 [INFO] Creating directory: .panels/
 [INFO] Bootstrap complete!
 ```
@@ -116,7 +116,8 @@ your-repo/
 │   ├── copilot-instructions.md       # Symlink → .ai/instructions.md
 │   └── workflows/
 │       └── dark-factory-governance.yml  # Required CI governance pipeline
-├── .plans/                           # Implementation plans (accumulated)
+├── governance/
+│   └── plans/                        # Implementation plans (accumulated)
 ├── .panels/                          # Panel review reports (latest per type)
 ├── CLAUDE.md                         # Symlink → .ai/instructions.md
 ├── .cursorrules                      # Symlink → .ai/instructions.md
@@ -246,7 +247,7 @@ AI context is loaded in tiers to prevent window overflow:
 | 2 | ~3,000 | Per-phase | Workflow phase + panel context |
 | 3 | 0 (on-demand) | Queried | Policies, schemas, docs |
 
-**Hard stop at 80% context capacity.** The agent will: stop all work → clean git state → write checkpoint to `.checkpoints/` → report to user → request `/clear`.
+**Hard stop at 80% context capacity.** The agent will: stop all work → clean git state → write checkpoint to `governance/checkpoints/` → report to user → request `/clear`.
 
 ---
 
@@ -306,7 +307,7 @@ Labels drive agentic prioritization:
 When the autonomous pipeline processes issues, five personas chain through five phases:
 
 1. **Phase 1 — Pre-flight & Triage** (DevOps Engineer): Scans issues, filters (excludes blocked/wontfix/duplicate, existing branches, recent human edits), prioritizes by label (P0 → P4), routes to Code Manager
-2. **Phase 2 — Intent & Planning** (Code Manager): Validates intent clarity, ensures `project.yaml` reflects repo state, selects context-appropriate review panels, creates branch (`itsfwcp/{type}/{issue-number}/{description}`) and plan in `.plans/`
+2. **Phase 2 — Intent & Planning** (Code Manager): Validates intent clarity, ensures `project.yaml` reflects repo state, selects context-appropriate review panels, creates branch (`itsfwcp/{type}/{issue-number}/{description}`) and plan in `governance/plans/`
 3. **Phase 3 — Implementation** (Coder): Implements the plan, writes tests, updates documentation. Emits structured RESULT to Code Manager
 4. **Phase 4 — Evaluation & Review** (Code Manager + Tester): Tester evaluates independently (must approve before push), Code Manager runs security review, context-specific reviews, monitors PR CI/Copilot loop
 5. **Phase 5 — Merge & Loop** (Code Manager + DevOps Engineer): Merges PR, runs retrospective, loops back or checkpoints on hard-stop

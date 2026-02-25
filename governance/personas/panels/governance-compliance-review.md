@@ -20,7 +20,7 @@ This panel acts as the governance step observer requested in issue #176. It enri
 
 1. Read the governance compliance checklist (`governance/prompts/governance-compliance-checklist.md`)
 2. For each required step, gather evidence from the PR:
-   - **Plan:** Check `.plans/` directory for a plan matching the issue number
+   - **Plan:** Check `governance/plans/` directory for a plan matching the issue number
    - **Panels:** Check `governance/emissions/` for required panel output files
    - **Copilot:** Check PR comments for Copilot polling evidence and recommendation responses
    - **Documentation:** Analyze the PR diff for documentation file changes
@@ -117,7 +117,7 @@ confidence = 0.95  (base — governance compliance is binary per step)
 
 | Step | Primary Evidence | Secondary Evidence |
 |------|-----------------|-------------------|
-| Plan created | `.plans/{issue}-*.md` in PR diff | Plan referenced in PR body |
+| Plan created | `governance/plans/{issue}-*.md` in PR diff | Plan referenced in PR body |
 | Panel evaluation | `governance/emissions/*.json` files | Governance workflow run results |
 | Copilot review | PR comments with Copilot polling | Copilot inline comments and responses |
 | Documentation | Doc files in PR diff | Commit message `Docs:` annotation |

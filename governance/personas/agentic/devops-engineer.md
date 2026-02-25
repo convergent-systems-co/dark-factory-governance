@@ -25,7 +25,7 @@ At **70% capacity**: Do not dispatch new Coder agents. Wait for in-flight agents
 At **80% capacity**: Execute the full Shutdown Protocol immediately — stop all work, clean git state, write checkpoint, report to user, request `/clear`.
 
 - **5-issue session cap** — track completed issues/PRs and enforce the hard cap; resolved PRs from Phase 1c count toward this cap
-- **Checkpoint on hard-stop only** — write a checkpoint to `.checkpoints/` only when a session cap or context pressure triggers the Shutdown Protocol
+- **Checkpoint on hard-stop only** — write a checkpoint to `governance/checkpoints/` only when a session cap or context pressure triggers the Shutdown Protocol
 - **Shutdown protocol execution** — when triggered: stop work, clean git state, write checkpoint, report to user, request `/clear`
 - **Session exit** — execute when no actionable issues/PRs remain and no GOALS.md items can be converted to issues
 
@@ -59,7 +59,7 @@ At **80% capacity**: Execute the full Shutdown Protocol immediately — stop all
 
 ### Checkpoint Restore
 
-When resuming from a checkpoint (`.checkpoints/` file):
+When resuming from a checkpoint (`governance/checkpoints/` file):
 1. Validate all issues in `current_issue` and `issues_remaining` are still open via `gh issue view`
 2. Remove closed issues from the work queue
 3. If all issues are closed, proceed to a fresh scan

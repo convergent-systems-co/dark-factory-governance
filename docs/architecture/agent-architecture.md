@@ -349,7 +349,7 @@ sequenceDiagram
     Note over CM: Phase 2 — Planning
     CM->>CM: Validate intent for each issue
     CM->>CM: Select review panels per issue
-    CM->>CM: Create plans in .plans/
+    CM->>CM: Create plans in governance/plans/
 
     Note over CM,CO: Phase 3 — Parallel Dispatch
     CM->>CO: Task(worktree, background) per issue
@@ -407,7 +407,7 @@ If the Tester rejects a Coder's work repeatedly:
 When any context pressure signal is detected (80% threshold):
 1. Stop all work immediately
 2. Clean git state (commit, stash, or abort)
-3. Write checkpoint to `.checkpoints/`
+3. Write checkpoint to `governance/checkpoints/`
 4. Report to user and request `/clear`
 5. Next session restores from checkpoint with issue state re-validation
 

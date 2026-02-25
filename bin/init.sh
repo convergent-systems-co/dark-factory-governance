@@ -383,11 +383,11 @@ print('code-review security-review threat-modeling cost-analysis documentation-r
     echo "  [OK] All required panel emissions present"
   fi
 
-  # Project directories — create .plans/ and .panels/ in consuming repo
+  # Project directories — create governance/plans/, .panels/, governance/checkpoints/ in consuming repo
   echo ""
   echo "Creating project directories..."
   # Read directory list from config if Python is available, otherwise use defaults
-  PROJECT_DIRS=".plans .panels"
+  PROJECT_DIRS="governance/plans .panels governance/checkpoints"
   if [ -n "$PYTHON_CMD" ]; then
     CONFIG_DIRS=$("$PYTHON_CMD" -c "
 import yaml, os, sys
@@ -403,7 +403,7 @@ for f in sys.argv[1:]:
             for k, v in data.items():
                 if k != 'project_directories':
                     config[k] = v
-dirs = config.get('project_directories', [{'path': '.plans'}, {'path': '.panels'}])
+dirs = config.get('project_directories', [{'path': 'governance/plans'}, {'path': '.panels'}, {'path': 'governance/checkpoints'}])
 print(' '.join(d.get('path', '') for d in dirs if d.get('path')))
 " "$AI_DIR/config.yaml" "$AI_DIR/project.yaml" "$PROJECT_ROOT/project.yaml" 2>/dev/null) && PROJECT_DIRS="$CONFIG_DIRS"
     # stderr suppressed: fallback to PROJECT_DIRS default on failure

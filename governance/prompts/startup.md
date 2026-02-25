@@ -44,7 +44,7 @@ When the user identifies a problem with a previously-created PR (e.g., failing c
 
 ## Issue State Validation (Checkpoint Restore)
 
-When resuming from a checkpoint (`.checkpoints/` file), **before continuing any work**:
+When resuming from a checkpoint (`governance/checkpoints/` file), **before continuing any work**:
 
 1. For each issue listed in `current_issue` and `issues_remaining`, verify it is still open:
    ```bash
@@ -216,7 +216,7 @@ If a needed review panel or persona does not exist, create a GitHub issue in the
 
 1. Create branch: `itsfwcp/{type}/{number}/{name}`
 2. Write plan using `governance/prompts/templates/plan-template.md`
-3. Save to `.plans/{number}-{description}.md`
+3. Save to `governance/plans/{number}-{description}.md`
 4. High risk → comment plan on issue, wait for approval before dispatching
 
 After all plans are written, proceed to Phase 3 (Parallel Dispatch).
@@ -250,7 +250,7 @@ Task(
 
 **The worker prompt must include:**
 1. The full persona instructions (Coder or IaC Engineer as appropriate)
-2. The plan content (from `.plans/{number}-{description}.md`)
+2. The plan content (from `governance/plans/{number}-{description}.md`)
 3. The issue body and acceptance criteria
 4. Branch name to use
 5. Instructions to commit, run tests/validation, and report results — but NOT push (the Code Manager pushes)
@@ -351,7 +351,7 @@ The Code Manager invokes the panels selected in Phase 2c. Each review:
 1. Push the branch
 2. Create PR:
    ```bash
-   gh pr create --title "<type>: <description>" --body "Closes #<issue-number>\n\n## Summary\n<description>\n\n## Plan\nSee .plans/<number>-<description>.md"
+   gh pr create --title "<type>: <description>" --body "Closes #<issue-number>\n\n## Summary\n<description>\n\n## Plan\nSee governance/plans/<number>-<description>.md"
    ```
 3. Comment on issue: `gh issue comment <number> --body "PR #<pr-number> created. Entering monitoring loop."`
 
@@ -463,7 +463,7 @@ When triggered:
 
 1. **Stop immediately** — do not start the next issue or step
 2. **Clean git state** — commit pending changes, abort in-progress merges, ensure clean working tree
-3. **Write checkpoint** — save to `.checkpoints/{timestamp}-{branch}.json`:
+3. **Write checkpoint** — save to `governance/checkpoints/{timestamp}-{branch}.json`:
    ```json
    {
      "timestamp": "ISO-8601",

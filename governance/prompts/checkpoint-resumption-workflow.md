@@ -4,7 +4,7 @@ This workflow describes how to resume an agentic session from a checkpoint file 
 
 ## Prerequisites
 
-- A checkpoint file exists in `.checkpoints/` (written by the shutdown protocol)
+- A checkpoint file exists in `governance/checkpoints/` (written by the shutdown protocol)
 - The user has run `/clear` to reset context
 - The agent has re-read `startup.md` and this workflow
 
@@ -15,7 +15,7 @@ This workflow describes how to resume an agentic session from a checkpoint file 
 Find the most recent checkpoint file:
 
 ```bash
-ls -t .checkpoints/*.json | head -1
+ls -t governance/checkpoints/*.json | head -1
 ```
 
 Read the checkpoint file and parse its contents. The file conforms to `governance/schemas/checkpoint.schema.json`.
@@ -86,7 +86,7 @@ Based on the checkpoint state, determine where to re-enter the startup sequence:
 
 2. **Re-read the plan** (if resuming mid-implementation):
    ```bash
-   cat .plans/<issue-number>-*.md
+   cat governance/plans/<issue-number>-*.md
    ```
    Review the plan to recall what was done and what remains.
 
@@ -111,7 +111,7 @@ Based on the checkpoint state, determine where to re-enter the startup sequence:
 
 When `startup.md` is invoked after a `/clear`:
 
-1. Check if `.checkpoints/` contains recent files (< 24 hours)
+1. Check if `governance/checkpoints/` contains recent files (< 24 hours)
 2. If yes, prompt the user: "Found checkpoint from [timestamp]. Resume from checkpoint or start fresh?"
 3. If the user chooses to resume, execute this workflow
 4. If the user chooses fresh start (or no checkpoint exists), execute startup.md from the beginning

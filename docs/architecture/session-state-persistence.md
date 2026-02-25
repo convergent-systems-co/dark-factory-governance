@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Cross-session state persistence provides governance memory that accumulates across multiple agentic sessions. While checkpoints (`.checkpoints/`) handle per-session save/restore, persistent state captures long-lived context: metrics trends, threshold tuning history, persona weight adjustments, work queue state, and governance decisions.
+Cross-session state persistence provides governance memory that accumulates across multiple agentic sessions. While checkpoints (`governance/checkpoints/`) handle per-session save/restore, persistent state captures long-lived context: metrics trends, threshold tuning history, persona weight adjustments, work queue state, and governance decisions.
 
 This document defines the storage strategy for cross-session state. The data format is defined in `governance/schemas/session-state.schema.json`.
 
@@ -10,7 +10,7 @@ This document defines the storage strategy for cross-session state. The data for
 
 Persistent state is stored in **`.governance-state/`** in the consuming repository root (not inside the `.ai` submodule). This directory is:
 
-- **Created by `init.sh`** alongside `.plans/` and `.panels/`
+- **Created by `init.sh`** alongside `governance/plans/` and `.panels/`
 - **Git-tracked** — state changes are committed as part of the governance lifecycle
 - **One file per state type**: `state.json` (the primary state document)
 
@@ -120,7 +120,7 @@ Migration scripts (when needed) will be placed in `bin/migrate-session-state.py`
 
 | System | Integration Point |
 |--------|-------------------|
-| **Checkpoints** (`.checkpoints/`) | Session end writes both a checkpoint and a state update |
+| **Checkpoints** (`governance/checkpoints/`) | Session end writes both a checkpoint and a state update |
 | **Autonomy metrics** (`autonomy-metrics.schema.json`) | Metrics reports are referenced by `report_id` in `metrics_history.snapshots` |
 | **Persona effectiveness** (`persona-effectiveness.schema.json`) | Effectiveness reports trigger `persona_weights` updates |
 | **Retrospective aggregation** (`retrospective-aggregation.schema.json`) | Retrospectives trigger `threshold_tuning` updates |

@@ -96,7 +96,7 @@ See [startup.md](../../governance/prompts/startup.md) for the full protocol and 
 
 **Write a plan before coding** — Every non-trivial change needs a plan:
 ```bash
-cp governance/prompts/templates/plan-template.md .plans/42-my-feature.md
+cp governance/prompts/templates/plan-template.md governance/plans/42-my-feature.md
 ```
 
 **Branch naming:** `itsfwcp/{type}/{issue-number}/{short-name}` (e.g., `itsfwcp/feat/42/add-auth`)
@@ -114,11 +114,11 @@ When the agentic loop stops — context reset, crash, stuck PR, dirty git state 
 ### Resume from a checkpoint
 
 ```bash
-ls -t .checkpoints/*.json | head -1   # find the most recent checkpoint
-cat .checkpoints/<latest>.json         # see where things left off
+ls -t governance/checkpoints/*.json | head -1   # find the most recent checkpoint
+cat governance/checkpoints/<latest>.json         # see where things left off
 ```
 
-Then tell the agent: `continue` or `Resume from checkpoint: .checkpoints/<file>`. See [checkpoint resumption workflow](../../governance/prompts/checkpoint-resumption-workflow.md) for the full protocol.
+Then tell the agent: `continue` or `Resume from checkpoint: governance/checkpoints/<file>`. See [checkpoint resumption workflow](../../governance/prompts/checkpoint-resumption-workflow.md) for the full protocol.
 
 ### No checkpoint exists
 
@@ -170,7 +170,7 @@ If the agent repeats itself, forgets decisions, or re-reads files it already rea
 |------|---------|
 | Git state | `git status` |
 | Current branch | `git branch --show-current` |
-| Recent checkpoints | `ls -t .checkpoints/*.json \| head -5` |
+| Recent checkpoints | `ls -t governance/checkpoints/*.json \| head -5` |
 | Open PRs | `gh pr list --state open` |
 | Open issues | `gh issue list --state open --limit 20` |
 | Issue state | `gh issue view <N> --json state --jq '.state'` |
