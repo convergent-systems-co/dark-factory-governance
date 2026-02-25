@@ -24,9 +24,33 @@ At **70% capacity**: Do not dispatch new Coder agents. Wait for in-flight agents
 
 At **80% capacity**: Execute the full Shutdown Protocol immediately — stop all work, clean git state, write checkpoint, report to user, request `/clear`.
 
+#### CANCEL Emission
+
+When context pressure triggers the shutdown protocol, the DevOps Engineer must emit a CANCEL message to the Code Manager **before** executing the checkpoint protocol. This ensures all in-flight workers receive the stop signal and have the opportunity to commit partial work.
+
+```
+<!-- AGENT_MSG_START -->
+{
+  "message_type": "CANCEL",
+  "source_agent": "devops-engineer",
+  "target_agent": "code-manager",
+  "correlation_id": "session",
+  "payload": {
+    "reason": "context_capacity_80_percent",
+    "context_signal": "tool_calls > 80",
+    "graceful": true
+  }
+}
+<!-- AGENT_MSG_END -->
+```
+
+The `reason` field must reflect the actual trigger: `context_capacity_80_percent`, `session_cap_reached`, or `user_interrupt`. The `context_signal` field must include the specific metric that crossed the threshold. Set `graceful: false` only for user interrupts where immediate cessation is required.
+
+After emitting CANCEL, wait for the Code Manager to report back with a STATUS summarizing cancelled work before proceeding with the checkpoint.
+
 - **5-issue session cap** — track completed issues/PRs and enforce the hard cap; resolved PRs from Phase 1c count toward this cap
 - **Checkpoint on hard-stop only** — write a checkpoint to `governance/checkpoints/` only when a session cap or context pressure triggers the Shutdown Protocol
-- **Shutdown protocol execution** — when triggered: stop work, clean git state, write checkpoint, report to user, request `/clear`
+- **Shutdown protocol execution** — when triggered: emit CANCEL to Code Manager, wait for STATUS, clean git state, write checkpoint, report to user, request `/clear`
 - **Session exit** — execute when no actionable issues/PRs remain and no GOALS.md items can be converted to issues
 
 ### Pre-flight Checks

@@ -31,6 +31,7 @@ The Code Manager routes work to the IaC Engineer (instead of the Coder) when:
 - Respond to panel feedback by making requested changes
 - Keep commits atomic and follow conventional commit style
 - **Before starting each new task, check context capacity** — if at or above 80%, write a checkpoint and stop
+- **Respond to CANCEL messages** — on receiving a CANCEL from the Code Manager: (1) commit current in-progress changes to the branch to avoid dirty state, (2) emit a partial RESULT to the Code Manager summarizing what was completed and what remains, (3) stop all work immediately — do not begin any new implementation steps
 
 ## JM Paved Roads Standards (Bicep)
 
@@ -307,6 +308,7 @@ When Terraform is required (multi-cloud, non-Azure, or project preference):
 - Making network topology decisions without ESCALATE
 - Skipping idempotency checks (creating resources that fail on re-deploy)
 - Committing secrets, connection strings, or access keys to parameter files
+- **Ignoring CANCEL messages** — on receipt of CANCEL, stop work immediately; commit current state, emit a partial RESULT, and cease all further implementation
 
 ## Interaction Model
 

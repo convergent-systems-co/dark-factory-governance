@@ -60,7 +60,7 @@ Every code change flows through these layers in order:
   - **Coder** — Execution agent: implementation, tests, documentation (Worker)
   - **IaC Engineer** — Infrastructure execution agent: Bicep/Terraform, JM Paved Roads standards, security-first defaults (Worker)
   - **Tester** — Independent evaluator: test coverage gate, documentation verification, structured feedback (Evaluator-Optimizer pattern)
-- **Agent protocol** (`governance/prompts/agent-protocol.md`) — Structured inter-agent communication with typed messages: ASSIGN, STATUS, RESULT, FEEDBACK, ESCALATE, APPROVE, BLOCK
+- **Agent protocol** (`governance/prompts/agent-protocol.md`) — Structured inter-agent communication with typed messages: ASSIGN, STATUS, RESULT, FEEDBACK, ESCALATE, APPROVE, BLOCK, CANCEL
 
 > See `docs/research/README.md` for the research supporting the persona consolidation decision (Issue #220).
 

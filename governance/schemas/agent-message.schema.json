@@ -8,7 +8,7 @@
   "properties": {
     "message_type": {
       "type": "string",
-      "enum": ["ASSIGN", "STATUS", "RESULT", "FEEDBACK", "ESCALATE", "APPROVE", "BLOCK"]
+      "enum": ["ASSIGN", "STATUS", "RESULT", "FEEDBACK", "ESCALATE", "APPROVE", "BLOCK", "CANCEL"]
     },
     "source_agent": {
       "type": "string",

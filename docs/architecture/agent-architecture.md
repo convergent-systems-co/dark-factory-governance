@@ -228,7 +228,7 @@ Every message includes:
 
 ```json
 {
-  "message_type": "ASSIGN | STATUS | RESULT | FEEDBACK | ESCALATE | APPROVE | BLOCK",
+  "message_type": "ASSIGN | STATUS | RESULT | FEEDBACK | ESCALATE | APPROVE | BLOCK | CANCEL",
   "source_agent": "devops-engineer | code-manager | coder | tester",
   "target_agent": "devops-engineer | code-manager | coder | tester",
   "correlation_id": "issue-42",

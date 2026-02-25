@@ -106,7 +106,7 @@ Quick reference for all available personas and when to use them.
 
 ### Agent Protocol
 
-Inter-agent communication follows `governance/prompts/agent-protocol.md` — a structured message protocol with typed messages (ASSIGN, STATUS, RESULT, FEEDBACK, ESCALATE, APPROVE, BLOCK). The DevOps Engineer routes to Code Manager, which orchestrates Coder and Tester.
+Inter-agent communication follows `governance/prompts/agent-protocol.md` — a structured message protocol with typed messages (ASSIGN, STATUS, RESULT, FEEDBACK, ESCALATE, APPROVE, BLOCK, CANCEL). The DevOps Engineer routes to Code Manager, which orchestrates Coder and Tester. CANCEL flows downward (DevOps Engineer to Code Manager to workers) for session lifecycle enforcement.
 
 ## Panels
 

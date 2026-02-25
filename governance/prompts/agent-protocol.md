@@ -8,7 +8,7 @@ Every inter-agent message must include these fields:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `message_type` | enum | Yes | One of: ASSIGN, STATUS, RESULT, FEEDBACK, ESCALATE, APPROVE, BLOCK |
+| `message_type` | enum | Yes | One of: ASSIGN, STATUS, RESULT, FEEDBACK, ESCALATE, APPROVE, BLOCK, CANCEL |
 | `source_agent` | string | Yes | Sending persona: `devops-engineer`, `code-manager`, `coder`, `iac-engineer`, `tester` |
 | `target_agent` | string | Yes | Receiving persona (same enum as source) |
 | `correlation_id` | string | Yes | Issue/PR identifier linking all messages in a work unit (e.g., `issue-42`, `pr-108`) |
@@ -104,26 +104,90 @@ Evaluator rejects submitted work — must be addressed before proceeding.
 
 **Valid senders:** Tester → Code Manager
 
+### CANCEL
+
+Instructs an agent to stop current work gracefully or immediately. CANCEL is a session lifecycle message used to enforce context capacity limits, session caps, and user-initiated interrupts.
+
+| Field | Description |
+|-------|-------------|
+| `payload.reason` | Why cancellation is needed (e.g., `context_capacity_80_percent`, `session_cap_reached`, `user_interrupt`) |
+| `payload.context_signal` | Specific signal that triggered cancellation (e.g., `tool_calls > 80`, `chat_turns > 50`, `issues_completed >= N`) |
+| `payload.graceful` | Boolean — `true` = finish current step then stop, `false` = stop immediately |
+
+**Valid senders:** DevOps Engineer → Code Manager, Code Manager → Coder, Code Manager → IaC Engineer, Code Manager → Tester
+
+**On receipt, the target agent must:**
+1. Stop current work within one step (graceful) or immediately (non-graceful)
+2. Commit any in-progress changes to avoid dirty state
+3. Emit a partial RESULT (or partial APPROVE/BLOCK for Tester) with work completed so far
+4. Stop processing — do not begin new work
+
+## Protocol Enforcement Rules
+
+### Cycle Limit Enforcement
+
+- The Tester has a maximum of **3 evaluation cycles** per work unit. At cycle 3, the Tester must emit BLOCK (not FEEDBACK). Continued FEEDBACK after cycle 3 is a protocol violation.
+- On BLOCK from cycle exhaustion, the Code Manager must emit ESCALATE to the DevOps Engineer with the unresolved items and cycle history.
+
+### CANCEL Priority
+
+- CANCEL supersedes all in-flight messages. On receipt, an agent must stop current work within one step regardless of what other messages are pending.
+- If an agent receives both an ASSIGN and a CANCEL for the same `correlation_id`, CANCEL takes precedence.
+- CANCEL does not require a response other than the partial RESULT (or partial APPROVE/BLOCK) described above.
+
+### CANCEL Idempotency
+
+- Multiple CANCEL messages for the same `correlation_id` are safe and must be deduplicated. An agent that has already processed a CANCEL for a given `correlation_id` ignores subsequent CANCEL messages for it.
+
+### Context Capacity Signals
+
+Concrete thresholds that trigger CANCEL propagation:
+
+| Signal | Threshold | Action |
+|--------|-----------|--------|
+| Tool calls in session | > 80 | DevOps Engineer emits CANCEL to Code Manager |
+| Chat turns (exchanges) | > 50 | DevOps Engineer emits CANCEL to Code Manager |
+| Issues completed | >= N (`parallel_coders`) | DevOps Engineer emits CANCEL to Code Manager |
+| User interrupt | Immediate | DevOps Engineer emits CANCEL with `graceful: false` |
+
+## Message Guarantees
+
+### Phase A / A+ (Single-Session, Current)
+
+- **Best-effort ordering** within a single session. Messages are processed in the order they appear in the context window.
+- **CANCEL is handled synchronously** — the receiving agent processes it before any subsequent messages.
+- **No deduplication needed** — single-session execution inherently prevents duplicate delivery.
+
+### Phase B (Multi-Session, Future)
+
+- **At-least-once delivery** with deduplication by the tuple `(correlation_id, source_agent, target_agent, message_type)`. Duplicate messages with identical tuples are silently dropped.
+- **CANCEL messages are prioritized** in the dispatch queue — they are processed before any other pending messages for the same `correlation_id`.
+- **Message ordering guaranteed per `correlation_id`** — messages for the same work unit are delivered in the order they were emitted. Cross-correlation ordering is not guaranteed.
+
 ## Valid Transition Map
 
 ```mermaid
 flowchart LR
     DE[DevOps Engineer] -->|ASSIGN| CM[Code Manager]
+    DE -->|CANCEL| CM
     CM -->|STATUS| DE
     CM -->|RESULT| DE
     CM -->|ESCALATE| DE
 
     CM -->|ASSIGN| CO[Coder]
+    CM -->|CANCEL| CO
     CO -->|STATUS| CM
     CO -->|RESULT| CM
     CO -->|ESCALATE| CM
 
     CM -->|ASSIGN| IAC[IaC Engineer]
+    CM -->|CANCEL| IAC
     IAC -->|STATUS| CM
     IAC -->|RESULT| CM
     IAC -->|ESCALATE| CM
 
     CM -->|ASSIGN| TE[Tester]
+    CM -->|CANCEL| TE
     TE -->|FEEDBACK| CM
     TE -->|APPROVE| CM
     TE -->|BLOCK| CM
@@ -133,7 +197,7 @@ flowchart LR
     CM -->|"FEEDBACK (relayed)"| IAC
 ```
 
-Agents must not send message types not listed in their valid transitions. The DevOps Engineer never communicates directly with Coder or Tester — all routing goes through Code Manager.
+Agents must not send message types not listed in their valid transitions. The DevOps Engineer never communicates directly with Coder or Tester — all routing goes through Code Manager. CANCEL flows strictly downward: DevOps Engineer to Code Manager, and Code Manager to workers (Coder, IaC Engineer, Tester).
 
 ## Transport
 
