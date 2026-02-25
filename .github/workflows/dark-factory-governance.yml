@@ -169,6 +169,9 @@ jobs:
           REPO_NAME: ${{ github.repository }}
           PROFILE_PATH: ${{ steps.profile.outputs.profile_path }}
         run: |
+          # Exit codes: 0=approve, 1=block, 2=human_review, 3=auto_remediate
+          # Using || true because the decision is read from the manifest JSON output,
+          # not from the exit code. The engine's exit code is informational only in CI.
           python "${GOV_ROOT}/governance/bin/policy-engine.py" \
             --emissions-dir "${GOV_ROOT}/governance/emissions/" \
             --profile "$PROFILE_PATH" \
@@ -267,6 +270,9 @@ jobs:
   # -----------------------------------------------------------
   # Job 4: Block PR when no emissions — required panels missing
   # -----------------------------------------------------------
+  # This job intentionally shares name "review" with the main review job above.
+  # GitHub branch protection rules match on job name, not job ID. Using the same name
+  # ensures the required status check "review" passes regardless of which path executes.
   skip-review:
     name: review
     runs-on: ubuntu-latest

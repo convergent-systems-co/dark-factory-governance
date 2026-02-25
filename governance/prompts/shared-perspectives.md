@@ -3,6 +3,11 @@
 > Canonical definitions for perspectives that appear in 2 or more review panels.
 > Review prompts in `governance/prompts/reviews/` reference these definitions.
 > Each perspective is a reasoning role — not a model prompt or agent identity.
+>
+> **DO NOT LOAD AT RUNTIME.** This file is the authoring-time DRY mechanism.
+> Compiled review prompts in `governance/prompts/reviews/` inline all perspectives
+> with full locality. Loading this file at runtime would duplicate perspective
+> definitions and waste context tokens.
 
 ---
 

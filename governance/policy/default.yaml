@@ -165,6 +165,10 @@ required_panels:
 
 # Optional Panels
 # Panels executed based on change characteristics.
+# NOTE: optional_panels triggers are advisory hints for AI agents, not machine-evaluated conditions.
+# Unlike policy conditions (e.g., "aggregate_confidence >= 0.85"), these trigger strings are
+# interpreted by AI agents to determine when a panel is relevant. They are not evaluated by the
+# policy engine.
 optional_panels:
   - panel: ai-expert-review
     trigger: files_changed_in ["governance/personas/", "governance/prompts/", "governance/policy/", "governance/schemas/", "instructions/"]

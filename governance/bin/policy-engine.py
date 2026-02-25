@@ -37,6 +37,8 @@ from pathlib import Path
 import yaml
 from jsonschema import validate, ValidationError
 
+__version__ = "1.0.0"
+
 
 # ---------------------------------------------------------------------------
 # Logging
@@ -573,7 +575,11 @@ def _evaluate_block_sub_condition(sub_cond: str, confidence: float, risk: str, f
 
 
 def evaluate_escalation_rules(aggregate_confidence, aggregate_risk, policy_flags, emissions, profile, log):
-    """Evaluate escalation rules. Returns (escalate: bool, reason: str)."""
+    """Evaluate escalation rules. Returns (escalate: bool, reason: str).
+
+    Complexity: O(R * max(F, E)) where R = number of rules, F = number of flags,
+    E = number of emissions. Acceptable at current scale (typically R < 10, F < 20, E < 10).
+    """
     rules = profile.get("escalation", {}).get("rules", [])
 
     for rule in rules:
@@ -602,7 +608,11 @@ def evaluate_escalation_rules(aggregate_confidence, aggregate_risk, policy_flags
 
 
 def _evaluate_escalation_condition(condition: str, confidence: float, risk: str, flags: list, emissions: list) -> bool:
-    """Evaluate a single escalation condition string."""
+    """Evaluate a single escalation condition string against current state.
+
+    Scans flags and emissions arrays for each condition check. Called once per rule,
+    contributing to the O(R * max(F, E)) complexity of the parent function.
+    """
     cond = condition.strip()
 
     # Handle compound 'and' conditions
@@ -1261,6 +1271,11 @@ def evaluate(emissions_dir, profile_path, ci_passed=True, commit_sha=None, pr_nu
 # ---------------------------------------------------------------------------
 
 def main():
+    # Exit codes:
+    #   0 — approve (merge allowed)
+    #   1 — block (merge denied)
+    #   2 — human_review_required (needs manual approval)
+    #   3 — auto_remediate (attempt automatic fix, then re-evaluate)
     parser = argparse.ArgumentParser(
         description="Dark Factory Policy Engine — evaluate panel emissions against a policy profile."
     )
@@ -1273,6 +1288,7 @@ def main():
     parser.add_argument("--pr-number", type=int, help="PR number for manifest context")
     parser.add_argument("--repo", help="Repository name (owner/repo) for manifest context")
     parser.add_argument("--dry-run", action="store_true", help="Preview decision without writing manifest or exiting non-zero")
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
 
     args = parser.parse_args()
 
