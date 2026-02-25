@@ -80,7 +80,7 @@ flowchart TD
 |-------|---------|---------|---------------|
 | 1 | DevOps Engineer | Routing | Pre-flight, triage, issue routing |
 | 2 | Code Manager | Orchestrator | Validate intent and create plans for **all** selected issues |
-| 3 | Code Manager | Parallelization | Spawn up to N Coder agents via `Task` tool with `isolation: "worktree"` (N = `governance.parallel_coders`, default 5) |
+| 3 | Code Manager | Parallelization | Spawn up to N worker agents (Coder/IaC Engineer) via `Task` tool with `isolation: "worktree"` (N = `governance.parallel_coders`, default 5) |
 | 4 | Code Manager + Tester | Evaluator-Optimizer | Collect results as each Coder finishes; evaluate, push PR, monitor CI |
 | 5 | Code Manager + DevOps Engineer | — | Merge all PRs, retrospective, loop or shutdown |
 
@@ -227,29 +227,33 @@ After all plans are written, proceed to Phase 3 (Parallel Dispatch).
 
 **Persona:** Code Manager (`governance/personas/agentic/code-manager.md`)
 
-The Code Manager spawns **parallel Coder agents** using the `Task` tool with `isolation: "worktree"`. Each Coder runs in its own git worktree with its own context window, working on a single issue independently.
+The Code Manager spawns **parallel worker agents** (Coder or IaC Engineer) using the `Task` tool with `isolation: "worktree"`. Each worker runs in its own git worktree with its own context window, working on a single issue independently.
 
-### 3a: Spawn Coder Agents
+### 3a: Spawn Worker Agents
 
-Read `governance.parallel_coders` from `project.yaml` (default: 5) to determine the maximum number of concurrent Coder agents.
+Read `governance.parallel_coders` from `project.yaml` (default: 5) to determine the maximum number of concurrent worker agents.
 
-For each planned issue, spawn a background Task agent:
+For each planned issue, determine the appropriate worker persona:
+- **IaC Engineer** (`governance/personas/agentic/iac-engineer.md`) — when the issue involves infrastructure: Bicep, Terraform, ARM templates, cloud resource provisioning, networking, or identity configuration
+- **Coder** (`governance/personas/agentic/coder.md`) — for all other implementation work
+
+Spawn a background Task agent per issue:
 
 ```
 Task(
   subagent_type: "general-purpose",
   isolation: "worktree",
   run_in_background: true,
-  prompt: <full Coder prompt with plan, acceptance criteria, and constraints>
+  prompt: <full worker persona prompt with plan, acceptance criteria, and constraints>
 )
 ```
 
-**The Coder prompt must include:**
-1. The full Coder persona instructions (from `governance/personas/agentic/coder.md`)
+**The worker prompt must include:**
+1. The full persona instructions (Coder or IaC Engineer as appropriate)
 2. The plan content (from `.plans/{number}-{description}.md`)
 3. The issue body and acceptance criteria
 4. Branch name to use
-5. Instructions to commit, run tests, and report results — but NOT push (the Code Manager pushes)
+5. Instructions to commit, run tests/validation, and report results — but NOT push (the Code Manager pushes)
 
 **Dispatch rules:**
 - Spawn up to N Coder agents concurrently (N = `governance.parallel_coders` from `project.yaml`, default 5)

@@ -9,7 +9,7 @@ Every inter-agent message must include these fields:
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `message_type` | enum | Yes | One of: ASSIGN, STATUS, RESULT, FEEDBACK, ESCALATE, APPROVE, BLOCK |
-| `source_agent` | string | Yes | Sending persona: `devops-engineer`, `code-manager`, `coder`, `tester` |
+| `source_agent` | string | Yes | Sending persona: `devops-engineer`, `code-manager`, `coder`, `iac-engineer`, `tester` |
 | `target_agent` | string | Yes | Receiving persona (same enum as source) |
 | `correlation_id` | string | Yes | Issue/PR identifier linking all messages in a work unit (e.g., `issue-42`, `pr-108`) |
 | `payload` | object | Yes | Message-type-specific structured data (see below) |
@@ -28,7 +28,7 @@ Delegates a work unit from an orchestrator to an executor.
 | `payload.constraints` | Boundaries: approved plan, time budget, scope limits |
 | `payload.priority` | `P0`–`P4` or `urgent` |
 
-**Valid senders:** DevOps Engineer → Code Manager, Code Manager → Coder, Code Manager → Tester
+**Valid senders:** DevOps Engineer → Code Manager, Code Manager → Coder, Code Manager → IaC Engineer, Code Manager → Tester
 
 ### STATUS
 
@@ -40,7 +40,7 @@ Progress update from an executor to its orchestrator.
 | `payload.progress` | Description of what has been done |
 | `payload.blockers` | Any blockers encountered (empty array if none) |
 
-**Valid senders:** Coder → Code Manager, Code Manager → DevOps Engineer
+**Valid senders:** Coder → Code Manager, IaC Engineer → Code Manager, Code Manager → DevOps Engineer
 
 ### RESULT
 
@@ -53,7 +53,7 @@ Executor reports completion of assigned work.
 | `payload.test_results` | Test pass/fail summary (if applicable) |
 | `payload.documentation_updated` | List of documentation files updated |
 
-**Valid senders:** Coder → Code Manager, Code Manager → DevOps Engineer
+**Valid senders:** Coder → Code Manager, IaC Engineer → Code Manager, Code Manager → DevOps Engineer
 
 ### FEEDBACK
 
@@ -80,7 +80,7 @@ Agent cannot resolve an issue within its authority and escalates upward.
 | `payload.attempts` | Number of attempts made before escalating |
 | `payload.options` | Suggested resolution paths (if any) |
 
-**Valid senders:** Coder → Code Manager, Tester → Code Manager, Code Manager → DevOps Engineer
+**Valid senders:** Coder → Code Manager, IaC Engineer → Code Manager, Tester → Code Manager, Code Manager → DevOps Engineer
 
 ### APPROVE
 
@@ -118,6 +118,11 @@ flowchart LR
     CO -->|RESULT| CM
     CO -->|ESCALATE| CM
 
+    CM -->|ASSIGN| IAC[IaC Engineer]
+    IAC -->|STATUS| CM
+    IAC -->|RESULT| CM
+    IAC -->|ESCALATE| CM
+
     CM -->|ASSIGN| TE[Tester]
     TE -->|FEEDBACK| CM
     TE -->|APPROVE| CM
@@ -125,6 +130,7 @@ flowchart LR
     TE -->|ESCALATE| CM
 
     CM -->|"FEEDBACK (relayed)"| CO
+    CM -->|"FEEDBACK (relayed)"| IAC
 ```
 
 Agents must not send message types not listed in their valid transitions. The DevOps Engineer never communicates directly with Coder or Tester — all routing goes through Code Manager.
@@ -161,7 +167,7 @@ These markers serve as structured logging — they document the handoff between 
 
 ### Phase A+: Parallel Single-Session (Current — Claude Code Task Tool)
 
-The Code Manager spawns multiple Coder agents using the `Task` tool with `isolation: "worktree"`. Each Coder runs in its own git worktree and context window, working on a single issue. The Code Manager remains in the main session and collects results as they arrive.
+The Code Manager spawns multiple worker agents (Coder or IaC Engineer as appropriate) using the `Task` tool with `isolation: "worktree"`. Each worker runs in its own git worktree and context window, working on a single issue. The Code Manager remains in the main session and collects results as they arrive.
 
 **Dispatch pattern:**
 ```

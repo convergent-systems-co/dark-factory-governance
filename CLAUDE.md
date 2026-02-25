@@ -54,10 +54,11 @@ Every code change flows through these layers in order:
 - **Shared perspectives** (`governance/prompts/shared-perspectives.md`) — Canonical definitions for the 19 perspectives appearing in 2+ review prompts. Serves as the authoring-time DRY mechanism; compiled prompts have full locality at runtime.
 - **Personas** (`governance/personas/`) — _Deprecated._ 58 role definitions across 13 categories. Superseded by consolidated review prompts. Will be removed in a future release.
 - **Panels** (`governance/personas/panels/`) — _Deprecated._ 19 multi-persona review workflows. Superseded by consolidated review prompts. Will be removed in a future release.
-- **Agentic personas** (`governance/personas/agentic/`) — Four-agent prompt-chained architecture:
+- **Agentic personas** (`governance/personas/agentic/`) — Five-agent prompt-chained architecture:
   - **DevOps Engineer** — Session entry point: pre-flight, triage, routing (Anthropic's Routing pattern)
   - **Code Manager** — Pipeline orchestrator: intent validation, panel selection, review coordination, merge (Orchestrator-Workers pattern)
   - **Coder** — Execution agent: implementation, tests, documentation (Worker)
+  - **IaC Engineer** — Infrastructure execution agent: Bicep/Terraform, JM Paved Roads standards, security-first defaults (Worker)
   - **Tester** — Independent evaluator: test coverage gate, documentation verification, structured feedback (Evaluator-Optimizer pattern)
 - **Agent protocol** (`governance/prompts/agent-protocol.md`) — Structured inter-agent communication with typed messages: ASSIGN, STATUS, RESULT, FEEDBACK, ESCALATE, APPROVE, BLOCK
 
