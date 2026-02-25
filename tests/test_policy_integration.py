@@ -462,6 +462,43 @@ class TestCompoundBlockIntegration:
         # Should not block — context-dependent compound conditions return False
         assert manifest["decision"]["action"] != "block" or "missing" in manifest["decision"]["rationale"].lower()
 
+    def test_compound_block_with_default_profile(self, tmp_path):
+        """default.yaml: craft emissions triggering compound block condition through evaluate().
+
+        The compound condition 'any_policy_flag_severity == "critical" and not auto_remediable'
+        from default.yaml should produce a block decision when emissions contain a critical,
+        non-remediable policy flag.
+        """
+        emissions = all_required_emissions(confidence=0.92, risk_level="low")
+        # Add a critical, non-auto-remediable policy flag to trigger the compound condition
+        emissions[0]["policy_flags"] = [
+            {"flag": "vuln_critical", "severity": "critical", "description": "Critical CVE", "auto_remediable": False},
+        ]
+        _write_emissions(str(tmp_path), emissions)
+        manifest, exit_code = policy_engine.evaluate(
+            str(tmp_path), _profile_path("default"),
+            ci_passed=True, log_stream=io.StringIO(),
+        )
+        assert exit_code == 1
+        assert manifest["decision"]["action"] == "block"
+
+    def test_compound_block_not_triggered(self, tmp_path):
+        """default.yaml: emissions that do NOT trigger the compound block condition.
+
+        When no critical policy flags exist, the compound condition
+        'any_policy_flag_severity == "critical" and not auto_remediable' should not fire,
+        and the PR should proceed to auto_merge with otherwise clean emissions.
+        """
+        emissions = all_required_emissions(confidence=0.92, risk_level="low")
+        # No policy flags at all — compound condition first sub-condition is False
+        _write_emissions(str(tmp_path), emissions)
+        manifest, exit_code = policy_engine.evaluate(
+            str(tmp_path), _profile_path("default"),
+            ci_passed=True, log_stream=io.StringIO(),
+        )
+        assert exit_code == 0
+        assert manifest["decision"]["action"] == "auto_merge"
+
 
 # ===========================================================================
 # Weight sum validation (issues #231, #232)

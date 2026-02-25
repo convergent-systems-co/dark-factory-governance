@@ -475,6 +475,74 @@ class TestCompoundBlockConditions:
         )
         assert result is False
 
+    def test_compound_both_true_blocks(self):
+        """Compound condition where both sub-conditions are true returns True (block)."""
+        flags = [
+            {"flag": "vuln_critical", "severity": "critical", "description": "Critical CVE", "auto_remediable": False},
+        ]
+        result = policy_engine._evaluate_block_condition(
+            'any_policy_flag_severity == "critical" and not auto_remediable',
+            0.90, "low", flags,
+        )
+        assert result is True
+
+    def test_compound_first_false_no_block(self):
+        """First sub-condition false (no critical flag) returns False."""
+        flags = [
+            {"flag": "style_issue", "severity": "low", "description": "Lint", "auto_remediable": False},
+        ]
+        result = policy_engine._evaluate_block_condition(
+            'any_policy_flag_severity == "critical" and not auto_remediable',
+            0.90, "low", flags,
+        )
+        assert result is False
+
+    def test_compound_second_false_no_block(self):
+        """Second sub-condition false (all flags auto-remediable) returns False."""
+        flags = [
+            {"flag": "vuln_critical", "severity": "critical", "description": "Critical CVE", "auto_remediable": True},
+        ]
+        result = policy_engine._evaluate_block_condition(
+            'any_policy_flag_severity == "critical" and not auto_remediable',
+            0.90, "low", flags,
+        )
+        assert result is False
+
+    def test_compound_with_not_negation(self):
+        """Compound with 'not' prefix negates the sub-condition correctly.
+
+        Tests: 'any_policy_flag_severity == "critical" and not auto_remediable'
+        When flags are critical AND not auto-remediable, block should trigger.
+        When flags are critical AND auto-remediable, 'not auto_remediable' is False → no block.
+        """
+        # Case 1: not auto_remediable is True (flags are NOT auto-remediable) → blocks
+        flags_not_remediable = [
+            {"flag": "vuln", "severity": "critical", "description": "CVE", "auto_remediable": False},
+        ]
+        result = policy_engine._evaluate_block_condition(
+            'any_policy_flag_severity == "critical" and not auto_remediable',
+            0.90, "low", flags_not_remediable,
+        )
+        assert result is True
+
+        # Case 2: not auto_remediable is False (flags ARE auto-remediable) → no block
+        flags_remediable = [
+            {"flag": "vuln", "severity": "critical", "description": "CVE", "auto_remediable": True},
+        ]
+        result = policy_engine._evaluate_block_condition(
+            'any_policy_flag_severity == "critical" and not auto_remediable',
+            0.90, "low", flags_remediable,
+        )
+        assert result is False
+
+    def test_compound_context_dependent_returns_false(self):
+        """Compound with a context-dependent sub-condition returns False (fail-closed)."""
+        result = policy_engine._evaluate_block_condition(
+            'panel_missing("data-design-review") and data_files_changed',
+            0.90, "low", [],
+        )
+        assert result is False
+
 
 class TestCompoundBlockSubCondition:
     """Unit tests for _evaluate_block_sub_condition."""
