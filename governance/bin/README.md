@@ -1,18 +1,18 @@
 # Dark Factory Governance Tools
 
-## Policy Engine (`policy-engine.py`)
+## Policy Engine
 
-Evaluates YAML policy profiles against structured panel emissions to produce deterministic merge decisions, rule-by-rule audit logs, and run manifests.
+The policy engine source has moved to `governance/engine/policy_engine.py` as part of a proper Python package (`governance/engine/`). This directory retains a backward-compatible wrapper at `policy-engine.py` so existing CI workflows and consuming repos continue to work without changes.
 
 ### Requirements
 
 - Python 3.12+
-- `pyyaml`
-- `jsonschema`
+- Dependencies defined in `governance/engine/pyproject.toml`
 
 ### Usage
 
 ```bash
+# Via the backward-compatible wrapper (existing behavior):
 python governance/bin/policy-engine.py \
     --emissions-dir governance/emissions/ \
     --profile governance/policy/default.yaml \
@@ -20,6 +20,12 @@ python governance/bin/policy-engine.py \
     --commit-sha "$(git rev-parse HEAD)" \
     --pr-number 42 \
     --repo "owner/repo"
+
+# Or as a Python package:
+python -m governance.engine.policy_engine \
+    --emissions-dir governance/emissions/ \
+    --profile governance/policy/default.yaml \
+    --output manifest.json
 ```
 
 ### Flags

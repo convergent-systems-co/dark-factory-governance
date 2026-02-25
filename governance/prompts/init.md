@@ -207,7 +207,7 @@ python3 -m venv .ai/.venv
 
 # Install dependencies
 .ai/.venv/bin/pip install --quiet --upgrade pip
-.ai/.venv/bin/pip install --quiet -r .ai/governance/bin/requirements.txt
+.ai/.venv/bin/pip install --quiet -e .ai/governance/engine[dev]
 
 # Verify
 .ai/.venv/bin/python -c "import jsonschema; import yaml; print('OK')"

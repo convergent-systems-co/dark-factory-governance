@@ -15,6 +15,7 @@ AI_DIR="$(dirname "$SCRIPT_DIR")"                             # .ai/
 PROJECT_ROOT="$(dirname "$AI_DIR")"                           # project root
 VENV_DIR="$AI_DIR/.venv"
 REQUIREMENTS="$AI_DIR/governance/bin/requirements.txt"
+PYPROJECT="$AI_DIR/governance/engine/pyproject.toml"
 INSTALL_DEPS=false
 PYTHON_MIN_MAJOR=3
 PYTHON_MIN_MINOR=12
@@ -459,18 +460,21 @@ if [ "$INSTALL_DEPS" = "true" ]; then
     echo "  [OK] Virtual environment already exists at .ai/.venv"
   fi
 
-  # Install requirements
-  if [ ! -f "$REQUIREMENTS" ]; then
-    echo "  [ERROR] requirements.txt not found at $REQUIREMENTS"
-    echo "          Cannot install dependencies without a requirements file."
-    echo "          Either create a requirements file at $REQUIREMENTS or rerun without --install-deps."
+  # Install requirements — prefer pyproject.toml, fall back to requirements.txt
+  "$VENV_DIR/bin/pip" install --quiet --upgrade pip
+  if [ -f "$PYPROJECT" ]; then
+    echo "  Installing packages from governance/engine/pyproject.toml ..."
+    "$VENV_DIR/bin/pip" install --quiet -e "$AI_DIR/governance/engine[dev]"
+    echo "  [OK] Packages installed (pyproject.toml)"
+  elif [ -f "$REQUIREMENTS" ]; then
+    echo "  Installing packages from requirements.txt (legacy fallback) ..."
+    "$VENV_DIR/bin/pip" install --quiet -r "$REQUIREMENTS"
+    echo "  [OK] Packages installed (requirements.txt)"
+  else
+    echo "  [ERROR] No pyproject.toml or requirements.txt found"
+    echo "          Expected: $PYPROJECT or $REQUIREMENTS"
     exit 1
   fi
-
-  echo "  Installing packages from requirements.txt ..."
-  "$VENV_DIR/bin/pip" install --quiet --upgrade pip
-  "$VENV_DIR/bin/pip" install --quiet -r "$REQUIREMENTS"
-  echo "  [OK] Packages installed"
 
   # Verify installation
   echo ""

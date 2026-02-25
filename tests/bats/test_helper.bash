@@ -43,9 +43,11 @@ setup() {
   export SCRIPT_DIR="$AI_DIR/bin"
   export VENV_DIR="$AI_DIR/.venv"
   export REQUIREMENTS="$AI_DIR/governance/bin/requirements.txt"
+  export PYPROJECT="$AI_DIR/governance/engine/pyproject.toml"
 
   mkdir -p "$AI_DIR/bin"
   mkdir -p "$AI_DIR/governance/bin"
+  mkdir -p "$AI_DIR/governance/engine"
   mkdir -p "$AI_DIR/governance/emissions"
   mkdir -p "$AI_DIR/governance/templates"
   mkdir -p "$AI_DIR/.github/workflows"

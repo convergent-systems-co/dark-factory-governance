@@ -89,10 +89,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install -r governance/bin/requirements.txt
+        run: pip install -e governance/engine[dev]
 
       - name: Run tests with coverage
-        run: pytest tests/ -v --cov=governance/bin --cov-fail-under=80
+        run: pytest governance/engine/tests/ -v --cov=governance/engine --cov-fail-under=80
 
   # -----------------------------------------------------------
   # Job 3: Run policy engine and post review

@@ -10,7 +10,7 @@ Current maturity: **Phase 4b (Autonomous Remediation)** — all governance artif
 
 ## Repository Commands
 
-There is no build system or linter. The policy engine has a pytest test suite in `tests/`.
+There is no build system or linter. The policy engine has a pytest test suite in `governance/engine/tests/`.
 
 **Bootstrap (for consuming repos):**
 ```bash

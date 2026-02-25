@@ -129,11 +129,14 @@ See [GOALS.md](GOALS.md) for detailed progress tracking, completed work, and ope
 
     emissions/                 Panel emission outputs (structured JSON)
     manifests/                 Run manifests (audit trail, append-only)
+    engine/                    Python package — policy engine and tests
+      __init__.py              Package marker
+      policy_engine.py         Deterministic evaluation engine (Phase 4b)
+      pyproject.toml           Package metadata and dependencies
+      tests/                   Policy engine test suite (pytest)
     bin/
-      policy-engine.py         Deterministic evaluation engine (Phase 4b)
-      requirements.txt         Python dependencies for policy engine
-
-  tests/                       Policy engine test suite (pytest)
+      policy-engine.py         Backward-compatible entry point (delegates to engine/)
+      requirements.txt         Legacy Python dependencies (prefer engine/pyproject.toml)
   docs/                        Documentation (architecture, configuration, operations, research)
     README.md                    Navigation hub and documentation index
     architecture/                Architecture and design documents

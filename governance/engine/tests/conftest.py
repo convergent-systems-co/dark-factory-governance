@@ -8,21 +8,13 @@ from pathlib import Path
 import pytest
 import yaml
 
-# Ensure the policy engine module is importable
-REPO_ROOT = Path(__file__).resolve().parent.parent
-GOVERNANCE_DIR = REPO_ROOT / "governance" / "bin"
-sys.path.insert(0, str(GOVERNANCE_DIR))
+# Repo root is four levels up: tests/ -> engine/ -> governance/ -> repo root
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
-# Re-export after path setup so tests can import the engine
-from importlib import import_module
+# Ensure governance.engine is importable
+sys.path.insert(0, str(REPO_ROOT))
 
-_engine_path = GOVERNANCE_DIR / "policy-engine.py"
-# Python can't import filenames with hyphens directly; use importlib
-import importlib.util
-
-_spec = importlib.util.spec_from_file_location("policy_engine", _engine_path)
-policy_engine = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(policy_engine)
+from governance.engine import policy_engine
 
 
 # ---------------------------------------------------------------------------
