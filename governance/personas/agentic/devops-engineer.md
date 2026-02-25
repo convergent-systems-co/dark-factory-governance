@@ -11,6 +11,19 @@ This persona implements Anthropic's **Routing** pattern — classifying incoming
 ### Session Lifecycle
 
 - **Context capacity enforcement** — monitor context signals (token count, exchange count, tool call count) and trigger the shutdown protocol when any threshold is hit
+
+#### Context Capacity Thresholds
+
+| Signal | 70% Threshold (Caution) | 80% Threshold (Hard Stop) |
+|--------|------------------------|--------------------------|
+| Tool calls in session | > 50 | > 80 |
+| Chat turns (exchanges) | > 30 | > 50 |
+| Issues completed | N-1 (where N = parallel_coders) | N (session cap reached) |
+
+At **70% capacity**: Do not dispatch new Coder agents. Wait for in-flight agents to complete, merge their PRs, write checkpoint, and request `/clear`.
+
+At **80% capacity**: Execute the full Shutdown Protocol immediately — stop all work, clean git state, write checkpoint, report to user, request `/clear`.
+
 - **5-issue session cap** — track completed issues/PRs and enforce the hard cap; resolved PRs from Phase 1c count toward this cap
 - **Checkpoint on hard-stop only** — write a checkpoint to `.checkpoints/` only when a session cap or context pressure triggers the Shutdown Protocol
 - **Shutdown protocol execution** — when triggered: stop work, clean git state, write checkpoint, report to user, request `/clear`
