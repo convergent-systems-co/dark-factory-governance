@@ -87,7 +87,9 @@ Closed issues represent a user decision. Continuing work on them wastes compute 
 
 ```mermaid
 flowchart TD
-    P1[Phase 1: Pre-flight & Triage] -->|ASSIGN batch| P2[Phase 2: Parallel Planning]
+    P0[Phase 0: Checkpoint Recovery] -->|Checkpoint found| RESUME[Resume from checkpoint phase]
+    P0 -->|No checkpoint| P1[Phase 1: Pre-flight & Triage]
+    P1 -->|ASSIGN batch| P2[Phase 2: Parallel Planning]
     P2 -->|ASSIGN per issue| P3[Phase 3: Parallel Dispatch]
     P3 -->|Task tool + worktree| C1[Coder Agent 1]
     P3 -->|Task tool + worktree| C2[Coder Agent 2]
@@ -103,6 +105,7 @@ flowchart TD
 
 | Phase | Persona | Pattern | Responsibility |
 |-------|---------|---------|---------------|
+| 0 | DevOps Engineer | Recovery | Auto-detect checkpoint, validate issues, resume or proceed to Phase 1 |
 | 1 | DevOps Engineer | Routing | Pre-flight, triage, issue routing |
 | 2 | Code Manager | Orchestrator | Validate intent and create plans for **all** selected issues |
 | 3 | Code Manager | Parallelization | Spawn up to N worker agents (Coder/IaC Engineer) via `Task` tool with `isolation: "worktree"` (N = `governance.parallel_coders`, default 5) |
@@ -113,7 +116,7 @@ flowchart TD
 
 ## Context Gate
 
-**Every phase boundary requires a context capacity check.** Before entering any phase (1-5), the active persona must evaluate the current capacity tier and act accordingly. This gate is mandatory and cannot be skipped.
+**Every phase boundary requires a context capacity check.** Before entering any phase (0-5), the active persona must evaluate the current capacity tier and act accordingly. This gate is mandatory and cannot be skipped.
 
 ### Gate Protocol
 
@@ -151,6 +154,90 @@ CONTEXT GATE — Phase {N} Entry
 **GitHub Copilot:** Check the context meter in the chat input area (hover for exact count). If operating programmatically, use `vscode.lm.countTokens()` on the assembled payload. Auto-summarization of conversation history indicates Red tier.
 
 **Both platforms:** Track tool call count and chat turn count internally. These heuristics are always available regardless of platform. If platform-specific signals are unavailable, rely on heuristic signals alone.
+
+---
+
+## Phase 0: Checkpoint Auto-Recovery
+
+> **Context Gate — Phase 0 Entry:** Execute the Context Gate protocol (see above). This is the session entry point — if already at Red tier on startup, execute Shutdown Protocol immediately.
+
+**Persona:** DevOps Engineer (`governance/personas/agentic/devops-engineer.md`)
+
+This phase runs automatically at the start of every `/startup` invocation. After a context reset, the user must explicitly restart the agentic loop: in Claude Code, run `/clear` and then invoke `/startup` again; in GitHub Copilot, start a new thread and paste the startup directive. Phase 0 then auto-detects any existing checkpoint and resumes from it, so no additional manual reconstruction of state is needed.
+
+### 0a: Scan for Checkpoints
+
+Look for the most recent checkpoint file in `.governance/checkpoints/`:
+
+```bash
+ls -t .governance/checkpoints/*.json 2>/dev/null | head -1
+```
+
+- **If no checkpoint files exist**: skip Phase 0 entirely, proceed to Phase 1.
+- **If a checkpoint file is found**: read it and proceed to 0b.
+- **If the user provides a specific checkpoint path** (e.g., Copilot users pasting a path): prefer the user-specified path over auto-scanning.
+
+### 0b: Validate Checkpoint Issues
+
+For each issue listed in the checkpoint's `current_issue` and `issues_remaining` fields, verify it is still open:
+
+```bash
+gh issue view <number> --json state --jq '.state'
+```
+
+- Remove any **closed** issues from the work queue. Closed issues represent a user decision — do not resume work on them.
+- If `current_issue` is closed, set it to `null` and move to the next remaining issue.
+- If all issues (both `current_issue` and `issues_remaining`) are closed, discard the checkpoint and proceed to Phase 1 for a fresh scan.
+
+### 0c: Validate Git State
+
+Verify the working tree matches the checkpoint's expected state:
+
+```bash
+git status --porcelain
+git branch --show-current
+```
+
+- If the working tree is dirty, **do not auto-commit on resume**. Surface what is dirty (summarize `git status`), and prefer `git stash` to preserve changes safely. If stashing fails, warn and proceed to Phase 1 (fresh start).
+- If the current branch does not match the checkpoint's `branch` field, surface the mismatch and check out the correct branch.
+- If git state cannot be reconciled cleanly (merge conflicts, unknown branch, failed stash), warn, abort the resume, and proceed to Phase 1 (fresh start) once the working tree is confirmed clean.
+
+### 0d: Resume from Checkpoint
+
+Using the checkpoint's structured fields (`prs_remaining`, `prs_created`, `current_issue`, `issues_remaining`), determine which phase to resume from:
+
+| Checkpoint State | Resume Action |
+|---------------------------|---------------|
+| No `prs_created`, has `issues_remaining` | Proceed to Phase 2 with the validated issue queue |
+| Has `prs_created` but none merged, has plans | Proceed to Phase 3 with the validated issue queue and existing plans |
+| Has `prs_created` with open PRs | Enter Phase 4 monitoring loop for those PRs |
+| Has `prs_created` all ready to merge | Enter Phase 5 |
+| No remaining work | Proceed to Phase 1 for a fresh scan |
+
+The `current_step` field provides descriptive context but is not the primary decision input. Load only the context needed for the resume phase (per the JIT loading strategy in `docs/architecture/context-management.md`).
+
+After determining the resume point, log the recovery:
+
+```
+Checkpoint recovered: {checkpoint_file}
+  Issues completed: {issues_completed}
+  Issues remaining: {validated_remaining_issues}
+  Resuming from: {current_step}
+```
+
+Proceed directly to the identified phase. Do not re-execute earlier phases unless the checkpoint state indicates Phase 1.
+
+### 0e: Platform-Specific Handoff
+
+The checkpoint-to-resume handoff differs by platform:
+
+| Platform | Reset Mechanism | Resume Mechanism |
+|----------|----------------|-----------------|
+| **Claude Code** | User runs `/clear` | User runs `/startup` — Phase 0 auto-detects the checkpoint |
+| **GitHub Copilot** | User starts a new chat thread | User pastes: "Resume from checkpoint: `.governance/checkpoints/{file}`" — Phase 0 reads the referenced file |
+| **CLI / Other** | User starts a new session | Agent reads `.governance/checkpoints/` on startup — Phase 0 auto-detects |
+
+The Shutdown Protocol (Phase 5c / end of this file) tells the user exactly what to do, including the platform-specific reset instruction.
 
 ---
 
@@ -574,7 +661,9 @@ When triggered:
    }
    ```
 4. **Report to user** — summarize completed work, remaining work, checkpoint location
-5. **Request context reset** — tell the user to run `/clear` and reference the checkpoint path
+5. **Request context reset** — tell the user to run `/clear` (Claude Code) or start a new thread (Copilot). Include the checkpoint path in the message. After the reset, `/startup` will auto-detect the checkpoint via Phase 0 and resume without further user intervention. The user's only required actions are:
+   - **Claude Code:** Run `/clear`, then run `/startup`
+   - **GitHub Copilot:** Start a new thread, then paste "Resume from checkpoint: `.governance/checkpoints/{file}`"
 
 **Never allow context to reach compaction.** Compaction with uncommitted changes, merge conflicts, or in-progress operations destroys instructions that cannot be recovered.
 

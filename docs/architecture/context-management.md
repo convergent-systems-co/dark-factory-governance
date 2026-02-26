@@ -469,6 +469,64 @@ When resuming from a checkpoint:
 3. Load only the Tier 1 + Tier 2 context needed for the next pending task
 4. Continue from where the checkpoint left off
 
+### Auto-Restart After Context Reset
+
+The agentic loop supports automatic resumption after a context reset. This eliminates manual re-orientation and allows the agent to pick up exactly where it left off with minimal user intervention.
+
+#### Flow
+
+```
+Session N (context pressure detected)
+  └─ Shutdown Protocol writes checkpoint to .governance/checkpoints/
+  └─ Agent tells user to run /clear (Claude Code) or start new thread (Copilot)
+
+Session N+1 (after context reset)
+  └─ User runs /startup (or pastes checkpoint path in Copilot)
+  └─ Phase 0: Checkpoint Auto-Recovery
+       ├─ Scans .governance/checkpoints/ for most recent JSON file
+       ├─ Validates all referenced issues are still open (gh issue view)
+       ├─ Removes closed issues from the work queue
+       ├─ Verifies git state matches checkpoint expectations
+       └─ Resumes from the checkpoint's current_step phase
+```
+
+Phase 0 is the first phase executed by `governance/prompts/startup.md`. It runs before Phase 1 (Pre-flight & Triage) on every `/startup` invocation. If no checkpoint is found, Phase 0 completes instantly and the pipeline proceeds to Phase 1 as normal.
+
+#### Issue State Validation on Resume
+
+Before resuming any work from a checkpoint, Phase 0 validates every issue in the checkpoint:
+
+- `current_issue` -- if closed, set to `null` and advance to the next remaining issue
+- `issues_remaining` -- remove any closed issues from the queue
+- If all issues are closed, discard the checkpoint and proceed to Phase 1 for a fresh scan
+
+This prevents wasted compute on issues that were resolved while the agent was resetting. Closed issues represent a user decision and must be respected.
+
+#### Platform-Specific Reset and Resume
+
+| Platform | Reset Action (User) | Resume Action (User) | Auto-Detection |
+|----------|-------------------|---------------------|----------------|
+| **Claude Code** | Run `/clear` | Run `/startup` | Phase 0 scans `.governance/checkpoints/` automatically |
+| **GitHub Copilot** | Start a new chat thread | Paste: "Resume from checkpoint: `.governance/checkpoints/{file}`" | Phase 0 reads the referenced checkpoint file |
+| **CLI / Other** | Start a new session | Run `/startup` or equivalent | Phase 0 scans `.governance/checkpoints/` automatically |
+
+**Claude Code:** The `/clear` command resets the context window but preserves the working directory and git state. The next `/startup` invocation triggers Phase 0, which finds the checkpoint and resumes. The user does not need to reference the checkpoint path -- auto-detection handles it.
+
+**GitHub Copilot:** Copilot does not have a `/clear` equivalent. Starting a new chat thread is the reset mechanism. Because the new thread has no memory of the previous session, the user must paste the checkpoint path so the agent knows where to look. The Shutdown Protocol message includes this path for easy copy-paste.
+
+**CLI / Other Agents:** Any agent that reads `governance/prompts/startup.md` on session start will execute Phase 0 automatically. The checkpoint directory is scanned without user input.
+
+#### Checkpoint Lifecycle
+
+Checkpoints are write-once artifacts created by the Shutdown Protocol:
+
+1. **Created** when the Shutdown Protocol triggers (context pressure or session cap)
+2. **Read** by Phase 0 on the next `/startup` invocation
+3. **Superseded** when a new checkpoint is written (the most recent file is always used)
+4. **Retained** for audit -- old checkpoints are not deleted automatically
+
+Checkpoint files use the naming convention `{timestamp}-{branch}.json` and are stored in `.governance/checkpoints/`. The `ls -t` scan in Phase 0 ensures the most recent checkpoint is always selected.
+
 ### Protection Mechanisms
 
 1. **Tier 0 pinning**: Base instructions are re-injected at every agent turn as system-level context. They are never part of the conversation history that gets truncated.
