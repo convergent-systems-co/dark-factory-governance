@@ -12,17 +12,27 @@ This persona implements Anthropic's **Routing** pattern — classifying incoming
 
 - **Context capacity enforcement** — monitor context signals (token count, exchange count, tool call count) and trigger the shutdown protocol when any threshold is hit
 
-#### Context Capacity Thresholds
+#### Context Capacity Thresholds (Four-Tier Model)
 
-| Signal | 70% Threshold (Caution) | 80% Threshold (Hard Stop) |
-|--------|------------------------|--------------------------|
-| Tool calls in session | > 50 | > 80 |
-| Chat turns (exchanges) | > 30 | > 50 |
-| Issues completed | N-1 (where N = parallel_coders) | N (session cap reached) |
+| Signal | Green (< 60%) | Yellow (60-70%) | Orange (70-80%) | Red (>= 80%) |
+|--------|---------------|-----------------|-----------------|---------------|
+| Tool calls in session | < 40 | 40-55 | 55-80 | > 80 |
+| Chat turns (exchanges) | < 60 | 60-100 | 100-150 | > 150 |
+| Issues completed (N = `parallel_coders`) | < N-2 | N-2 | N-1 | N (cap reached) |
+| Claude Code token counter | < 60% | 60-70% | 70-80% | >= 80% |
+| Copilot context meter | < 60% | 60-70% | 70-80% | >= 80% |
+| Degraded recall | — | — | — | Red (any occurrence) |
 
-At **70% capacity**: Do not dispatch new Coder agents. Wait for in-flight agents to complete, merge their PRs, write checkpoint, and request `/clear`.
+**Any single signal reaching a tier is sufficient to classify at that tier.** Use the highest tier indicated by any signal.
 
-At **80% capacity**: Execute the full Shutdown Protocol immediately — stop all work, clean git state, write checkpoint, report to user, request `/clear`.
+**Tier actions:**
+
+| Tier | Label | Action |
+|------|-------|--------|
+| 1 | **Green** | Normal operation. All phases proceed. New Coder dispatches allowed. |
+| 2 | **Yellow** | No new Coder dispatches. Finish in-flight work only. Proactively summarize context. |
+| 3 | **Orange** | Stop after current PR completes. Write checkpoint. Request `/clear`. |
+| 4 | **Red** | Stop immediately. Emergency checkpoint. Do not finish current step. |
 
 #### CANCEL Emission
 

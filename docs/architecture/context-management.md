@@ -201,6 +201,121 @@ flowchart TD
     P3b --> P4
 ```
 
+## Capacity Tiers
+
+The pipeline uses a four-tier capacity model to govern phase transitions, Coder dispatch, and shutdown decisions. Tier classification uses the highest tier indicated by any single signal.
+
+### Tier Definitions
+
+| Tier | Capacity Range | Label | Color | Behavior |
+|------|---------------|-------|-------|----------|
+| 1 | < 60% | **Green** | Safe | Normal operation. All phases proceed. New Coder dispatches allowed. |
+| 2 | 60-70% | **Yellow** | Caution | No new Coder dispatches. Finish in-flight work only. Proactively summarize context to extend the working window. |
+| 3 | 70-80% | **Orange** | Warning | Stop after current PR completes (if mid-Phase 4). Write checkpoint and request `/clear`. Do not start new phases. |
+| 4 | >= 80% | **Red** | Critical | Stop immediately. Emergency checkpoint. Do not finish current step. Execute full Shutdown Protocol. |
+
+### Signal-to-Tier Mapping
+
+Each signal maps independently to a tier. The agent's current tier is the **maximum** across all signals.
+
+| Signal | Green (< 60%) | Yellow (60-70%) | Orange (70-80%) | Red (>= 80%) |
+|--------|---------------|-----------------|-----------------|---------------|
+| Tool calls in session | < 40 | 40-55 | 55-80 | > 80 |
+| Chat turns (exchanges) | < 60 | 60-100 | 100-150 | > 150 |
+| Issues completed (N = `parallel_coders`) | < N-2 | N-2 | N-1 | N (cap reached) |
+| Claude Code token counter | < 60% shown | 60-70% shown | 70-80% shown | >= 80% shown |
+| Copilot context meter | < 60% shown | 60-70% shown | 70-80% shown | >= 80% shown |
+| Copilot character count | < 150K chars | 150-200K chars | 200-250K chars | > 250K chars |
+| Degraded recall (re-reading files, inconsistent output) | — | — | — | Red (any occurrence) |
+| System warnings about context limits | — | — | — | Red (any occurrence) |
+| Automatic summarization observed | — | — | — | Red (any occurrence) |
+
+**Degraded recall, system warnings, and automatic summarization are always Red** — they indicate context is already under pressure and immediate action is required.
+
+### Tier Transition Rules
+
+- Tiers only escalate upward during a session (Green -> Yellow -> Orange -> Red). Context capacity does not recover within a session.
+- The agent must re-evaluate tier classification at every phase boundary via the Context Gate protocol.
+- A single signal reaching a higher tier is sufficient to escalate. The agent does not wait for multiple signals to agree.
+
+## Phase Boundary Gate Protocol
+
+Every pipeline phase (1-5) begins with a mandatory Context Gate check. This ensures context capacity is evaluated at structured intervals, not just when symptoms appear.
+
+### Gate Execution
+
+At each phase boundary, the active persona executes:
+
+1. **Evaluate all capacity signals** — check tool call count, turn count, issues completed, and platform-specific token indicators
+2. **Classify current tier** — use the Signal-to-Tier Mapping table; take the maximum tier across all signals
+3. **Act on tier:**
+
+| Current Tier | Phase 1 (Pre-flight) | Phase 2 (Planning) | Phase 3 (Dispatch) | Phase 4 (Review) | Phase 5 (Merge) |
+|-------------|---------------------|-------------------|-------------------|-----------------|----------------|
+| **Green** | Proceed | Proceed | Dispatch all | Proceed | Merge + loop |
+| **Yellow** | Proceed | Proceed | Skip new dispatches; Phase 4 for in-flight only | Finish in-flight PRs; no new dispatches | Merge; do NOT loop |
+| **Orange** | Shutdown | Shutdown | Shutdown | Complete current PR only, then shutdown | Shutdown (leave PRs open) |
+| **Red** | Shutdown | Shutdown | Shutdown | Shutdown immediately | Shutdown immediately |
+
+4. **Log gate result** — record the gate evaluation in checkpoint metadata for audit:
+
+```json
+{
+  "context_gate": {
+    "phase": 3,
+    "tier": "yellow",
+    "tool_calls": 47,
+    "turn_count": 82,
+    "issues_completed": 3,
+    "platform": "claude-code",
+    "action": "skip-dispatch"
+  }
+}
+```
+
+### Gate Actions
+
+| Action | Meaning |
+|--------|---------|
+| `proceed` | Enter the phase normally |
+| `skip-dispatch` | Enter Phase 3 but do not spawn new Coder agents; proceed to Phase 4 for in-flight work |
+| `finish-current` | Complete the current PR in Phase 4, then execute Shutdown Protocol |
+| `merge-no-loop` | Execute Phase 5 merge but do not loop back to Phase 1 |
+| `checkpoint` | Execute Shutdown Protocol: clean git, write checkpoint, request `/clear` |
+| `emergency-stop` | Execute Shutdown Protocol immediately without finishing current step |
+
+### Platform-Specific Gate Detection
+
+#### Claude Code
+
+Claude Code provides direct token usage visibility:
+
+- **Token counter** (verbose mode): Displayed on the right side of the terminal. Shows `{used}/{total}` tokens. Divide to get the capacity percentage.
+- **System warnings**: Emitted as system messages when approaching context limits. Any system warning is an automatic Red classification.
+- **Automatic summarization**: When Claude Code summarizes earlier messages mid-conversation, this indicates Red tier. Checkpoint immediately.
+- **Tool call tracking**: The agent must maintain an internal count of tool calls made during the session. This is the most reliable cross-platform heuristic.
+
+#### GitHub Copilot
+
+Copilot requires a combination of API access and heuristics:
+
+- **Context meter** (VS Code Chat): Hover the token indicator in the chat input area for exact counts (e.g., `15K/128K`). Calculate percentage directly.
+- **`vscode.lm.countTokens()` API**: For extension-based agents, count tokens on the assembled payload before each request. Compare against the model's context window size.
+- **Character count heuristic**: When API access is unavailable, estimate tokens from total conversation character count (1 token ~ 4 characters).
+- **Turn count heuristic**: Track back-and-forth exchanges. This is always available regardless of API access.
+- **Auto-summarization**: If VS Code auto-summarizes conversation history, classify as Red immediately.
+
+#### Universal Heuristics (All Platforms)
+
+These signals are always available and do not depend on platform-specific APIs:
+
+| Heuristic | How to Track | Notes |
+|-----------|-------------|-------|
+| Tool call count | Increment on each tool invocation | Most reliable universal signal |
+| Turn count | Increment on each assistant response | Correlates with context consumption |
+| Issues completed | Count merged PRs + resolved PRs | Tracked by the pipeline naturally |
+| Degraded recall | Detect re-reading of previously-read files, contradictory decisions | Self-detection; always Red |
+
 ## Context Reset Protection
 
 ### The Reset Problem
@@ -325,9 +440,24 @@ The agent must check context capacity before starting any new issue, and after c
      "pending_work": "Issues #7 and #8 need implementation. PRs #13-#15 need governance approval.",
      "prs_created": ["#13", "#14", "#15"],
      "manifests_written": ["20260221-143000-abc1234"],
-     "branches_touched": ["itsfwcp/5-agile-coach", "itsfwcp/6-finops-group"]
+     "branches_touched": ["itsfwcp/5-agile-coach", "itsfwcp/6-finops-group"],
+     "context_capacity": {
+       "tier": "red",
+       "tool_calls": 83,
+       "turn_count": 47,
+       "issues_completed_count": 2,
+       "platform": "claude-code",
+       "trigger": "tool_calls > 80 (Red threshold)"
+     },
+     "context_gates_passed": [
+       {"phase": 1, "tier": "green", "action": "proceed"},
+       {"phase": 2, "tier": "green", "action": "proceed"},
+       {"phase": 3, "tier": "yellow", "action": "skip-dispatch"},
+       {"phase": 4, "tier": "orange", "action": "finish-current"}
+     ]
    }
    ```
+   The `context_capacity` object records the state at shutdown. The `context_gates_passed` array records every gate evaluation during the session, providing an audit trail of capacity decisions.
 4. **Report to user** — summarize what was completed, what remains, and the checkpoint file path
 5. **Request context reset** — tell the user to run `/clear` and provide the checkpoint path for the next session to read
 

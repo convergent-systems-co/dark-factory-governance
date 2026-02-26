@@ -17,11 +17,36 @@ Watch for these signals that context is filling up:
 3. **Conversation length heuristic** — If you have completed N issues (where N = `governance.parallel_coders`), or made more than 80 tool calls, or the conversation exceeds ~150 exchanges, assume you are at or near 80% regardless of other signals.
 4. **Degraded recall** — If you find yourself re-reading files you already read, forgetting earlier decisions, or producing inconsistent output, context pressure is likely the cause.
 
+### Capacity Tiers
+
+The pipeline uses a four-tier capacity model. Tier boundaries are evaluated at every phase boundary (see Context Gate below) and continuously during execution.
+
+| Tier | Capacity | Label | Behavior |
+|------|----------|-------|----------|
+| 1 | < 60% | **Green** | Normal operation. All phases proceed. New Coder dispatches allowed. |
+| 2 | 60-70% | **Yellow** | No new Coder dispatches. Finish in-flight work only. Proactively summarize context. |
+| 3 | 70-80% | **Orange** | Stop after current PR completes. Write checkpoint. Request `/clear`. |
+| 4 | >= 80% | **Red** | Stop immediately. Emergency checkpoint. Do not finish current step. |
+
+**Platform-specific detection for tier classification:**
+
+| Signal | Green (< 60%) | Yellow (60-70%) | Orange (70-80%) | Red (>= 80%) |
+|--------|---------------|-----------------|-----------------|---------------|
+| Tool calls in session | < 40 | 40-55 | 55-80 | > 80 |
+| Chat turns (exchanges) | < 60 | 60-100 | 100-150 | > 150 |
+| Issues completed | < N-2 | N-2 | N-1 | N (cap) |
+| Claude Code token counter | < 60% shown | 60-70% shown | 70-80% shown | >= 80% shown |
+| Copilot context meter | < 60% shown | 60-70% shown | 70-80% shown | >= 80% shown |
+| Copilot character count | < 150K chars | 150-200K chars | 200-250K chars | > 250K chars |
+| Degraded recall | None | None | Possible | Likely |
+
+**Any single signal reaching a tier is sufficient to classify at that tier.** Use the highest tier indicated by any signal.
+
 ### Hard Limits
 
 - **Maximum N issues per session** (where N = `governance.parallel_coders` from `project.yaml`, default 5) — parallel dispatch means Coder subagents use their own context, not the main session's
-- **Checkpoint only on hard-stop** — checkpoints are written only when a session cap or context pressure triggers the Shutdown Protocol, not between batches
-- **Two-tier capacity threshold**: at ~70%, do not dispatch new Coder agents (wait for in-flight ones to complete, merge, checkpoint, request `/clear`); at ~80%, stop immediately and execute the full shutdown protocol regardless of current step
+- **Checkpoint only on hard-stop** — checkpoints are written only when a session cap or context pressure triggers the Shutdown Protocol (Orange or Red tier), not between batches
+- **Four-tier capacity enforcement**: Green = normal, Yellow = no new dispatches, Orange = stop after current PR and checkpoint, Red = stop immediately and emergency checkpoint
 
 ### When Triggered
 
@@ -86,7 +111,52 @@ flowchart TD
 
 ---
 
+## Context Gate
+
+**Every phase boundary requires a context capacity check.** Before entering any phase (1-5), the active persona must evaluate the current capacity tier and act accordingly. This gate is mandatory and cannot be skipped.
+
+### Gate Protocol
+
+```
+CONTEXT GATE — Phase {N} Entry
+1. Evaluate all capacity signals (see Capacity Tiers table above)
+2. Classify current tier: Green / Yellow / Orange / Red
+3. Act on tier:
+   - Green  → Proceed to Phase {N}
+   - Yellow → Proceed only if Phase {N} does not dispatch new Coders.
+              If Phase {N} is Phase 3 (Parallel Dispatch), skip new dispatches
+              and proceed to Phase 4 for in-flight work only.
+   - Orange → Do not enter Phase {N}. Complete current PR if mid-Phase 4,
+              then execute Shutdown Protocol (checkpoint + request /clear).
+   - Red    → Do not enter Phase {N}. Execute Shutdown Protocol immediately.
+              Do not finish current step.
+4. Log gate result in checkpoint metadata:
+   {
+     "context_gate": {
+       "phase": N,
+       "tier": "green|yellow|orange|red",
+       "tool_calls": <count>,
+       "turn_count": <count>,
+       "issues_completed": <count>,
+       "platform": "claude-code|copilot|unknown",
+       "action": "proceed|skip-dispatch|finish-current|merge-no-loop|checkpoint|emergency-stop"
+     }
+   }
+```
+
+### Platform-Specific Gate Detection
+
+**Claude Code:** Check the token counter visible in `--verbose` mode. System warnings about context limits are authoritative. Automatic summarization of earlier messages indicates Red tier.
+
+**GitHub Copilot:** Check the context meter in the chat input area (hover for exact count). If operating programmatically, use `vscode.lm.countTokens()` on the assembled payload. Auto-summarization of conversation history indicates Red tier.
+
+**Both platforms:** Track tool call count and chat turn count internally. These heuristics are always available regardless of platform. If platform-specific signals are unavailable, rely on heuristic signals alone.
+
+---
+
 ## Phase 1: Pre-flight & Triage
+
+> **Context Gate — Phase 1 Entry:** Execute the Context Gate protocol (see above) before proceeding. This is the session entry point — if resuming from a checkpoint and already at Orange/Red, execute Shutdown Protocol immediately without re-entering Phase 1.
 
 **Persona:** DevOps Engineer (`governance/personas/agentic/devops-engineer.md`)
 
@@ -169,6 +239,8 @@ Emit an ASSIGN message per `governance/prompts/agent-protocol.md` for **all acti
 
 ## Phase 2: Parallel Planning
 
+> **Context Gate — Phase 2 Entry:** Execute the Context Gate protocol (see above) before proceeding. Yellow tier: proceed (planning does not dispatch Coders). Orange/Red: execute Shutdown Protocol.
+
 **Persona:** Code Manager (`governance/personas/agentic/code-manager.md`)
 
 The Code Manager receives the full batch of prioritized issues and plans **all of them** before any implementation begins. This front-loads the planning work in the main context window (where the Code Manager has full codebase visibility) before dispatching to parallel Coder agents.
@@ -225,6 +297,8 @@ After all plans are written, proceed to Phase 3 (Parallel Dispatch).
 
 ## Phase 3: Parallel Dispatch
 
+> **Context Gate — Phase 3 Entry:** Execute the Context Gate protocol (see above) before proceeding. Yellow tier: do NOT dispatch new Coder agents — skip to Phase 4 for in-flight work only. Orange/Red: execute Shutdown Protocol.
+
 **Persona:** Code Manager (`governance/personas/agentic/code-manager.md`)
 
 The Code Manager spawns **parallel worker agents** (Coder or IaC Engineer) using the `Task` tool with `isolation: "worktree"`. Each worker runs in its own git worktree with its own context window, working on a single issue independently.
@@ -278,6 +352,8 @@ If the `Task` tool with `isolation: "worktree"` is unavailable (e.g., not in a g
 
 ## Phase 3-Sequential: Implementation (Fallback)
 
+> **Context Gate — Phase 3-Sequential Entry:** Execute the Context Gate protocol (see above) before proceeding. Yellow tier: proceed with current issue only — do not start additional issues. Orange/Red: execute Shutdown Protocol.
+
 **Persona:** Coder (`governance/personas/agentic/coder.md`)
 
 Used only when parallel dispatch is unavailable. The Coder receives an ASSIGN message from the Code Manager and executes the approved plan in the main session.
@@ -306,6 +382,8 @@ Return a structured RESULT to Code Manager with summary, artifacts, test results
 ---
 
 ## Phase 4: Collect, Evaluate & Review
+
+> **Context Gate — Phase 4 Entry:** Execute the Context Gate protocol (see above) before proceeding. Yellow tier: proceed — finish evaluating in-flight work but do not return to Phase 3 for new dispatches. Orange tier: complete the current PR only, then execute Shutdown Protocol. Red: execute Shutdown Protocol immediately.
 
 **Personas:** Code Manager (orchestrator), Tester (`governance/personas/agentic/tester.md`)
 
@@ -391,6 +469,8 @@ gh api graphql -f query='
 
 ## Phase 5: Merge & Loop
 
+> **Context Gate — Phase 5 Entry:** Execute the Context Gate protocol (see above) before proceeding. Yellow tier: proceed with merge but do not loop back to Phase 1. Orange/Red: execute Shutdown Protocol immediately — do not merge (leave PRs open for next session).
+
 **Personas:** Code Manager (merge), DevOps Engineer (checkpoint)
 
 ### 5a: Merge
@@ -443,7 +523,7 @@ If no actionable issues remain after Phase 1d:
 - **Maximum N issues per session** (where N = `governance.parallel_coders`, default 5) — parallel execution is more context-efficient since Coder subagents have their own context windows
 - **Maximum 3 review cycles per PR** — then escalate
 - **Checkpoint only on hard-stop** — checkpoints are written only when a session cap or context pressure triggers the Shutdown Protocol, not between batches
-- **Context capacity is a hard constraint** — shutdown immediately on any signal
+- **Context capacity is a hard constraint** — four-tier model (Green/Yellow/Orange/Red) governs all phase transitions; shutdown on Orange or Red
 - **Security review always produces a report** — even when no findings exist
 - **Context-specific reviews based on codebase** — Code Manager selects panels dynamically
 - **Coder agents do not push** — they commit to their worktree branch; the Code Manager pushes after evaluation
@@ -478,7 +558,19 @@ When triggered:
      "pending_work": "description of what remains",
      "prs_created": ["#A", "#B"],
      "manifests_written": ["manifest-id-1"],
-     "review_cycle": "current review cycle number if in Phase 4"
+     "review_cycle": "current review cycle number if in Phase 4",
+     "context_capacity": {
+       "tier": "green|yellow|orange|red",
+       "tool_calls": 0,
+       "turn_count": 0,
+       "issues_completed_count": 0,
+       "platform": "claude-code|copilot|unknown",
+       "trigger": "description of which signal triggered shutdown"
+     },
+     "context_gates_passed": [
+       {"phase": 1, "tier": "green", "action": "proceed"},
+       {"phase": 2, "tier": "yellow", "action": "proceed"}
+     ]
    }
    ```
 4. **Report to user** — summarize completed work, remaining work, checkpoint location
@@ -491,5 +583,5 @@ When triggered:
 Stop the loop when:
 - No open PRs **and** no actionable issues **and** no GOALS.md items can be converted to issues
 - **N issues/PRs completed** (where N = `governance.parallel_coders`) — shutdown protocol, checkpoint, request `/clear`
-- **Any context pressure signal** — shutdown protocol immediately
+- **Orange or Red capacity tier** — shutdown protocol immediately (see Capacity Tiers)
 - A human sends a message (human input takes priority)
