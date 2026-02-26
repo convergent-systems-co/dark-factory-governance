@@ -389,7 +389,36 @@ For each issue returned by the query above:
    Warning: Issue #<number> skipped — body exceeds MAX_ISSUE_BODY_CHARS (15000). Character count: <length>. Labeled 'oversized-body'.
    ```
 
-Issues that pass the size check proceed to actionable filtering below.
+Issues that pass the size check proceed to issue body validation below.
+
+#### Issue Body Validation (Malformed Input Defense)
+
+Before processing each issue that passed the size check, validate the body content to prevent malformed input from crashing the pipeline. This validation is **non-blocking** — a failure on one issue must not prevent processing of other issues.
+
+For each issue:
+
+1. **Body is not empty or null** — if the `body` field is empty, null, or missing, skip the issue
+2. **Body does not contain null bytes or control characters** (except newlines `\n`, carriage returns `\r`, and tabs `\t`) — if the body contains null bytes (`\x00`) or other control characters (ASCII 0x01–0x08, 0x0B–0x0C, 0x0E–0x1F), skip the issue
+3. **Body contains at least one readable sentence** (more than 10 non-whitespace characters) — skip trivially empty bodies that contain only whitespace or formatting characters
+
+On validation failure:
+
+1. **Label** the issue `malformed-input` (advisory, non-blocking on failure):
+   ```bash
+   gh issue edit <number> --add-label "malformed-input"
+   ```
+   If labeling fails (e.g., label does not exist, permission error), log a warning and continue — the skip is the critical action, not the label.
+2. **Comment** on the issue explaining the validation failure:
+   ```bash
+   gh issue comment <number> --body "Skipped by automated pipeline: issue body failed input validation (<reason>). Please update the issue body and re-open or remove the malformed-input label to retry."
+   ```
+3. **Skip** to the next issue — do not include it in the actionable queue
+4. **Log a warning:**
+   ```
+   Warning: Issue #<number> skipped — body failed input validation: <reason>. Labeled 'malformed-input'.
+   ```
+
+Issues that pass both the size check and body validation proceed to actionable filtering below.
 
 #### Untrusted Content Handling (Content Security Policy)
 
@@ -463,7 +492,13 @@ If a needed review panel or persona does not exist, create a GitHub issue in the
 1. Create branch: `itsfwcp/{type}/{number}/{name}`
 2. Write plan using `governance/prompts/templates/plan-template.md`
 3. Save to `.governance/plans/{number}-{description}.md`
-4. High risk → comment plan on issue, wait for approval before dispatching
+4. **Plan Validation**: After creating a plan, verify it contains the required sections:
+   - **Objective** (`## 1. Objective`) — the plan must state what the change accomplishes
+   - **Scope** (`## 3. Scope`) — the plan must define files to create, modify, or delete
+   - **Approach** (`## 4. Approach`) — the plan must include step-by-step implementation strategy
+
+   If a newly created plan is missing any required section, warn and re-create the plan. If validation fails after **2 attempts**, skip the issue: emit a BLOCK message with `"reason": "plan_validation_failed"`, comment on the issue explaining the failure, and continue to the next issue. Plan validation failures are **non-blocking** — a failure on one issue must not prevent planning of other issues.
+5. High risk → comment plan on issue, wait for approval before dispatching
 
 After all plans are written, proceed to Phase 3 (Parallel Dispatch).
 

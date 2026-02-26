@@ -397,3 +397,15 @@ Each entry must conform to `governance/schemas/agent-log-entry.schema.json`.
 3. **Append-only.** Never modify or delete existing entries in the log file. Each entry is an immutable audit record.
 4. **One file per session.** All agents in the same session write to the same `{session-id}.jsonl` file.
 5. **Commit with PR.** The session log file is committed as part of the PR or merge commit (see `governance/prompts/startup.md` Phase 5).
+
+## Error Isolation
+
+A failure processing one work unit must not cascade to other work units. This is a mandatory protocol rule.
+
+### Rules
+
+1. **Independent processing.** Each work unit (issue, PR, plan) is processed independently. An error in one must not prevent processing of others.
+2. **Unrecoverable error handling.** On unrecoverable error for a work unit: emit BLOCK with `"reason": "unrecoverable_error"`, label the issue `pipeline-error` (advisory, non-blocking on label failure), and continue with remaining work units.
+3. **No single-input crashes.** Never allow a single bad input to crash the pipeline, exhaust the context window, or block other work. Malformed issue bodies, invalid plan files, and unexpected API responses must be caught and isolated.
+4. **Parallel dispatch failures.** If an error occurs during parallel dispatch (Phase 3), the failed agent's work unit is logged and skipped; other agents continue normally. The Code Manager must not wait indefinitely for a failed agent — timeout or error results are treated as a skipped work unit.
+5. **Retry cap.** Error recovery attempts are capped at **2 per work unit**. After 2 failures, emit BLOCK with `"reason": "unrecoverable_error"` and move on. This cap is independent of the Circuit Breaker's `MAX_TOTAL_EVALUATION_CYCLES` — the error isolation retry cap applies to processing errors (parse failures, validation errors, unexpected exceptions), while the circuit breaker applies to evaluation feedback loops.
