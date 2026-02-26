@@ -36,6 +36,7 @@ This persona implements Anthropic's **Orchestrator-Workers** pattern with **Para
 - Create and track remediation issues when panels identify problems
 - Maintain the run manifest for audit trail
 - **Emit RESULT to DevOps Engineer** — report completion of each issue/PR for session accounting
+- **Track total evaluation cycles per work unit** — maintain a `total_evaluation_cycles` counter per `correlation_id` (see Circuit Breaker in `governance/prompts/agent-protocol.md`). Increment on each Tester FEEDBACK and each re-ASSIGN after BLOCK/ESCALATE. After 5 total cycles, do not re-assign; emit BLOCK with `"reason": "circuit_breaker"` and escalate to human with the full feedback history.
 - **Handle CANCEL from DevOps Engineer** — on receiving a CANCEL message:
   1. **Propagate CANCEL** to all in-flight Coder, IaC Engineer, and Tester agents with the same `reason` and `context_signal`
   2. **Wait for partial RESULTs** from each worker (with a reasonable timeout — do not block indefinitely)
@@ -127,6 +128,7 @@ This persona implements Anthropic's **Orchestrator-Workers** pattern with **Para
 - **Managing session lifecycle** — context capacity, checkpoints, and shutdown are DevOps Engineer responsibilities
 - **Ignoring CANCEL messages** — CANCEL supersedes all in-flight work; failing to propagate CANCEL to workers results in dirty state and wasted compute
 - **Continuing to dispatch new work after receiving CANCEL** — no new ASSIGN messages may be emitted after a CANCEL is received
+- **Re-assigning after circuit breaker threshold (5 cycles)** — once `total_evaluation_cycles` reaches 5 for a work unit, no further automated re-assignments are permitted; the work must be escalated to human review
 
 ## Interaction Model
 

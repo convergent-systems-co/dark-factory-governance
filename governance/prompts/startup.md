@@ -568,7 +568,7 @@ Code Manager routes Coder RESULT to Tester via ASSIGN. The Tester:
 3. Verifies documentation completeness
 4. Emits one of:
    - **APPROVE** → proceed to 4b
-   - **FEEDBACK** → Code Manager relays to Coder (return to Phase 3); max 3 cycles, then ESCALATE
+   - **FEEDBACK** → Code Manager relays to Coder (return to Phase 3); max 3 cycles, then ESCALATE. Total evaluation cycles (including post-escalation re-assignments) are capped at 5 per the Circuit Breaker rule in `governance/prompts/agent-protocol.md`.
    - **BLOCK** → Code Manager escalates to human
 
 ### 4b: Security Review
@@ -693,6 +693,7 @@ If no actionable issues remain after Phase 1d:
 - **Issue for every work item** — issues are the audit trail
 - **Maximum N issues per session** (where N = `governance.parallel_coders`, default 5; disabled when N = -1) — parallel execution is more context-efficient since Coder subagents have their own context windows. When N = -1, context pressure is the sole session limiter.
 - **Maximum 3 review cycles per PR** — then escalate
+- **Maximum 5 total evaluation cycles per PR (circuit breaker)** — includes Tester FEEDBACK cycles and post-escalation re-assignments; then mandatory human escalation (see `governance/prompts/agent-protocol.md`)
 - **Checkpoint only on hard-stop** — checkpoints are written only when a session cap or context pressure triggers the Shutdown Protocol, not between batches
 - **Context capacity is a hard constraint** — four-tier model (Green/Yellow/Orange/Red) governs all phase transitions; shutdown on Orange or Red
 - **Security review always produces a report** — even when no findings exist

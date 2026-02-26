@@ -129,6 +129,30 @@ Instructs an agent to stop current work gracefully or immediately. CANCEL is a s
 - The Tester has a maximum of **3 evaluation cycles** per work unit. At cycle 3, the Tester must emit BLOCK (not FEEDBACK). Continued FEEDBACK after cycle 3 is a protocol violation.
 - On BLOCK from cycle exhaustion, the Code Manager must emit ESCALATE to the DevOps Engineer with the unresolved items and cycle history.
 
+### Circuit Breaker — Total Evaluation Cycle Cap
+
+**Constant:** `MAX_TOTAL_EVALUATION_CYCLES = 5`
+
+The circuit breaker enforces a **global cap on total evaluation cycles per work unit** (per issue/PR), spanning all escalation boundaries. This is additive to the per-agent Tester cycle limit above — the Tester's 3-cycle limit remains unchanged, but the circuit breaker prevents unbounded loops when the Code Manager re-assigns work after escalation.
+
+**Counting rules:**
+
+| Event | Cycle Increment |
+|-------|----------------|
+| Tester emits FEEDBACK | +1 |
+| Code Manager emits ASSIGN (re-assignment after BLOCK or ESCALATE) | +1 |
+
+The counter is cumulative and **per work unit** (`correlation_id`), not per session or per agent. Initial ASSIGN messages that begin a work unit do not increment the counter — only re-assignments after a BLOCK or ESCALATE do.
+
+**Enforcement:**
+
+- The Code Manager **must** track the `total_evaluation_cycles` counter for each active work unit.
+- When `total_evaluation_cycles` reaches **5**, the Code Manager **must**:
+  1. Emit **BLOCK** with `"reason": "circuit_breaker"` and include the full feedback history in the `feedback` field
+  2. Escalate to human review — no further automated re-assignments are permitted for this work unit
+  3. Comment on the issue/PR with the circuit breaker trigger and accumulated feedback summary
+- Continued ASSIGN messages after the circuit breaker fires are a **protocol violation**.
+
 ### CANCEL Priority
 
 - CANCEL supersedes all in-flight messages. On receipt, an agent must stop current work within one step regardless of what other messages are pending.
