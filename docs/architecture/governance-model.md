@@ -161,12 +161,19 @@ The system is distributed as a git submodule (`.ai/`) cloned into host repositor
 
 ### 4.3 Phase Transition Context
 
-```
-Phase 1: Manual                  -- Human writes all code and reviews
-Phase 2: Assisted                -- AI suggests, human decides
-Phase 3: Agentic Orchestration   -- AI executes workflows, human gates  <-- CURRENT
-Phase 4: Policy-Bound Autonomy   -- Policy decides, human escalation    <-- TARGET
-Phase 5: Self-Improving          -- System evolves its own governance    <-- FUTURE
+```mermaid
+flowchart LR
+    P1["Phase 1: Manual\nHuman writes all code and reviews"]
+    P2["Phase 2: Assisted\nAI suggests, human decides"]
+    P3["Phase 3: Agentic Orchestration\nAI executes workflows, human gates"]
+    P4["Phase 4: Policy-Bound Autonomy\nPolicy decides, human escalation"]
+    P5["Phase 5: Self-Improving\nSystem evolves its own governance"]
+
+    P1 --> P2 --> P3 --> P4 --> P5
+
+    style P3 stroke:#f90,stroke-width:3px
+    style P4 stroke:#09f,stroke-width:3px
+    style P5 stroke:#999,stroke-dasharray:5 5
 ```
 
 The transition from Phase 3 to Phase 4 replaces human decision gates with policy evaluation where confidence thresholds are met. Human gates remain as the escalation path when policy cannot determine an outcome or when risk thresholds are exceeded.
@@ -1032,20 +1039,16 @@ Panel participants cannot:
 
 When automated authority is insufficient, decisions escalate through this chain:
 
-```
-    Policy Engine (automated)
-           |
-           | cannot decide (confidence too low, conflicting signals)
-           v
-    Code Manager (agentic, with rationale)
-           |
-           | exceeds agentic authority (block, critical risk)
-           v
-    Human Reviewer (designated approver)
-           |
-           | exceeds individual authority (cross-team, production)
-           v
-    Human Review Board (multiple approvers required)
+```mermaid
+flowchart TD
+    PE["Policy Engine\n(automated)"]
+    CM["Code Manager\n(agentic, with rationale)"]
+    HR["Human Reviewer\n(designated approver)"]
+    HRB["Human Review Board\n(multiple approvers required)"]
+
+    PE -->|"cannot decide\n(confidence too low, conflicting signals)"| CM
+    CM -->|"exceeds agentic authority\n(block, critical risk)"| HR
+    HR -->|"exceeds individual authority\n(cross-team, production)"| HRB
 ```
 
 ### 12.3 Auto-Merge Authority Conditions
@@ -1147,51 +1150,40 @@ The following are NOT valid rationale entries and will be rejected:
 
 When a failure in one layer affects another:
 
-```
-    L1 Failure                    L2 Failure
-    (bad intent)                  (wrong routing)
-         |                             |
-         v                             v
-    L2 receives                   L3 receives
-    invalid input                 wrong plan
-         |                             |
-         v                             v
-    L2-F001: Return               L3 detects mismatch
-    to L1 for fix                 via panel findings
-                                       |
-                                       v
-                                  L3 to L2: Re-route
-                                  request with evidence
+```mermaid
+flowchart TD
+    subgraph L1_Fail["L1 Failure (bad intent)"]
+        L1F1["L2 receives invalid input"]
+        L1F2["L2-F001: Return to L1 for fix"]
+        L1F1 --> L1F2
+    end
 
+    subgraph L2_Fail["L2 Failure (wrong routing)"]
+        L2F1["L3 receives wrong plan"]
+        L2F2["L3 detects mismatch via panel findings"]
+        L2F3["L3 to L2: Re-route request with evidence"]
+        L2F1 --> L2F2 --> L2F3
+    end
 
-    L3 Failure                    L4 Failure
-    (bad emission)                (missed drift)
-         |                             |
-         v                             v
-    Manifest incomplete           Undetected degradation
-         |                             |
-         v                             v
-    auto_merge blocked            Incident occurs
-    human_review_required              |
-                                       v
-                                  L4 generates DI
-                                  (reactive, not proactive)
+    subgraph L3_Fail["L3 Failure (bad emission)"]
+        L3F1["Manifest incomplete"]
+        L3F2["auto_merge blocked\nhuman_review_required"]
+        L3F1 --> L3F2
+    end
 
+    subgraph L4_Fail["L4 Failure (missed drift)"]
+        L4F1["Undetected degradation"]
+        L4F2["Incident occurs"]
+        L4F3["L4 generates DI\n(reactive, not proactive)"]
+        L4F1 --> L4F2 --> L4F3
+    end
 
-    L5 Failure
-    (breaking change without migration)
-         |
-         v
-    Consuming repos receive
-    incompatible governance
-         |
-         v
-    L3 schema validation fails
-    across multiple repos
-         |
-         v
-    CRITICAL: System-wide halt
-    Rollback required
+    subgraph L5_Fail["L5 Failure (breaking change without migration)"]
+        L5F1["Consuming repos receive\nincompatible governance"]
+        L5F2["L3 schema validation fails\nacross multiple repos"]
+        L5F3["CRITICAL: System-wide halt\nRollback required"]
+        L5F1 --> L5F2 --> L5F3
+    end
 ```
 
 ### 14.3 Recovery Procedures

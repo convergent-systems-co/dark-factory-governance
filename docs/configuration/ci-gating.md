@@ -119,17 +119,14 @@ A run manifest conforming to `governance/schemas/run-manifest.schema.json` must 
 
 The following dependency chain must be satisfied:
 
-```
-Panel Emissions (all panels complete)
-        |
-        v
-Policy Evaluation (consumes all emissions + JM Compliance status)
-        |
-        v
-Run Manifest (produced from policy evaluation result)
-        |
-        v
-Merge Decision (gated by all of the above)
+```mermaid
+flowchart TD
+    PE["Panel Emissions\n(all panels complete)"]
+    EVAL["Policy Evaluation\n(consumes all emissions + JM Compliance status)"]
+    RM["Run Manifest\n(produced from policy evaluation result)"]
+    MD["Merge Decision\n(gated by all of the above)"]
+
+    PE --> EVAL --> RM --> MD
 ```
 
 No artifact may be produced out of order. The governance workflow enforces this sequencing.

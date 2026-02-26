@@ -8,24 +8,15 @@ The threshold auto-tuning policy (`governance/policy/threshold-tuning.yaml`) def
 
 ### Data Flow
 
-```
-Retrospective Aggregation Report
-  (governance/schemas/retrospective-aggregation.schema.json)
-         |
-         v
-Threshold Tuning Policy evaluates:
-  - Per-panel false positive rate
-  - Per-panel false negative rate
-  - Override frequency by profile
-         |
-         v
-Tuning Proposal (if triggers met)
-         |
-         v
-Approval Gate (human or auto)
-         |
-         v
-Threshold adjustment applied to policy profile
+```mermaid
+flowchart TD
+    RETRO["Retrospective Aggregation Report\n(governance/schemas/retrospective-aggregation.schema.json)"]
+    EVAL["Threshold Tuning Policy evaluates:\n- Per-panel false positive rate\n- Per-panel false negative rate\n- Override frequency by profile"]
+    PROPOSAL["Tuning Proposal\n(if triggers met)"]
+    GATE["Approval Gate\n(human or auto)"]
+    APPLY["Threshold adjustment applied\nto policy profile"]
+
+    RETRO --> EVAL --> PROPOSAL --> GATE --> APPLY
 ```
 
 ### Trigger Conditions

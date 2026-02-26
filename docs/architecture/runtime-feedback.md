@@ -524,23 +524,38 @@ Before generating a new DI, the correlation engine checks whether an existing DI
 
 **State transitions for correlated DIs:**
 
-```
-[Open DI] + [New Signal, same fingerprint]
-    --> Update occurrence_count
-    --> Update last_detected
-    --> IF severity_increased THEN recalculate priority
-    --> IF priority_increased AND priority >= P1 THEN trigger re-evaluation
+```mermaid
+stateDiagram-v2
+    state "Open DI" as Open
+    state "Closed DI" as Closed
+    state "New DI (recurrence)" as NewDI
 
-[Open DI] + [New Signal, different fingerprint, same component+category]
-    --> Append to signal_ids
-    --> Expand evidence_summary
-    --> Recalculate priority with updated blast radius
-    --> IF new panel needed THEN add to proposed_panel list
+    state "Same fingerprint signal" as SameFP {
+        state "Update occurrence_count" as U1
+        state "Update last_detected" as U2
+        state "Recalculate priority\n(if severity increased)" as U3
+        state "Trigger re-evaluation\n(if priority >= P1)" as U4
+        U1 --> U2
+        U2 --> U3
+        U3 --> U4
+    }
 
-[Closed DI] + [New Signal, same fingerprint]
-    --> Generate NEW DI
-    --> Reference closed DI as "recurrence_of"
-    --> Escalate severity by one level (regression penalty)
+    state "Different fingerprint signal\n(same component+category)" as DiffFP {
+        state "Append to signal_ids" as A1
+        state "Expand evidence_summary" as A2
+        state "Recalculate priority\n(updated blast radius)" as A3
+        state "Add to proposed_panel list\n(if new panel needed)" as A4
+        A1 --> A2
+        A2 --> A3
+        A3 --> A4
+    }
+
+    Open --> SameFP
+    SameFP --> Open
+    Open --> DiffFP
+    DiffFP --> Open
+    Closed --> NewDI : Same fingerprint signal\nEscalate severity +1\n(regression penalty)
+    NewDI --> Open : Reference closed DI\nas recurrence_of
 ```
 
 ### Root Cause Hypothesis Generation
@@ -831,61 +846,29 @@ Cooldown is measured from the completion timestamp of the previous execution, no
 
 The complete re-execution flow, incorporating all safeguards:
 
-```
-[Trigger Event]
-      |
-      v
-[Check cooldown for DI + panel combination]
-      |
-      +-- cooldown active --> [Queue for after cooldown]
-      |
-      +-- cooldown clear
-            |
-            v
-      [Check per-DI rate limit]
-            |
-            +-- exceeded --> [Queue for next window]
-            |
-            +-- within limit
-                  |
-                  v
-            [Check per-component rate limit]
-                  |
-                  +-- exceeded --> [Aggregate with pending DIs]
-                  |
-                  +-- within limit
-                        |
-                        v
-                  [Check global rate limit]
-                        |
-                        +-- exceeded, priority < cutoff --> [Queue]
-                        |
-                        +-- within limit OR priority >= cutoff
-                              |
-                              v
-                        [Check circuit breaker state]
-                              |
-                              +-- OPEN --> [Escalate to human]
-                              |
-                              +-- CLOSED or HALF-OPEN
-                                    |
-                                    v
-                              [Compute diff against PEC]
-                                    |
-                                    v
-                              [Select affected panels]
-                                    |
-                                    v
-                              [Execute panels]
-                                    |
-                                    v
-                              [Collect structured emissions]
-                                    |
-                                    v
-                              [Submit to policy engine]
-                                    |
-                                    v
-                              [Record in manifest]
+```mermaid
+flowchart TD
+    TRIGGER["Trigger Event"] --> COOLDOWN{"Check cooldown for\nDI + panel combination"}
+    COOLDOWN -->|"cooldown active"| Q_COOL["Queue for after cooldown"]
+    COOLDOWN -->|"cooldown clear"| DI_RATE{"Check per-DI\nrate limit"}
+
+    DI_RATE -->|exceeded| Q_DI["Queue for next window"]
+    DI_RATE -->|"within limit"| COMP_RATE{"Check per-component\nrate limit"}
+
+    COMP_RATE -->|exceeded| AGG["Aggregate with pending DIs"]
+    COMP_RATE -->|"within limit"| GLOBAL{"Check global\nrate limit"}
+
+    GLOBAL -->|"exceeded, priority < cutoff"| Q_GLOBAL["Queue"]
+    GLOBAL -->|"within limit OR\npriority >= cutoff"| CB{"Check circuit\nbreaker state"}
+
+    CB -->|OPEN| ESCALATE["Escalate to human"]
+    CB -->|"CLOSED or HALF-OPEN"| DIFF["Compute diff against PEC"]
+
+    DIFF --> SELECT["Select affected panels"]
+    SELECT --> EXEC["Execute panels"]
+    EXEC --> COLLECT["Collect structured emissions"]
+    COLLECT --> POLICY["Submit to policy engine"]
+    POLICY --> MANIFEST["Record in manifest"]
 ```
 
 ---

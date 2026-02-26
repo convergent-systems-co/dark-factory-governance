@@ -35,21 +35,22 @@ The workflow filters out events that should not trigger governance sessions:
 
 ## Architecture
 
-```
-Repository Event (issue created, labeled, deployment failure)
-    |
-    v
-event-trigger.yml (filter job)
-    |
-    +-- Skip: bot-created, excluded labels, draft, non-failure deployment
-    |
-    +-- Dispatch: workflow_dispatch to issue-monitor.yml
-            |
-            v
-        issue-monitor.yml (evaluate + dispatch-claude jobs)
-            |
-            +-- Evaluate actionability
-            +-- Dispatch to Claude Code / Copilot
+```mermaid
+flowchart TD
+    EVENT["Repository Event\n(issue created, labeled, deployment failure)"]
+    FILTER["event-trigger.yml\n(filter job)"]
+    SKIP["Skip:\nbot-created, excluded labels,\ndraft, non-failure deployment"]
+    DISPATCH["Dispatch: workflow_dispatch\nto issue-monitor.yml"]
+    MONITOR["issue-monitor.yml\n(evaluate + dispatch-claude jobs)"]
+    EVAL["Evaluate actionability"]
+    AGENT["Dispatch to Claude Code / Copilot"]
+
+    EVENT --> FILTER
+    FILTER --> SKIP
+    FILTER --> DISPATCH
+    DISPATCH --> MONITOR
+    MONITOR --> EVAL
+    MONITOR --> AGENT
 ```
 
 The event-trigger workflow does not evaluate issue actionability itself — it delegates to `issue-monitor.yml` which already has the full actionability evaluation logic. This avoids duplicating logic across workflows.

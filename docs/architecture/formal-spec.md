@@ -16,26 +16,19 @@ The formal spec schema defines a structured specification format richer than Git
 
 ## How It Integrates
 
-```
-GitHub Issue (free text)
-    |
-    v
-Formal Spec (structured, machine-readable)
-    |
-    v
-Plan (.governance/plans/ — implementation strategy)
-    |
-    v
-Implementation + Tests
-    |
-    v
-Completion Conditions verified (automated)
-    |
-    v
-Acceptance Criteria verified (automated + panel)
-    |
-    v
-Panel Review → Policy Engine → Merge Decision
+```mermaid
+flowchart TD
+    ISSUE["GitHub Issue\n(free text)"]
+    SPEC["Formal Spec\n(structured, machine-readable)"]
+    PLAN["Plan\n(.governance/plans/ -- implementation strategy)"]
+    IMPL["Implementation + Tests"]
+    COMP["Completion Conditions verified\n(automated)"]
+    ACC["Acceptance Criteria verified\n(automated + panel)"]
+    REVIEW["Panel Review"]
+    POLICY["Policy Engine"]
+    MERGE["Merge Decision"]
+
+    ISSUE --> SPEC --> PLAN --> IMPL --> COMP --> ACC --> REVIEW --> POLICY --> MERGE
 ```
 
 The formal spec sits between issue intake and plan creation. It translates human intent into machine-verifiable contracts. The acceptance verification workflow (future 5e artifact) will consume formal specs to validate implementations before triggering review panels.
