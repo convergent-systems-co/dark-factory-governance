@@ -5,24 +5,23 @@ site_url: https://set-apps.github.io/ai-submodule
 theme:
   name: material
   palette:
-    scheme: slate
-    primary: deep purple
-    accent: cyan
+    scheme: nord
+    primary: custom
+    accent: custom
   logo: assets/logo.svg
   favicon: assets/logo.svg
   icon:
     repo: fontawesome/brands/github
   features:
-    - navigation.tabs
     - navigation.sections
     - navigation.expand
     - navigation.top
     - navigation.sticky
+    - navigation.indexes
     - search.suggest
     - search.highlight
     - search.share
     - content.code.copy
-    - toc.integrate
 
 markdown_extensions:
   - pymdownx.superfences:
