@@ -392,12 +392,14 @@ git commit -m "Add .ai submodule"
 
 **macOS / Linux:**
 ```bash
-bash .ai/bin/init.sh
+bash .ai/bin/init.sh                    # First-time setup
+bash .ai/bin/init.sh --refresh          # After submodule update (skips freshness check)
 ```
 
 **Windows (PowerShell):**
 ```powershell
 powershell -ExecutionPolicy Bypass -File .ai\bin\init.ps1
+powershell -ExecutionPolicy Bypass -File .ai\bin\init.ps1 -Refresh
 ```
 
 The bootstrap script creates symlinks so Claude Code and GitHub Copilot receive shared instructions. On Windows, if symlinks are unavailable (requires Developer Mode or admin), it falls back to file copies.
@@ -416,9 +418,12 @@ git clone --recurse-submodules <PROJECT_URL>
 
 ```bash
 git submodule update --remote .ai
+bash .ai/bin/init.sh --refresh          # Re-apply structural setup (new symlinks, workflows, dirs)
 git add .ai
 git commit -m "Update .ai submodule"
 ```
+
+The `--refresh` flag re-runs all structural setup (symlinks, workflows, directories, CODEOWNERS, repo settings) while skipping the submodule freshness check. The agentic startup loop runs this automatically after every submodule state check.
 
 ### Pinning a Version
 

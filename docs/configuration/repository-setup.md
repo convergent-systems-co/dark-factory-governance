@@ -80,6 +80,10 @@ When `init.sh` runs, after creating symlinks it:
 6. **Generates or merges CODEOWNERS** — if the file is empty or missing, generates from config; if it already exists, merges governance-required entries (adds missing patterns and owners)
 7. **Validates branch protection** by checking expected rulesets exist (warns on mismatch, does not apply)
 
+### Refresh Mode (`--refresh`)
+
+When called with `--refresh`, `init.sh` skips the submodule freshness check and SSH-to-HTTPS conversion (already handled by the caller) but runs all other steps. The agentic startup loop calls this after every submodule state check. Idempotent — a no-op when nothing has changed.
+
 ### Graceful Degradation
 
 Every step degrades gracefully:
@@ -156,10 +160,12 @@ If the API call fails (insufficient permissions), validation is skipped with a w
 
 The agentic startup sequence (`governance/prompts/startup.md`) includes a pre-flight check that verifies repository settings before scanning issues:
 
-1. Checks `allow_auto_merge` is enabled via `gh api`
-2. Checks CODEOWNERS file exists and is non-empty
-3. Checks governance workflow (`dark-factory-governance.yml`) exists in `.github/workflows/`
-4. If any check fails, warns the user and suggests running `bash .ai/bin/init.sh`
+1. Updates the `.ai` submodule (if not pinned and clean)
+2. Runs `bash .ai/bin/init.sh --refresh` to re-apply structural setup (symlinks, workflows, directories, CODEOWNERS, repo settings)
+3. Checks `allow_auto_merge` is enabled via `gh api`
+4. Checks CODEOWNERS file exists and is non-empty
+5. Checks governance workflow (`dark-factory-governance.yml`) exists in `.github/workflows/`
+6. If any check fails, warns the user and suggests running `bash .ai/bin/init.sh`
 
 This catches misconfiguration before the agentic loop starts, preventing silent failures during PR merge.
 

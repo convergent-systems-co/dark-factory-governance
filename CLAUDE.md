@@ -16,8 +16,9 @@ There is no build system or linter. The policy engine has a pytest test suite in
 ```bash
 bash .ai/bin/init.sh                    # Symlinks only
 bash .ai/bin/init.sh --install-deps     # Symlinks + Python venv + dependencies
+bash .ai/bin/init.sh --refresh          # Re-apply structural setup after submodule update
 ```
-Checks `.ai` submodule freshness (auto-updates if behind), creates symlinks for CLAUDE.md and .github/copilot-instructions.md, creates `.governance/plans/`, `.governance/panels/`, `.governance/checkpoints/`, and `.governance/state/` directories (with migration from legacy paths), generates GOALS.md from template, and validates required panel emissions.
+Checks `.ai` submodule freshness (auto-updates if behind), creates symlinks for CLAUDE.md and .github/copilot-instructions.md, creates `.governance/plans/`, `.governance/panels/`, `.governance/checkpoints/`, and `.governance/state/` directories (with migration from legacy paths), generates GOALS.md from template, and validates required panel emissions. The `--refresh` flag skips the submodule freshness check and SSH-to-HTTPS conversion (already handled by the caller) but runs all other steps; the agentic startup loop calls this automatically after every submodule state check.
 
 **Agentic bootstrap (interactive):**
 Tell your AI assistant to read and execute `governance/prompts/init.md`. This walks through setup interactively — choosing a language template, configuring repository settings, and installing dependencies — with the agent asking about each option.

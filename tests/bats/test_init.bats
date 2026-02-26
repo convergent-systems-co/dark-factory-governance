@@ -494,10 +494,48 @@ EOF
   [ "$status" -eq 0 ]
   [[ "$output" == *"Usage"* ]]
   [[ "$output" == *"--install-deps"* ]]
+  [[ "$output" == *"--refresh"* ]]
 }
 
 @test "init.sh rejects unknown arguments" {
   run bash "$INIT_SH" --bogus
   [ "$status" -eq 1 ]
   [[ "$output" == *"Unknown argument"* ]]
+}
+
+@test "init.sh --refresh is accepted and outputs Refresh complete" {
+  mkdir -p "$PROJECT_ROOT/.ai/bin"
+  cp "$INIT_SH" "$PROJECT_ROOT/.ai/bin/init.sh"
+  echo "# Instructions" > "$PROJECT_ROOT/.ai/instructions.md"
+  cat > "$PROJECT_ROOT/.ai/config.yaml" <<'YAML'
+version: "1.0.0"
+workflows:
+  required: []
+  optional: []
+project_directories:
+  - path: .plans
+YAML
+
+  run bash "$PROJECT_ROOT/.ai/bin/init.sh" --refresh 2>&1
+  [[ "$output" == *"Refresh complete."* ]]
+  # Should NOT contain "Next steps" (that's only for non-refresh mode)
+  [[ "$output" != *"Next steps"* ]]
+}
+
+@test "init.sh --refresh skips submodule freshness check" {
+  mkdir -p "$PROJECT_ROOT/.ai/bin"
+  cp "$INIT_SH" "$PROJECT_ROOT/.ai/bin/init.sh"
+  echo "# Instructions" > "$PROJECT_ROOT/.ai/instructions.md"
+  cat > "$PROJECT_ROOT/.ai/config.yaml" <<'YAML'
+version: "1.0.0"
+workflows:
+  required: []
+  optional: []
+project_directories:
+  - path: .plans
+YAML
+
+  run bash "$PROJECT_ROOT/.ai/bin/init.sh" --refresh 2>&1
+  # Should NOT contain submodule freshness output
+  [[ "$output" != *"Checking .ai submodule freshness"* ]]
 }

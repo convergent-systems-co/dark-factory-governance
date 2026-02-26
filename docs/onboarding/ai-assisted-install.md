@@ -89,7 +89,7 @@ The `init.md` prompt walks through these steps:
 | **1. Language detection** | Scans your repo and asks which template to use (Python, Node, Go, C#, React, or custom) |
 | **2. Project configuration** | Creates `project.yaml` with your project name, language conventions, and governance settings |
 | **3. Policy profile selection** | Asks which policy profile to use: `default`, `fin_pii_high`, `infrastructure_critical`, or `reduced_touchpoint` |
-| **4. Bootstrap execution** | Runs `init.sh` / `init.ps1` — creates symlinks, directories, Python venv, and validates setup |
+| **4. Bootstrap execution** | Runs `init.sh` / `init.ps1` — creates symlinks, directories, Python venv, and validates setup. After submodule updates, use `--refresh` / `-Refresh` to re-apply structural setup. |
 | **5. Initial commit** | Commits the submodule and all generated files |
 
 ---

@@ -5,6 +5,7 @@
 # Usage:
 #   bash .ai/bin/init.sh                 # Symlinks only (existing behavior)
 #   bash .ai/bin/init.sh --install-deps  # Symlinks + Python venv + dependencies
+#   bash .ai/bin/init.sh --refresh       # Re-apply structural setup after submodule update
 #
 # This script is idempotent — safe to run multiple times.
 
@@ -17,6 +18,7 @@ VENV_DIR="$AI_DIR/.venv"
 REQUIREMENTS="$AI_DIR/governance/bin/requirements.txt"
 PYPROJECT="$AI_DIR/governance/engine/pyproject.toml"
 INSTALL_DEPS=false
+REFRESH_MODE=false
 PYTHON_MIN_MAJOR=3
 PYTHON_MIN_MINOR=12
 
@@ -25,17 +27,19 @@ PYTHON_MIN_MINOR=12
 for arg in "$@"; do
   case "$arg" in
     --install-deps) INSTALL_DEPS=true ;;
+    --refresh) REFRESH_MODE=true ;;
     --help|-h)
-      echo "Usage: bash .ai/bin/init.sh [--install-deps]"
+      echo "Usage: bash .ai/bin/init.sh [--install-deps] [--refresh]"
       echo ""
       echo "Options:"
       echo "  --install-deps  Install Python virtual environment and dependencies"
+      echo "  --refresh       Re-apply structural setup (skip submodule check and SSH conversion)"
       echo "  --help, -h      Show this help message"
       exit 0
       ;;
     *)
       echo "Unknown argument: $arg"
-      echo "Usage: bash .ai/bin/init.sh [--install-deps]"
+      echo "Usage: bash .ai/bin/init.sh [--install-deps] [--refresh]"
       exit 1
       ;;
   esac
@@ -106,8 +110,9 @@ fi
 
 echo ""
 
-# --- Submodule freshness check ---
+# --- Submodule freshness check (skipped in refresh mode) ---
 
+if [ "$REFRESH_MODE" = "false" ]; then
 # If running in a consuming repo (submodule context), check if .ai is up to date
 if [ -f "$PROJECT_ROOT/.gitmodules" ] && grep -q '\.ai' "$PROJECT_ROOT/.gitmodules" 2>/dev/null; then
   echo "Checking .ai submodule freshness..."
@@ -175,6 +180,7 @@ if [ -f "$PROJECT_ROOT/.gitmodules" ]; then
   fi
   echo ""
 fi
+fi  # end REFRESH_MODE gate
 
 # --- Symlinks ---
 
@@ -946,17 +952,21 @@ fi
 # --- Done ---
 
 echo ""
-echo "Done."
-echo ""
-echo "Next steps:"
-if [ "$INSTALL_DEPS" = "false" ] && [ ! -d "$VENV_DIR" ]; then
-  echo "  0. Install dependencies:     bash .ai/bin/init.sh --install-deps"
-fi
-echo "  1. Copy a language template:  cp .ai/governance/templates/python/project.yaml project.yaml"
-echo "  2. Customize personas and conventions in project.yaml"
-echo "  3. Set governance profile:    governance.policy_profile: default"
-if [ -d "$VENV_DIR" ]; then
+if [ "$REFRESH_MODE" = "true" ]; then
+  echo "Refresh complete."
+else
+  echo "Done."
   echo ""
-  echo "To activate the virtual environment:"
-  echo "  source .ai/.venv/bin/activate"
+  echo "Next steps:"
+  if [ "$INSTALL_DEPS" = "false" ] && [ ! -d "$VENV_DIR" ]; then
+    echo "  0. Install dependencies:     bash .ai/bin/init.sh --install-deps"
+  fi
+  echo "  1. Copy a language template:  cp .ai/governance/templates/python/project.yaml project.yaml"
+  echo "  2. Customize personas and conventions in project.yaml"
+  echo "  3. Set governance profile:    governance.policy_profile: default"
+  if [ -d "$VENV_DIR" ]; then
+    echo ""
+    echo "To activate the virtual environment:"
+    echo "  source .ai/.venv/bin/activate"
+  fi
 fi

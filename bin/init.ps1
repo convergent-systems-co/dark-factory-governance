@@ -14,15 +14,23 @@
     When specified, creates a Python virtual environment at .ai\.venv and
     installs all required packages from .ai\governance\bin\requirements.txt.
 
+.PARAMETER Refresh
+    Re-apply structural setup (symlinks, workflows, directories, CODEOWNERS,
+    repo settings) without checking submodule freshness or converting SSH URLs.
+    Used by the agentic startup loop after submodule updates.
+
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File .ai\bin\init.ps1
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File .ai\bin\init.ps1 -InstallDeps
+.EXAMPLE
+    powershell -ExecutionPolicy Bypass -File .ai\bin\init.ps1 -Refresh
 #>
 
 [CmdletBinding()]
 param(
-    [switch]$InstallDeps
+    [switch]$InstallDeps,
+    [switch]$Refresh
 )
 
 Set-StrictMode -Version Latest
@@ -639,25 +647,30 @@ if ((Test-Path $legacyProjectYaml) -and -not (Test-Path $rootProjectYaml)) {
 # --- Done ---
 
 Write-Host ""
-Write-Host "Done." -ForegroundColor Green
-Write-Host ""
-Write-Host "Next steps:" -ForegroundColor Cyan
-if (-not $InstallDeps -and -not (Test-Path $VenvDir)) {
-    Write-Host "  0. Install dependencies:     powershell -File .ai\bin\init.ps1 -InstallDeps"
+if ($Refresh) {
+    Write-Host "Refresh complete." -ForegroundColor Green
 }
-Write-Host "  1. Copy a language template:  Copy-Item .ai\governance\templates\python\project.yaml project.yaml"
-Write-Host "  2. Customize personas and conventions in project.yaml"
-Write-Host "  3. Set governance profile:    governance.policy_profile: default"
-
-if (Test-Path $VenvDir) {
+else {
+    Write-Host "Done." -ForegroundColor Green
     Write-Host ""
-    Write-Host "To activate the virtual environment:" -ForegroundColor Cyan
-    Write-Host "  .ai\.venv\Scripts\Activate.ps1"
-}
+    Write-Host "Next steps:" -ForegroundColor Cyan
+    if (-not $InstallDeps -and -not (Test-Path $VenvDir)) {
+        Write-Host "  0. Install dependencies:     powershell -File .ai\bin\init.ps1 -InstallDeps"
+    }
+    Write-Host "  1. Copy a language template:  Copy-Item .ai\governance\templates\python\project.yaml project.yaml"
+    Write-Host "  2. Customize personas and conventions in project.yaml"
+    Write-Host "  3. Set governance profile:    governance.policy_profile: default"
 
-if (-not $pythonOk -and -not $InstallDeps) {
-    Write-Host ""
-    Write-Host "WARNING: Python ${PythonMinMajor}.${PythonMinMinor}+ is required for the governance policy engine." -ForegroundColor Red
-    Write-Host "Install Python from https://www.python.org/downloads/ and ensure it is in your PATH." -ForegroundColor Red
-    Write-Host "Then run: powershell -File .ai\bin\init.ps1 -InstallDeps" -ForegroundColor Red
+    if (Test-Path $VenvDir) {
+        Write-Host ""
+        Write-Host "To activate the virtual environment:" -ForegroundColor Cyan
+        Write-Host "  .ai\.venv\Scripts\Activate.ps1"
+    }
+
+    if (-not $pythonOk -and -not $InstallDeps) {
+        Write-Host ""
+        Write-Host "WARNING: Python ${PythonMinMajor}.${PythonMinMinor}+ is required for the governance policy engine." -ForegroundColor Red
+        Write-Host "Install Python from https://www.python.org/downloads/ and ensure it is in your PATH." -ForegroundColor Red
+        Write-Host "Then run: powershell -File .ai\bin\init.ps1 -InstallDeps" -ForegroundColor Red
+    }
 }

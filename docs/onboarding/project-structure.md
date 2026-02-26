@@ -132,7 +132,7 @@ Cross-session governance state that persists across agent sessions. Includes ret
 
 #### Symlinked Workflows
 
-Governance workflows are **symlinked** (not copied) from `.ai/.github/workflows/`. This means submodule updates flow automatically without re-running `init.sh`.
+Governance workflows are **symlinked** (not copied) from `.ai/.github/workflows/`. Existing symlink content flows automatically with submodule updates. For structural changes (new symlinks, new workflows, new directories), run `bash .ai/bin/init.sh --refresh` after updating the submodule — the agentic startup loop does this automatically.
 
 - **`dark-factory-governance.yml`** (required) — Policy engine evaluation and PR auto-approval
 - **`issue-monitor.yml`** (optional) — Issue lifecycle monitoring

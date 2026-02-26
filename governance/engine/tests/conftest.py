@@ -108,6 +108,8 @@ def make_emission(
     **overrides,
 ):
     """Factory that builds a valid panel emission dict with sensible defaults."""
+    from datetime import datetime, timezone
+
     emission = {
         "panel_name": panel_name,
         "panel_version": "1.0.0",
@@ -116,7 +118,7 @@ def make_emission(
         "compliance_score": compliance_score,
         "policy_flags": policy_flags if policy_flags is not None else [],
         "requires_human_review": requires_human_review,
-        "timestamp": "2026-02-25T12:00:00Z",
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "findings": findings or [
             {
                 "persona": "quality/code-reviewer",

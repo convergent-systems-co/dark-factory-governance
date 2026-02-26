@@ -261,3 +261,5 @@ This prompt is idempotent. Running it again will:
 - Skip issue templates that already exist
 - Skip CODEOWNERS if populated
 - Skip Python venv if `.ai/.venv` exists
+
+**After a submodule update**, run `bash .ai/bin/init.sh --refresh` (or `-Refresh` on Windows) to re-apply structural setup without the submodule freshness check. The agentic startup loop does this automatically.

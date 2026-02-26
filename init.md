@@ -33,9 +33,10 @@ git commit -m "chore: add Dark Factory governance submodule"
 
 ```bash
 git submodule update --remote .ai
+bash .ai/bin/init.sh --refresh
 ```
 
-Then re-run `bash .ai/bin/init.sh` if the symlink configuration has changed.
+The `--refresh` flag re-applies structural setup (symlinks, workflows, directories, CODEOWNERS, repo settings) while skipping the submodule freshness check. It is idempotent — a no-op when nothing has changed. The agentic startup loop runs this automatically.
 
 ## What's Included
 

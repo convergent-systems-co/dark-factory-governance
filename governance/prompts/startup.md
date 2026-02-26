@@ -278,6 +278,14 @@ The Shutdown Protocol (Phase 5c / end of this file) tells the user exactly what 
    If behind: `git submodule update --remote .ai` → commit pointer change.
    All failures are non-blocking — warn and continue.
 
+5. **Refresh structural setup** (after any submodule state check):
+   ```bash
+   bash .ai/bin/init.sh --refresh
+   ```
+   Run regardless of whether the submodule was updated — idempotent. Ensures symlinks,
+   workflows, directories, CODEOWNERS, and repo settings match current `.ai` config.
+   All failures are non-blocking — warn and continue.
+
 ### 1b: Repository Configuration
 
 Verify the repository supports the agentic workflow. All checks are **non-blocking** — warn and continue.
