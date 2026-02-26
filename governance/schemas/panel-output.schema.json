@@ -197,6 +197,44 @@
       "description": "Panel execution duration in milliseconds.",
       "minimum": 0
     },
+    "canary_results": {
+      "type": "array",
+      "description": "Results from canary calibration tests injected during panel execution. Optional — omit if no canaries were injected.",
+      "items": {
+        "type": "object",
+        "required": ["canary_id", "detected", "severity_match"],
+        "properties": {
+          "canary_id": {
+            "type": "string",
+            "description": "Identifier of the canary test (matches canary-calibration.yaml)."
+          },
+          "detected": {
+            "type": "boolean",
+            "description": "Whether the panel detected the known issue in the canary snippet."
+          },
+          "expected_severity": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low", "info"],
+            "description": "Expected severity from canary configuration."
+          },
+          "actual_severity": {
+            "type": ["string", "null"],
+            "enum": ["critical", "high", "medium", "low", "info", null],
+            "description": "Severity reported by the panel, or null if not detected."
+          },
+          "severity_match": {
+            "type": "boolean",
+            "description": "Whether the reported severity matches the expected severity."
+          },
+          "detection_latency_ms": {
+            "type": ["integer", "null"],
+            "description": "Time taken to detect the canary finding, if measurable.",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      }
+    },
     "execution_trace": {
       "type": "object",
       "description": "Evidence of actual code evaluation during panel review. Records which files the LLM read and which specific code sections it analyzed, linking findings to concrete code locations.",

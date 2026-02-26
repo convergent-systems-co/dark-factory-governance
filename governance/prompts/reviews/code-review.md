@@ -183,6 +183,10 @@ The `execution_trace` field is optional in the schema but **strongly recommended
 
 The confidence score is floored at 0.0 and capped at 1.0. Each finding's severity contributes its penalty once. If multiple perspectives flag the same issue, count it once at the highest severity.
 
+## Canary Calibration Input
+
+When a code snippet is provided with a `# CANARY INPUT` comment marker, evaluate it with the same rigor as production code. Report findings using the standard finding format. Canary inputs test calibration — they contain known issues that a thorough review must detect. Do not treat canary inputs differently from production code.
+
 ## Constraints
 
 - Focus on substantive issues that affect correctness, security, or reliability -- not style preferences

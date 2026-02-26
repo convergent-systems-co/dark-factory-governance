@@ -1040,6 +1040,134 @@ def _evaluate_auto_remediate_condition(condition: str, confidence: float, risk: 
 
 
 # ---------------------------------------------------------------------------
+# Canary calibration validation
+# ---------------------------------------------------------------------------
+
+def load_canary_config(profile):
+    """Load canary calibration config from the path specified in the profile.
+
+    Returns the canary_calibration dict or None if not configured.
+    """
+    canary_section = profile.get("canary_calibration", {})
+    config_path_str = canary_section.get("config")
+    if not config_path_str:
+        return None
+
+    # Resolve relative to repo root (engine is at governance/engine/)
+    here = Path(__file__).resolve().parent
+    repo_root = here.parent.parent
+    config_path = repo_root / config_path_str
+    if not config_path.is_file():
+        return None
+
+    with open(config_path) as f:
+        data = yaml.safe_load(f)
+    return data.get("canary_calibration") if data else None
+
+
+def validate_canary_results(emissions, profile, log):
+    """Validate canary calibration results in emissions.
+
+    Checks canary_results fields against the profile's canary_calibration rules.
+    Returns a list of (emission_index, action) tuples for emissions that need
+    human review or should block.
+    """
+    canary_section = profile.get("canary_calibration", {})
+    if not canary_section:
+        log.record("canary_calibration", "skip", "No canary_calibration section in profile")
+        return []
+
+    canary_config = load_canary_config(profile)
+    if canary_config is None:
+        log.record("canary_calibration", "skip", "Canary config not found or not configured")
+        return []
+
+    min_pass_rate = canary_config.get("min_pass_rate", 0.70)
+    mode = canary_config.get("mode", "advisory")
+    actions = []
+
+    for idx, emission in enumerate(emissions):
+        panel_name = emission.get("panel_name", "unknown")
+        canary_results = emission.get("canary_results")
+
+        if canary_results is None:
+            # No canary results — not an error (canaries may not have been injected)
+            log.record(
+                f"canary_{panel_name}",
+                "skip",
+                f"No canary_results in {panel_name} emission"
+            )
+            continue
+
+        if not canary_results:
+            # Empty array — also valid
+            log.record(
+                f"canary_{panel_name}",
+                "skip",
+                f"Empty canary_results in {panel_name} emission"
+            )
+            continue
+
+        # Compute pass rate
+        total = len(canary_results)
+        detected = sum(1 for cr in canary_results if cr.get("detected", False))
+        pass_rate = detected / total if total > 0 else 0.0
+
+        # Compute severity mismatch rate
+        severity_mismatches = sum(
+            1 for cr in canary_results
+            if cr.get("detected", False) and not cr.get("severity_match", True)
+        )
+        severity_mismatch_rate = severity_mismatches / detected if detected > 0 else 0.0
+
+        log.record(
+            f"canary_{panel_name}",
+            "pass" if pass_rate >= min_pass_rate else "fail",
+            f"Canary pass rate: {detected}/{total} = {pass_rate:.2f} "
+            f"(threshold: {min_pass_rate}), severity_mismatch_rate: {severity_mismatch_rate:.2f}"
+        )
+
+        flagged = False
+
+        # Rule: low pass rate
+        if pass_rate < min_pass_rate:
+            log.record(
+                f"canary_{panel_name}_low_pass_rate",
+                "fail",
+                f"Canary pass rate {pass_rate:.2f} < {min_pass_rate} — flagging for human review"
+            )
+            flagged = True
+
+        # Rule: zero detections on security panel
+        if panel_name == "security-review" and detected == 0:
+            log.record(
+                f"canary_{panel_name}_zero_detections",
+                "fail",
+                f"Zero canary detections on security-review panel — anomalous"
+            )
+            flagged = True
+
+        # Rule: severity mismatch rate
+        if severity_mismatch_rate > 0.50:
+            log.record(
+                f"canary_{panel_name}_severity_mismatch",
+                "fail",
+                f"Canary severity mismatch rate {severity_mismatch_rate:.2f} > 0.50 — "
+                f"suggests evaluation gaming"
+            )
+            flagged = True
+
+        if flagged:
+            if mode == "enforcing":
+                actions.append((idx, "block"))
+            else:
+                # Advisory mode — flag for human review but do not block
+                actions.append((idx, "flag_for_human_review"))
+
+    return actions
+
+
+# ---------------------------------------------------------------------------
 # Utility helpers
 # ---------------------------------------------------------------------------
 
@@ -1337,6 +1465,29 @@ def evaluate(emissions_dir, profile_path, ci_passed=True, commit_sha=None, pr_nu
             log.record(f"flag_{flag['flag']}", "pass", f"severity={flag['severity']}: {flag['description']}")
     else:
         log.record("policy_flags", "pass", "No policy flags raised")
+
+    # Step 8b: Canary calibration validation
+    log._stream.write("\n--- Step 8b: Canary calibration validation ---\n")
+    canary_actions = validate_canary_results(emissions, profile, log)
+    for em_idx, action in canary_actions:
+        panel_name = emissions[em_idx].get("panel_name", "unknown")
+        if action == "block":
+            log.record(
+                f"canary_block_{panel_name}", "fail",
+                f"Canary calibration failure blocks merge for {panel_name} (enforcing mode)"
+            )
+            reason = f"Canary calibration failure on {panel_name} — enforcing mode blocks auto-merge"
+            manifest = generate_manifest(
+                emissions, profile, aggregate_confidence, aggregate_risk,
+                "block", reason, log, commit_sha, pr_number, repo
+            )
+            return manifest, 1
+        elif action == "flag_for_human_review":
+            log.record(
+                f"canary_flag_{panel_name}", "fail",
+                f"Canary calibration anomaly on {panel_name} — flagging for human review (advisory)"
+            )
+            emissions[em_idx]["requires_human_review"] = True
 
     # Step 9: Evaluate block conditions
     log._stream.write("\n--- Step 9: Evaluate block conditions ---\n")

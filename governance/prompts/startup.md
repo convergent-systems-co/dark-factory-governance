@@ -655,6 +655,8 @@ If any plausibility check fails, set `requires_human_review: true` on the emissi
 
 If no baseline emission exists and the panel cannot execute, treat the panel as missing. The policy engine's `required_panel_missing` block rule will apply.
 
+**Canary Calibration**: Before invoking each panel, select a canary snippet from `governance/policy/canary-calibration.yaml` that targets the panel type. Append the canary code to the review context with a `# CANARY INPUT` marker. After the panel emits its results, validate canary detection against expected findings. Record results in the emission's `canary_results` field. If the canary pass rate falls below the configured threshold, flag the emission for human review. Canary results are advisory-only in the initial rollout.
+
 ### 4d: Push PR & Monitoring Loop
 
 1. Push the branch

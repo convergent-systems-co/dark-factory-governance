@@ -234,6 +234,10 @@ The `execution_trace` field is optional in the schema but **strongly recommended
 
 **Grounding Requirement**: Every finding with severity 'medium' or above MUST include an `evidence` block containing the file path, line range, and a code snippet (max 200 chars) from the actual code. Findings without evidence may be treated as hallucinated and discarded. If the review produces zero findings, you must still demonstrate analysis by populating `execution_trace.grounding_references` with at least one file+line reference showing what was examined.
 
+## Canary Calibration Input
+
+When a code snippet is provided with a `# CANARY INPUT` comment marker, evaluate it with the same rigor as production code. Report findings using the standard finding format. Canary inputs test calibration — they contain known issues that a thorough review must detect. Do not treat canary inputs differently from production code.
+
 ## Structured Emission
 
 All output must include a JSON block between emission markers, validated against [`governance/schemas/panel-output.schema.json`](../../schemas/panel-output.schema.json).
