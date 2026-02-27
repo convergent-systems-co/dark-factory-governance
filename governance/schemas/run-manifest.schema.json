@@ -170,6 +170,65 @@
       "type": "string",
       "description": "ID of the previous manifest for this PR, if this is a re-evaluation.",
       "pattern": "^\\d{8}-\\d{6}-[0-9a-f]{7}$"
+    },
+    "escalation_chain": {
+      "type": "array",
+      "description": "Ordered audit trail of escalation events during governance evaluation. Each entry records when an agent escalated a decision to a human role, and optionally captures the human's response.",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "source_agent", "target_role", "reason", "escalation_type"],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp when the escalation was initiated."
+          },
+          "source_agent": {
+            "type": "string",
+            "description": "The agent or system component that initiated the escalation (e.g., 'policy-engine', 'code-manager', 'security-review')."
+          },
+          "target_role": {
+            "type": "string",
+            "description": "The human role escalated to (e.g., 'security-lead', 'architect', 'compliance-officer')."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Human-readable explanation of why the escalation was triggered."
+          },
+          "escalation_type": {
+            "type": "string",
+            "enum": ["policy_override", "human_review_required", "circuit_breaker", "block_decision"],
+            "description": "Category of escalation event."
+          },
+          "human_decision": {
+            "type": "object",
+            "description": "The human reviewer's response to the escalation, if one has been recorded.",
+            "required": ["action", "decision_timestamp", "reviewer"],
+            "properties": {
+              "action": {
+                "type": "string",
+                "enum": ["approve", "reject", "defer", "override"],
+                "description": "The action taken by the human reviewer."
+              },
+              "justification": {
+                "type": "string",
+                "description": "Required when action is 'override'. Explains why the human overrode the governance decision."
+              },
+              "decision_timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "ISO 8601 timestamp when the human decision was recorded."
+              },
+              "reviewer": {
+                "type": "string",
+                "description": "GitHub username of the human reviewer."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
     }
   },
   "additionalProperties": false

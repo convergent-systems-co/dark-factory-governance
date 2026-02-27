@@ -151,3 +151,253 @@ class TestPolicyProfileValidity:
             except yaml.YAMLError as e:
                 failures.append(f"{fpath.name}: {e}")
         assert not failures, "\n".join(failures)
+
+
+# ===========================================================================
+# Escalation chain in run-manifest schema (Issue #436)
+# ===========================================================================
+
+
+class TestEscalationChainSchema:
+    """Validate escalation_chain behaviour in run-manifest.schema.json."""
+
+    @pytest.fixture
+    def manifest_schema(self):
+        with open(SCHEMAS_DIR / "run-manifest.schema.json") as f:
+            return json.load(f)
+
+    @pytest.fixture
+    def _base_manifest(self):
+        """Minimal valid run-manifest (without escalation_chain)."""
+        return {
+            "manifest_version": "1.0.0",
+            "manifest_id": "20260227-120000-abcdef1",
+            "timestamp": "2026-02-27T12:00:00Z",
+            "persona_set_commit": "a" * 40,
+            "panel_graph_version": "1.0.0",
+            "policy_profile_used": "default",
+            "model_version": "claude-opus-4-6",
+            "aggregate_confidence": 0.92,
+            "risk_level": "low",
+            "human_intervention": {
+                "required": False,
+                "occurred": False,
+            },
+            "decision": {
+                "action": "auto_merge",
+                "rationale": "All panels approved with high confidence.",
+            },
+            "panels_executed": [
+                {
+                    "panel_name": "code-review",
+                    "verdict": "approve",
+                    "confidence_score": 0.92,
+                    "artifact_path": ".governance/panels/code-review.json",
+                }
+            ],
+        }
+
+    # -- backward compatibility -------------------------------------------
+
+    def test_manifest_without_escalation_chain_is_valid(
+        self, manifest_schema, _base_manifest,
+    ):
+        """escalation_chain is optional — manifests without it must still pass."""
+        validate(instance=_base_manifest, schema=manifest_schema)
+
+    # -- valid escalation chains ------------------------------------------
+
+    def test_manifest_with_valid_escalation_chain(
+        self, manifest_schema, _base_manifest,
+    ):
+        """A manifest containing a well-formed escalation_chain must validate."""
+        manifest = copy.deepcopy(_base_manifest)
+        manifest["escalation_chain"] = [
+            {
+                "timestamp": "2026-02-27T12:01:00Z",
+                "source_agent": "policy-engine",
+                "target_role": "security-lead",
+                "reason": "Critical vulnerability detected in dependency scan.",
+                "escalation_type": "human_review_required",
+            }
+        ]
+        validate(instance=manifest, schema=manifest_schema)
+
+    def test_escalation_chain_with_human_decision(
+        self, manifest_schema, _base_manifest,
+    ):
+        """An escalation event that includes a human_decision must validate."""
+        manifest = copy.deepcopy(_base_manifest)
+        manifest["escalation_chain"] = [
+            {
+                "timestamp": "2026-02-27T12:01:00Z",
+                "source_agent": "code-manager",
+                "target_role": "architect",
+                "reason": "Block decision on high-risk refactor.",
+                "escalation_type": "block_decision",
+                "human_decision": {
+                    "action": "override",
+                    "justification": "Risk accepted per ADR-042.",
+                    "decision_timestamp": "2026-02-27T12:15:00Z",
+                    "reviewer": "octocat",
+                },
+            }
+        ]
+        validate(instance=manifest, schema=manifest_schema)
+
+    def test_escalation_chain_multiple_events(
+        self, manifest_schema, _base_manifest,
+    ):
+        """Multiple escalation events in sequence must validate."""
+        manifest = copy.deepcopy(_base_manifest)
+        manifest["escalation_chain"] = [
+            {
+                "timestamp": "2026-02-27T12:01:00Z",
+                "source_agent": "security-review",
+                "target_role": "security-lead",
+                "reason": "PII exposure detected.",
+                "escalation_type": "circuit_breaker",
+            },
+            {
+                "timestamp": "2026-02-27T12:05:00Z",
+                "source_agent": "policy-engine",
+                "target_role": "compliance-officer",
+                "reason": "Policy override requested after circuit breaker.",
+                "escalation_type": "policy_override",
+                "human_decision": {
+                    "action": "approve",
+                    "decision_timestamp": "2026-02-27T12:10:00Z",
+                    "reviewer": "compliance-bot",
+                },
+            },
+        ]
+        validate(instance=manifest, schema=manifest_schema)
+
+    def test_empty_escalation_chain_is_valid(
+        self, manifest_schema, _base_manifest,
+    ):
+        """An empty escalation_chain array must validate (no escalations occurred)."""
+        manifest = copy.deepcopy(_base_manifest)
+        manifest["escalation_chain"] = []
+        validate(instance=manifest, schema=manifest_schema)
+
+    # -- invalid escalation chains ----------------------------------------
+
+    def test_rejects_escalation_event_missing_required_field(
+        self, manifest_schema, _base_manifest,
+    ):
+        """An escalation event missing a required field must fail validation."""
+        manifest = copy.deepcopy(_base_manifest)
+        manifest["escalation_chain"] = [
+            {
+                # missing "timestamp"
+                "source_agent": "policy-engine",
+                "target_role": "security-lead",
+                "reason": "Missing timestamp field.",
+                "escalation_type": "human_review_required",
+            }
+        ]
+        with pytest.raises(ValidationError):
+            validate(instance=manifest, schema=manifest_schema)
+
+    def test_rejects_invalid_escalation_type(
+        self, manifest_schema, _base_manifest,
+    ):
+        """An unrecognised escalation_type must fail validation."""
+        manifest = copy.deepcopy(_base_manifest)
+        manifest["escalation_chain"] = [
+            {
+                "timestamp": "2026-02-27T12:01:00Z",
+                "source_agent": "policy-engine",
+                "target_role": "security-lead",
+                "reason": "Invalid type test.",
+                "escalation_type": "unknown_type",
+            }
+        ]
+        with pytest.raises(ValidationError):
+            validate(instance=manifest, schema=manifest_schema)
+
+    def test_rejects_invalid_human_decision_action(
+        self, manifest_schema, _base_manifest,
+    ):
+        """A human_decision with an invalid action must fail validation."""
+        manifest = copy.deepcopy(_base_manifest)
+        manifest["escalation_chain"] = [
+            {
+                "timestamp": "2026-02-27T12:01:00Z",
+                "source_agent": "policy-engine",
+                "target_role": "architect",
+                "reason": "Bad action test.",
+                "escalation_type": "block_decision",
+                "human_decision": {
+                    "action": "maybe",
+                    "decision_timestamp": "2026-02-27T12:10:00Z",
+                    "reviewer": "octocat",
+                },
+            }
+        ]
+        with pytest.raises(ValidationError):
+            validate(instance=manifest, schema=manifest_schema)
+
+    def test_rejects_human_decision_missing_reviewer(
+        self, manifest_schema, _base_manifest,
+    ):
+        """A human_decision missing the required reviewer field must fail."""
+        manifest = copy.deepcopy(_base_manifest)
+        manifest["escalation_chain"] = [
+            {
+                "timestamp": "2026-02-27T12:01:00Z",
+                "source_agent": "policy-engine",
+                "target_role": "architect",
+                "reason": "Missing reviewer.",
+                "escalation_type": "policy_override",
+                "human_decision": {
+                    "action": "approve",
+                    "decision_timestamp": "2026-02-27T12:10:00Z",
+                    # missing "reviewer"
+                },
+            }
+        ]
+        with pytest.raises(ValidationError):
+            validate(instance=manifest, schema=manifest_schema)
+
+    def test_rejects_additional_properties_on_escalation_event(
+        self, manifest_schema, _base_manifest,
+    ):
+        """Extra properties on an escalation event must fail validation."""
+        manifest = copy.deepcopy(_base_manifest)
+        manifest["escalation_chain"] = [
+            {
+                "timestamp": "2026-02-27T12:01:00Z",
+                "source_agent": "policy-engine",
+                "target_role": "security-lead",
+                "reason": "Extra field test.",
+                "escalation_type": "human_review_required",
+                "unexpected_field": True,
+            }
+        ]
+        with pytest.raises(ValidationError):
+            validate(instance=manifest, schema=manifest_schema)
+
+    def test_rejects_additional_properties_on_human_decision(
+        self, manifest_schema, _base_manifest,
+    ):
+        """Extra properties on human_decision must fail validation."""
+        manifest = copy.deepcopy(_base_manifest)
+        manifest["escalation_chain"] = [
+            {
+                "timestamp": "2026-02-27T12:01:00Z",
+                "source_agent": "policy-engine",
+                "target_role": "architect",
+                "reason": "Extra human_decision field test.",
+                "escalation_type": "block_decision",
+                "human_decision": {
+                    "action": "approve",
+                    "decision_timestamp": "2026-02-27T12:10:00Z",
+                    "reviewer": "octocat",
+                    "mood": "happy",
+                },
+            }
+        ]
+        with pytest.raises(ValidationError):
+            validate(instance=manifest, schema=manifest_schema)
