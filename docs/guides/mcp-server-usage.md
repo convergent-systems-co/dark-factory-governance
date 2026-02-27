@@ -287,3 +287,15 @@ governance/
   policy/              (4 primary .yaml files)
   schemas/             (panel-output.schema.json)
 ```
+
+## Security
+
+The MCP server exposes governance tools that influence merge decisions and policy evaluation. Securing this surface is essential to maintaining governance integrity. Key concerns include:
+
+- **Tool classification** — Tools are classified as read-only (`list_panels`, `list_policy_profiles`, `validate_emission`) or action (`check_policy`, `generate_name`). Action tools spawn subprocesses and accept filesystem paths, requiring stricter controls.
+- **Confused deputy attacks** — The `check_policy` tool accepts an `emissions_dir` filesystem path and invokes a Python subprocess. Without path validation, a caller could read files outside the project boundary.
+- **Policy oracle attacks** — Repeated `check_policy` invocations with crafted emissions could reverse-engineer passing patterns.
+- **Rate limiting** — Action tools should be rate-limited, especially `check_policy` (recommended: 10 requests/minute).
+- **Audit logging** — All tool invocations should be logged with caller identity, parameters, and outcomes.
+
+For comprehensive guidance including token scoping, confused deputy mitigations, rate limit recommendations, and audit requirements, see the [MCP Security Guidelines](mcp-security-guidelines.md).
