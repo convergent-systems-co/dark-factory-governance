@@ -2,6 +2,7 @@
   "name": "@jm-packages/ai-submodule-mcp",
   "version": "0.1.0",
   "description": "MCP server for AI governance prompts, panels, and policy tools",
+  "license": "MIT",
   "type": "module",
   "bin": {
     "ai-submodule-mcp": "./dist/index.js"
