@@ -132,6 +132,19 @@
               "snippet": { "type": "string", "maxLength": 200, "description": "Code snippet (first 200 chars)" }
             },
             "required": ["file"]
+          },
+          "groundedness_score": {
+            "type": "number",
+            "description": "Score indicating how well this finding is grounded in actual code evidence. 0.0 = no grounding, 1.0 = fully grounded with concrete evidence.",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "hallucination_indicators": {
+            "type": "array",
+            "description": "Indicators suggesting potential hallucination in this finding. Empty array means no hallucination signals detected.",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "additionalProperties": false
