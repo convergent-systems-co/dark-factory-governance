@@ -7,6 +7,8 @@ framework: null
 governance:
   policy_profile: "default"
   parallel_coders: 6
+  use_project_manager: false        # opt-in: set to true to enable PM-multiplexed pipeline
+  parallel_code_managers: 3         # max concurrent Code Managers when PM is enabled (default 3)
 
 conventions:
   git:

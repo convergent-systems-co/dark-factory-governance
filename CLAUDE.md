@@ -72,13 +72,14 @@ Every code change flows through these layers in order:
 
 - **Consolidated review prompts** (`governance/prompts/reviews/`) — 19 self-contained review prompts implementing Anthropic's Parallelization (Voting) pattern. Each prompt inlines its participant perspectives with full evaluation criteria, scoring, and output schema. This is the canonical location for review definitions.
 - **Shared perspectives** (`governance/prompts/shared-perspectives.md`) — Canonical definitions for the 19 perspectives appearing in 2+ review prompts. Serves as the authoring-time DRY mechanism; compiled prompts have full locality at runtime.
-- **Agentic personas** (`governance/personas/agentic/`) — Five-agent prompt-chained architecture:
-  - **DevOps Engineer** — Session entry point: pre-flight, triage, routing (Anthropic's Routing pattern)
-  - **Code Manager** — Pipeline orchestrator: intent validation, panel selection, review coordination, merge (Orchestrator-Workers pattern)
+- **Agentic personas** (`governance/personas/agentic/`) — Six-agent prompt-chained architecture:
+  - **Project Manager** — Portfolio-level orchestrator: multiplexes Code Managers, spawns background DevOps Engineer, cross-batch coordination (Orchestrator-Workers pattern, opt-in via `governance.use_project_manager: true`)
+  - **DevOps Engineer** — Session entry point (standard) or background agent (PM mode): pre-flight, triage, routing, issue grouping, continuous polling (Anthropic's Routing pattern)
+  - **Code Manager** — Pipeline orchestrator: intent validation, panel selection, review coordination, merge (Orchestrator-Workers pattern). Operates in standard or batch-scoped mode.
   - **Coder** — Execution agent: implementation, tests, documentation (Worker)
   - **IaC Engineer** — Infrastructure execution agent: Bicep/Terraform, JM Paved Roads standards, security-first defaults (Worker)
   - **Tester** — Independent evaluator: test coverage gate, documentation verification, structured feedback (Evaluator-Optimizer pattern)
-- **Agent protocol** (`governance/prompts/agent-protocol.md`) — Structured inter-agent communication with typed messages: ASSIGN, STATUS, RESULT, FEEDBACK, ESCALATE, APPROVE, BLOCK, CANCEL
+- **Agent protocol** (`governance/prompts/agent-protocol.md`) — Structured inter-agent communication with typed messages: ASSIGN, STATUS, RESULT, FEEDBACK, ESCALATE, APPROVE, BLOCK, CANCEL, WATCH
 
 > See `docs/research/README.md` for the research supporting the persona consolidation decision (Issue #220).
 
@@ -134,7 +135,9 @@ All panel output must include JSON between `<!-- STRUCTURED_EMISSION_START -->` 
 
 ## Agentic Startup Sequence
 
-When operating autonomously (via `governance/prompts/startup.md`), the pipeline chains five personas through five phases with **parallel Coder dispatch**:
+When operating autonomously (via `governance/prompts/startup.md`), the pipeline chains personas through structured phases with **parallel Coder dispatch**:
+
+### Standard Mode (default)
 
 | Phase | Persona | What Happens |
 |-------|---------|-------------|
@@ -145,6 +148,22 @@ When operating autonomously (via `governance/prompts/startup.md`), the pipeline 
 | 5 | Code Manager + DevOps Engineer | Merge all PRs, retrospective, loop or shutdown |
 
 Max N issues per session where N = `governance.parallel_coders` (default 5; set to -1 for unlimited — context pressure becomes the sole session limiter; parallel execution is context-efficient — Coder subagents use their own context windows); **hard stop at 80% context capacity** — executes shutdown protocol (clean git, write checkpoint, request `/clear`)
+
+### Project Manager Mode (opt-in: `governance.use_project_manager: true`)
+
+When enabled, the Project Manager replaces the DevOps Engineer as the session entry point and introduces multiplexed Code Managers for higher throughput:
+
+| PM Phase | Persona | What Happens |
+|----------|---------|-------------|
+| 0 | Project Manager | Checkpoint recovery (PM-specific state) |
+| 1 | Project Manager + DevOps Engineer | PM spawns DevOps Engineer as background agent for pre-flight and triage |
+| 1b | DevOps Engineer (background) | Pre-flight, issue scanning, grouping by change type (code/docs/infra/security/mixed), RESULT to PM |
+| 2 | Project Manager | Receives grouped batches, spawns M Code Managers (one per group, M = `governance.parallel_code_managers`, default 3) |
+| 2b | Code Managers (parallel) | Each CM plans its batch, dispatches Coders (nested parallelism: PM -> CM -> Coder) |
+| 3 | Project Manager | Collects CM results, coordinates cross-batch dependencies, processes WATCH messages from DevOps |
+| 4 | Project Manager | Merges all PRs (via CMs), retrospective, handles new WATCH work or shutdown |
+
+Total concurrent agents = M Code Managers x N Coders per CM. The DevOps Engineer runs in background polling mode, emitting WATCH messages when new actionable issues are discovered. See `docs/architecture/project-manager-architecture.md` for the full architecture.
 
 ## Symlink Configuration
 
