@@ -129,6 +129,7 @@ This document tracks the maturity phases, completed work, and open enhancements 
 | #347 | #351 | Slash commands reference page | Reference guide for AI tooling chain commands (`/startup`, `/checkpoint`) |
 | #348 | #352 | Contributing guide | How-to-contribute page for the governance framework |
 | #353 | #354 | Remove Cursor tooling references | Removed all Cursor IDE references; supported tools are now Claude Code and GitHub Copilot |
+| #433 | — | Governance dashboard and prompt catalog | Panel catalog, policy comparison, prompt index reference pages; catalog generator script; publish-dashboard CI workflow |
 
 ## TODO
 
