@@ -1,6 +1,7 @@
 {
   "panel_name": "testing-review",
   "panel_version": "1.0.0",
+  "schema_version": "1.0.0",
   "confidence_score": 0.85,
   "risk_level": "low",
   "compliance_score": 1.0,
@@ -12,15 +13,27 @@
       "persona": "quality/test-engineer",
       "verdict": "approve",
       "confidence": 0.85,
-      "rationale": "Baseline emission — governance configuration repo contains no executable application code requiring test coverage. Panel evaluates coverage gaps, test quality, and testing infrastructure when test-relevant changes are present.",
-      "findings_count": { "critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0 }
+      "rationale": "Baseline emission \u2014 governance configuration repo contains no executable application code requiring test coverage. Panel evaluates coverage gaps, test quality, and testing infrastructure when test-relevant changes are present.",
+      "findings_count": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "info": 0
+      }
     },
     {
       "persona": "quality/quality-engineer",
       "verdict": "approve",
       "confidence": 0.85,
       "rationale": "Schema validation serves as the test surface for governance artifacts. JSON Schema files validated against panel-output.schema.json.",
-      "findings_count": { "critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0 }
+      "findings_count": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "info": 0
+      }
     }
   ],
   "aggregate_verdict": "approve",

@@ -1,7 +1,8 @@
 {
   "panel_name": "code-review",
   "panel_version": "1.0.0",
-  "confidence_score": 0.90,
+  "schema_version": "1.0.0",
+  "confidence_score": 0.9,
   "risk_level": "low",
   "compliance_score": 1.0,
   "policy_flags": [],
@@ -11,7 +12,7 @@
     {
       "persona": "quality/code-reviewer",
       "verdict": "approve",
-      "confidence": 0.90,
+      "confidence": 0.9,
       "rationale": "Workflow logic is sound. Changelog and update jobs separated correctly. fail-fast disabled for matrix. Job disabled with if:false until consuming repos configured."
     },
     {

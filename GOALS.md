@@ -117,6 +117,12 @@ This document tracks the maturity phases, completed work, and open enhancements 
 |-------|----|-------|--------|
 | #455 | — | FinOps review panel | Default required panel across all policy profiles with 5 perspectives (FinOps Strategist, Resource Optimizer, Shutdown/Decommission Analyst, Savings Plan Advisor, Cost Allocation Auditor), destruction safety guardrails requiring human approval, schema extension for destruction_recommended and requires_human_approval fields |
 
+### Schema and Tooling
+
+| Issue | PR | Title | Impact |
+|-------|----|-------|--------|
+| #435 | — | Schema evolution tooling and emission migration CLI | Schema versioning (`schema_version` field), migration rules directory, chained migration CLI (`governance/bin/migrate-emissions.py`), 25 pytest tests |
+
 ### Documentation Site & Tooling
 
 | Issue | PR | Title | Impact |

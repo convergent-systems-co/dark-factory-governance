@@ -1,6 +1,7 @@
 {
   "panel_name": "security-review",
   "panel_version": "1.0.0",
+  "schema_version": "1.0.0",
   "confidence_score": 0.88,
   "risk_level": "low",
   "compliance_score": 1.0,
@@ -11,8 +12,8 @@
     {
       "persona": "compliance/security-auditor",
       "verdict": "approve",
-      "confidence": 0.90,
-      "rationale": "Governance configuration repo — no application code, no secrets, no user input handling. Policy profiles use YAML with no dynamic evaluation. Schema files are static JSON Schema definitions."
+      "confidence": 0.9,
+      "rationale": "Governance configuration repo \u2014 no application code, no secrets, no user input handling. Policy profiles use YAML with no dynamic evaluation. Schema files are static JSON Schema definitions."
     },
     {
       "persona": "operations/infrastructure-engineer",

@@ -255,6 +255,12 @@
       "required": ["level"],
       "additionalProperties": false
     },
+    "schema_version": {
+      "type": "string",
+      "description": "Schema version this emission conforms to. Defaults to 1.0.0 if omitted.",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "1.0.0"
+    },
     "duration_ms": {
       "type": "integer",
       "description": "Panel execution duration in milliseconds.",

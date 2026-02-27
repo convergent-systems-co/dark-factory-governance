@@ -1,6 +1,7 @@
 {
   "panel_name": "test-generation-review",
   "panel_version": "1.0.0",
+  "schema_version": "1.0.0",
   "confidence_score": 0.85,
   "risk_level": "low",
   "compliance_score": 1.0,
@@ -12,7 +13,7 @@
       "persona": "quality/quality-engineer",
       "verdict": "approve",
       "confidence": 0.85,
-      "rationale": "Phase 5a governance artifacts are configuration-only — no executable code requiring test coverage. Schema, panel, and policy definitions follow existing patterns."
+      "rationale": "Phase 5a governance artifacts are configuration-only \u2014 no executable code requiring test coverage. Schema, panel, and policy definitions follow existing patterns."
     },
     {
       "persona": "compliance/security-auditor",

@@ -1,7 +1,8 @@
 {
   "panel_name": "copilot-review",
   "panel_version": "1.0.0",
-  "confidence_score": 0.80,
+  "schema_version": "1.0.0",
+  "confidence_score": 0.8,
   "risk_level": "low",
   "compliance_score": 1.0,
   "policy_flags": [],
@@ -11,9 +12,15 @@
     {
       "persona": "external/github-copilot",
       "verdict": "approve",
-      "confidence": 0.80,
-      "rationale": "Baseline emission — no Copilot findings on governance configuration changes. Clean review with no inline comments, review submissions, or issue-level comments from Copilot bots.",
-      "findings_count": { "critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0 }
+      "confidence": 0.8,
+      "rationale": "Baseline emission \u2014 no Copilot findings on governance configuration changes. Clean review with no inline comments, review submissions, or issue-level comments from Copilot bots.",
+      "findings_count": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "info": 0
+      }
     }
   ],
   "aggregate_verdict": "approve",
