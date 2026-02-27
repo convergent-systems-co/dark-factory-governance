@@ -6,7 +6,7 @@ This guide covers diagnosis and recovery when GitHub Actions workflows enter a c
 
 **The most common loop** involves three workflows:
 
-1. **Auto-Rebase Agent PRs** (`auto-rebase.yml`) — triggers on every push to `main`, rebases all open agent PRs (`itsfwcp/*` branches) with `--force-with-lease`
+1. **Auto-Rebase Agent PRs** (`auto-rebase.yml`) — triggers on every push to `main`, rebases all open agent PRs (`NETWORK_ID/*` branches) with `--force-with-lease`
 2. **Dark Factory Governance** (`dark-factory-governance.yml`) — triggers on `pull_request: [opened, synchronize]`, has `cancel-in-progress: true` on its concurrency group
 3. **Event-Driven Governance Trigger** (`event-trigger.yml`) — triggers on `pull_request` events and dispatches additional governance runs
 

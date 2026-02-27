@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** in_progress
 **Issue:** #316
-**Branch:** itsfwcp/refactor/316/move-plans-checkpoints
+**Branch:** NETWORK_ID/refactor/316/move-plans-checkpoints
 
 ---
 

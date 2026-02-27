@@ -301,7 +301,7 @@ Labels drive agentic prioritization:
 When the autonomous pipeline processes issues, five personas chain through five phases:
 
 1. **Phase 1 — Pre-flight & Triage** (DevOps Engineer): Scans issues, filters (excludes blocked/wontfix/duplicate, existing branches, recent human edits), prioritizes by label (P0 → P4), routes to Code Manager
-2. **Phase 2 — Intent & Planning** (Code Manager): Validates intent clarity, ensures `project.yaml` reflects repo state, selects context-appropriate review panels, creates branch (`itsfwcp/{type}/{issue-number}/{description}`) and plan in `.governance/plans/`
+2. **Phase 2 — Intent & Planning** (Code Manager): Validates intent clarity, ensures `project.yaml` reflects repo state, selects context-appropriate review panels, creates branch (`NETWORK_ID/{type}/{issue-number}/{description}`) and plan in `.governance/plans/`
 3. **Phase 3 — Implementation** (Coder): Implements the plan, writes tests, updates documentation. Emits structured RESULT to Code Manager
 4. **Phase 4 — Evaluation & Review** (Code Manager + Tester): Tester evaluates independently (must approve before push), Code Manager runs security review, context-specific reviews, monitors PR CI/Copilot loop
 5. **Phase 5 — Merge & Loop** (Code Manager + DevOps Engineer): Merges PR, runs retrospective, loops back or checkpoints on hard-stop
@@ -521,7 +521,7 @@ git submodule update --remote .ai
 bash .ai/bin/init.sh
 
 # Create a feature branch (following naming convention)
-git checkout -b itsfwcp/feat/42/add-user-auth
+git checkout -b NETWORK_ID/feat/42/add-user-auth
 
 # Create an issue
 gh issue create --title "Title" --label "enhancement,P2"
@@ -536,16 +536,16 @@ cat .governance/panels/code-review.md
 
 ### Branch Naming Convention
 
-All governance branches use the `itsfwcp` prefix (the project's standard branch identifier). The full pattern:
+All governance branches use the `NETWORK_ID` prefix (the project's standard branch identifier). The full pattern:
 
 ```
-itsfwcp/{type}/{issue-number}/{description}
+NETWORK_ID/{type}/{issue-number}/{description}
 
 Examples:
-  itsfwcp/feat/42/add-user-auth
-  itsfwcp/fix/57/login-crash
-  itsfwcp/refactor/63/extract-service
-  itsfwcp/docs/71/update-api-docs
+  NETWORK_ID/feat/42/add-user-auth
+  NETWORK_ID/fix/57/login-crash
+  NETWORK_ID/refactor/63/extract-service
+  NETWORK_ID/docs/71/update-api-docs
 ```
 
 ### Commit Message Convention

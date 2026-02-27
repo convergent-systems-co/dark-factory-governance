@@ -4,7 +4,7 @@
 **Date:** 2026-02-20
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/12
-**Branch:** itsfwcp/12-auto-propagation
+**Branch:** NETWORK_ID/12-auto-propagation
 
 ---
 

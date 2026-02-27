@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/371
-**Branch:** itsfwcp/feat/371/azure-dashboards
+**Branch:** NETWORK_ID/feat/371/azure-dashboards
 
 ---
 

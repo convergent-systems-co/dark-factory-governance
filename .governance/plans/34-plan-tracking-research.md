@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/34
-**Branch:** itsfwcp/feat/34/plan-tracking-research
+**Branch:** NETWORK_ID/feat/34/plan-tracking-research
 
 ---
 

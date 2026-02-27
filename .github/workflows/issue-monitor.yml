@@ -100,7 +100,12 @@ jobs:
           # Check if a branch already exists for this issue
           REPO="${{ github.repository }}"
           BRANCHES=$(gh api "repos/$REPO/branches" --jq '.[].name' 2>/dev/null || echo "")
-          if echo "$BRANCHES" | grep -qE "(itsfwcp|feature)/[^/]+/$ISSUE_NUMBER/"; then
+          # Extract branch prefix from project.yaml
+          BRANCH_PREFIX=$(grep 'branch_pattern:' project.yaml | sed 's/.*"\([^/]*\)\/.*/\1/' || echo "")
+          if [ -z "$BRANCH_PREFIX" ] || [ "$BRANCH_PREFIX" = "{network_id}" ]; then
+            BRANCH_PREFIX="$(whoami)"
+          fi
+          if echo "$BRANCHES" | grep -qE "($BRANCH_PREFIX|feature)/[^/]+/$ISSUE_NUMBER/"; then
             echo "actionable=false" >> "$GITHUB_OUTPUT"
             echo "reason=Branch already exists for this issue" >> "$GITHUB_OUTPUT"
             echo "::notice::Skipping issue #$ISSUE_NUMBER — branch already exists"

@@ -4,13 +4,13 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** #404 — E-5: Policy Engine Bypass via Emission Crafting
-**Branch:** itsfwcp/fix/404/emission-plausibility-validation
+**Branch:** NETWORK_ID/fix/404/emission-plausibility-validation
 
 **Author:** Coder (agentic)
 **Date:** 2026-02-26
 **Status:** in_progress
 **Issue:** #404 — E-5: Policy Engine Bypass via Emission Crafting
-**Branch:** `itsfwcp/fix/404/emission-plausibility-validation`
+**Branch:** `NETWORK_ID/fix/404/emission-plausibility-validation`
 
 ---
 

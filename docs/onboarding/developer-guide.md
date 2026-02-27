@@ -99,7 +99,7 @@ See [startup.md](../../governance/prompts/startup.md) for the full protocol and 
 cp .ai/governance/prompts/templates/plan-template.md .governance/plans/42-my-feature.md
 ```
 
-**Branch naming:** `itsfwcp/{type}/{issue-number}/{short-name}` (e.g., `itsfwcp/feat/42/add-auth`)
+**Branch naming:** `NETWORK_ID/{type}/{issue-number}/{short-name}` (e.g., `NETWORK_ID/feat/42/add-auth`)
 
 **Commit style:** Conventional commits — `feat:`, `fix:`, `refactor:`, `docs:`, `chore:`
 
@@ -183,7 +183,7 @@ If the agent repeats itself, forgets decisions, or re-reads files it already rea
 | PR checks | `gh pr checks <N>` |
 | Governance health | `gh workflow list` |
 | Submodule status | `git submodule status .ai` |
-| Agent branches | `git branch -r \| grep itsfwcp` |
+| Agent branches | `git branch -r \| grep NETWORK_ID` |
 
 ## Troubleshooting
 

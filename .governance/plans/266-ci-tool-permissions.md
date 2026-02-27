@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** approved
 **Issue:** #266
-**Branch:** itsfwcp/fix/266/ci-tool-permissions
+**Branch:** NETWORK_ID/fix/266/ci-tool-permissions
 
 ---
 

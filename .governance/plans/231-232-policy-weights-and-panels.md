@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/231, https://github.com/SET-Apps/ai-submodule/issues/232
-**Branch:** itsfwcp/fix/231-232/policy-weights-and-panels
+**Branch:** NETWORK_ID/fix/231-232/policy-weights-and-panels
 
 ---
 

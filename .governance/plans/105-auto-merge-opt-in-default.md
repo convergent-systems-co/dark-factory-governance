@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/105
-**Branch:** itsfwcp/feat/105/auto-merge-opt-in-default
+**Branch:** NETWORK_ID/feat/105/auto-merge-opt-in-default
 
 ---
 

@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/222
-**Branch:** `itsfwcp/feat/222/cleanup-root`
+**Branch:** `NETWORK_ID/feat/222/cleanup-root`
 
 ---
 

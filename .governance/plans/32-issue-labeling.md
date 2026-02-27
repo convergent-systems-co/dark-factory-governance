@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/32
-**Branch:** itsfwcp/chore/32/issue-labeling
+**Branch:** NETWORK_ID/chore/32/issue-labeling
 
 ---
 

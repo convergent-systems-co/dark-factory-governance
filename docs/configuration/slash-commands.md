@@ -122,7 +122,7 @@ Checkpoint files contain session state in JSON format:
   "pending_work": "Finish implementing #127, run security review",
   "prs_created": ["#48", "#49"],
   "manifests_written": ["manifest-20260225-143000"],
-  "branches_touched": ["itsfwcp/feat/123/add-feature", "main"],
+  "branches_touched": ["NETWORK_ID/feat/123/add-feature", "main"],
   "review_cycle": null
 }
 ```

@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** #399 — D-2: Context Window Exhaustion as a Weapon
-**Branch:** itsfwcp/fix/399/context-exhaustion-defense
+**Branch:** NETWORK_ID/fix/399/context-exhaustion-defense
 
 ---
 

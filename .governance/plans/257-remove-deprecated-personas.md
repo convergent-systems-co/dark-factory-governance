@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/257
-**Branch:** itsfwcp/chore/257/remove-deprecated-personas
+**Branch:** NETWORK_ID/chore/257/remove-deprecated-personas
 
 ---
 

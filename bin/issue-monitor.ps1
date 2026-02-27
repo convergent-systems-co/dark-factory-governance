@@ -80,6 +80,7 @@ function Get-RepoName {
     $remoteUrl -replace '.*github\.com[:/]', '' -replace '\.git$', ''
 }
 
+$NetworkId = $env:USERNAME
 $RepoName = Get-RepoName
 if (-not $RepoName) {
     Write-Error "Could not detect repository. Set -Repo owner/repo or AI_MONITOR_REPO env var."
@@ -162,7 +163,7 @@ function Test-IssueActionable {
     $branches = & gh api "repos/$RepoName/branches" --jq '.[].name' 2>$null
     if ($branches) {
         foreach ($branch in $branches) {
-            if ($branch -match "(itsfwcp|feature)/[^/]+/$IssueNumber/") {
+            if ($branch -match "($NetworkId|feature)/[^/]+/$IssueNumber/") {
                 return $false
             }
         }

@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/100
-**Branch:** itsfwcp/feat/100/autonomy-metrics
+**Branch:** NETWORK_ID/feat/100/autonomy-metrics
 
 ---
 

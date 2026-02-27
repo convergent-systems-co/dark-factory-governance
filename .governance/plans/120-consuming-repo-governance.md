@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** completed
 **Issue:** #120
-**Branch:** itsfwcp/fix/120/consuming-repo-governance
+**Branch:** NETWORK_ID/fix/120/consuming-repo-governance
 
 ---
 

@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/189
-**Branch:** itsfwcp/feat/189/checkpoint-resumption
+**Branch:** NETWORK_ID/feat/189/checkpoint-resumption
 
 ---
 

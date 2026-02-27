@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/173
-**Branch:** itsfwcp/feat/173/merge-sequencing-policy
+**Branch:** NETWORK_ID/feat/173/merge-sequencing-policy
 
 ---
 

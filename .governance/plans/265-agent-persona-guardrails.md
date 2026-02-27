@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** approved
 **Issue:** #265
-**Branch:** itsfwcp/feat/265/agent-persona-guardrails
+**Branch:** NETWORK_ID/feat/265/agent-persona-guardrails
 
 ---
 

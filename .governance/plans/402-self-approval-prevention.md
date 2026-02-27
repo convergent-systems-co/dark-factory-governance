@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** #402 — E-1: Coder Self-Approval via Prompt Injection
-**Branch:** itsfwcp/fix/402/self-approval-prevention
+**Branch:** NETWORK_ID/fix/402/self-approval-prevention
 
 ---
 

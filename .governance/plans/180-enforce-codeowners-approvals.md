@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/180
-**Branch:** itsfwcp/fix/180/enforce-codeowners-approvals
+**Branch:** NETWORK_ID/fix/180/enforce-codeowners-approvals
 
 ---
 

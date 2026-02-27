@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** #398 — D-1: Infinite Feedback Loop
-**Branch:** itsfwcp/fix/398/feedback-circuit-breaker
+**Branch:** NETWORK_ID/fix/398/feedback-circuit-breaker
 
 ---
 

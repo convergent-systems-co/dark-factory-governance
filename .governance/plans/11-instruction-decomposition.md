@@ -4,7 +4,7 @@
 **Date:** 2026-02-20
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/11
-**Branch:** itsfwcp/11-instruction-decomposition
+**Branch:** NETWORK_ID/11-instruction-decomposition
 
 ---
 

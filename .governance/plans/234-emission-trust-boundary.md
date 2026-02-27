@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/234
-**Branch:** itsfwcp/fix/234/emission-trust-boundary
+**Branch:** NETWORK_ID/fix/234/emission-trust-boundary
 
 ---
 

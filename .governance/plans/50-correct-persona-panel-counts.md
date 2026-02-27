@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/50
-**Branch:** itsfwcp/fix/50/correct-persona-panel-counts
+**Branch:** NETWORK_ID/fix/50/correct-persona-panel-counts
 
 ---
 

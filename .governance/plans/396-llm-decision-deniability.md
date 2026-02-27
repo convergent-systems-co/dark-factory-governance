@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** #396 — LLM Decision Deniability
-**Branch:** itsfwcp/fix/396/panel-execution-trace
+**Branch:** NETWORK_ID/fix/396/panel-execution-trace
 
 ---
 

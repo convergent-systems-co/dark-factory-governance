@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/81
-**Branch:** itsfwcp/feat/81/auto-remediation-loops
+**Branch:** NETWORK_ID/feat/81/auto-remediation-loops
 
 ---
 

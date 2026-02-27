@@ -480,7 +480,7 @@ The agent must check context capacity before starting any new issue, and after c
    ```json
    {
      "timestamp": "2026-02-21T14:30:00Z",
-     "branch": "itsfwcp/current-branch",
+     "branch": "NETWORK_ID/current-branch",
      "issues_completed": ["#5", "#6"],
      "issues_remaining": ["#7", "#8"],
      "current_issue": null,
@@ -489,7 +489,7 @@ The agent must check context capacity before starting any new issue, and after c
      "pending_work": "Issues #7 and #8 need implementation. PRs #13-#15 need governance approval.",
      "prs_created": ["#13", "#14", "#15"],
      "manifests_written": ["20260221-143000-abc1234"],
-     "branches_touched": ["itsfwcp/5-agile-coach", "itsfwcp/6-finops-group"],
+     "branches_touched": ["NETWORK_ID/5-agile-coach", "NETWORK_ID/6-finops-group"],
      "context_capacity": {
        "tier": "red",
        "tool_calls": 83,

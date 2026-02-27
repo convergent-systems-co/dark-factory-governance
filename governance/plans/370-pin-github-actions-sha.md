@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/370
-**Branch:** itsfwcp/fix/370/pin-actions-sha
+**Branch:** NETWORK_ID/fix/370/pin-actions-sha
 
 ---
 

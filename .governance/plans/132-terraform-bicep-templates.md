@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** in_progress
 **Issue:** #132
-**Branch:** itsfwcp/feat/132/terraform-bicep-templates
+**Branch:** NETWORK_ID/feat/132/terraform-bicep-templates
 
 ---
 

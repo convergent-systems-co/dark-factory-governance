@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/142
-**Branch:** itsfwcp/feat/142/persona-effectiveness-schema
+**Branch:** NETWORK_ID/feat/142/persona-effectiveness-schema
 
 ---
 

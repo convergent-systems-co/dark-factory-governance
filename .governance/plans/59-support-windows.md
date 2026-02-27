@@ -4,7 +4,7 @@
 **Date:** 2026-02-22
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/59
-**Branch:** itsfwcp/feat/59/support-windows
+**Branch:** NETWORK_ID/feat/59/support-windows
 
 ---
 

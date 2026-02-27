@@ -12,6 +12,6 @@ governance:
 
 conventions:
   git:
-    branch_pattern: "itsfwcp/{type}/{number}/{name}"
+    branch_pattern: "{network_id}/{type}/{number}/{name}"
     commit_style: "conventional"
     pr_template: true

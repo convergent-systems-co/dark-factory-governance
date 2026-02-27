@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/373
-**Branch:** itsfwcp/feat/373/jm-naming-conventions
+**Branch:** NETWORK_ID/feat/373/jm-naming-conventions
 
 ---
 

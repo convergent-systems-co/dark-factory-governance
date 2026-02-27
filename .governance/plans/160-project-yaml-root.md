@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/160
-**Branch:** itsfwcp/fix/160/project-yaml-root
+**Branch:** NETWORK_ID/fix/160/project-yaml-root
 
 ---
 

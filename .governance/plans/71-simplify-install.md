@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/71
-**Branch:** itsfwcp/fix/71/simplify-install
+**Branch:** NETWORK_ID/fix/71/simplify-install
 
 ---
 

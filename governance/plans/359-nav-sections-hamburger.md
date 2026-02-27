@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/359
-**Branch:** itsfwcp/fix/359/nav-sections-hamburger-position
+**Branch:** NETWORK_ID/fix/359/nav-sections-hamburger-position
 
 ---
 

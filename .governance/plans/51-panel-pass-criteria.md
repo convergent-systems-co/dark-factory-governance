@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/51
-**Branch:** itsfwcp/feat/51/panel-pass-criteria
+**Branch:** NETWORK_ID/feat/51/panel-pass-criteria
 
 ---
 

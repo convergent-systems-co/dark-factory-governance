@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/116
-**Branch:** itsfwcp/fix/116/auto-update-ai-submodule
+**Branch:** NETWORK_ID/fix/116/auto-update-ai-submodule
 
 ---
 

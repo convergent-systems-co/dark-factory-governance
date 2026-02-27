@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/53
-**Branch:** itsfwcp/feat/53/evaluate-personas-panels
+**Branch:** NETWORK_ID/feat/53/evaluate-personas-panels
 
 ---
 

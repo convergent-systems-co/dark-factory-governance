@@ -4,7 +4,7 @@
 **Date:** 2026-02-27
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/474
-**Branch:** itsfwcp/docs/474/retroactive-adrs
+**Branch:** NETWORK_ID/docs/474/retroactive-adrs
 
 ---
 

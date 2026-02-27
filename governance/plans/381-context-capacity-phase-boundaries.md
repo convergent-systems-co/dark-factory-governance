@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/381
-**Branch:** itsfwcp/feat/381/context-capacity-phase-gates
+**Branch:** NETWORK_ID/feat/381/context-capacity-phase-gates
 
 ---
 

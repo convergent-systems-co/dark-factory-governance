@@ -235,7 +235,7 @@ Keeps agent-created PRs up to date with `main` by automatically rebasing.
 | **Trigger** | `push` to `main`, `workflow_dispatch`, `schedule` (every 6 hours) |
 | **Permissions** | contents: write, pull-requests: write |
 
-**Behavior:** Finds open PRs by `github-actions[bot]` or on `itsfwcp/*` branches. Checks if rebase needed (merge-base vs main HEAD). Rebases with `--force-with-lease`. Posts conflict comment if rebase fails.
+**Behavior:** Finds open PRs by `github-actions[bot]` or on `NETWORK_ID/*` branches. Checks if rebase needed (merge-base vs main HEAD). Rebases with `--force-with-lease`. Posts conflict comment if rebase fails.
 
 ---
 

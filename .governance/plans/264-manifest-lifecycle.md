@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** approved
 **Issue:** #264
-**Branch:** itsfwcp/fix/264/manifest-lifecycle
+**Branch:** NETWORK_ID/fix/264/manifest-lifecycle
 
 ---
 

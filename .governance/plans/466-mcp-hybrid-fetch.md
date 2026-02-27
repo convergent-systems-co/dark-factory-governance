@@ -4,7 +4,7 @@
 **Date:** 2026-02-27
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/466
-**Branch:** itsfwcp/feat/466/mcp-hybrid-fetch
+**Branch:** NETWORK_ID/feat/466/mcp-hybrid-fetch
 
 ---
 

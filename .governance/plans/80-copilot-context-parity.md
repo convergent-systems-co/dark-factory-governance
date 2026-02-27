@@ -4,7 +4,7 @@
 **Date:** 2026-02-22
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/80
-**Branch:** itsfwcp/feat/80/copilot-context-parity
+**Branch:** NETWORK_ID/feat/80/copilot-context-parity
 
 ---
 

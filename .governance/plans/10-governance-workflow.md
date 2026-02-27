@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/10
-**Branch:** itsfwcp/feat/10/governance-workflow
+**Branch:** NETWORK_ID/feat/10/governance-workflow
 
 ---
 

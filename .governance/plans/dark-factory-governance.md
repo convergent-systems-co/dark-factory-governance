@@ -3,7 +3,7 @@
 ## Branch Instruction
 Create a new branch:
 
-itsfwcp/dark-factory-governance
+NETWORK_ID/dark-factory-governance
 
 All governance framework work must occur on this branch.
 

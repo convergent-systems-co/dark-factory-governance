@@ -4,7 +4,7 @@
 **Date:** 2026-02-22
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/87
-**Branch:** itsfwcp/feat/87/incident-to-di-generation
+**Branch:** NETWORK_ID/feat/87/incident-to-di-generation
 
 ---
 

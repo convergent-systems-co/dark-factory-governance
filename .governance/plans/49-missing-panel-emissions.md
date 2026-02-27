@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/49
-**Branch:** itsfwcp/fix/49/missing-panel-emissions
+**Branch:** NETWORK_ID/fix/49/missing-panel-emissions
 
 ---
 

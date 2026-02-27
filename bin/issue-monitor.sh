@@ -82,6 +82,7 @@ detect_repo() {
   echo "$remote_url" | sed -E 's|.*github\.com[:/]||; s|\.git$||'
 }
 
+NETWORK_ID="$(whoami)"
 REPO="$(detect_repo)"
 if [ -z "$REPO" ]; then
   echo "ERROR: Could not detect repository. Set AI_MONITOR_REPO=owner/repo" >&2
@@ -166,7 +167,7 @@ is_actionable() {
   # Check if branch exists
   local branches
   branches="$(gh api "repos/$REPO/branches" --jq '.[].name' 2>/dev/null || echo "")"
-  if echo "$branches" | grep -qE "(itsfwcp|feature)/[^/]+/$issue_number/"; then
+  if echo "$branches" | grep -qE "($NETWORK_ID|feature)/[^/]+/$issue_number/"; then
     return 1
   fi
 

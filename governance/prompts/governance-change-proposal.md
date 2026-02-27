@@ -137,7 +137,7 @@ The issue body should include:
 
 If the proposals involve specific, well-defined configuration changes:
 
-1. Create a branch: `itsfwcp/chore/governance-change-{date}`
+1. Create a branch: `NETWORK_ID/chore/governance-change-{date}`
 2. Apply the proposed changes to the configuration files
 3. Create a **draft** PR referencing the proposal issue
 4. The draft PR is NOT ready for merge — it exists to show the exact diff

@@ -22,7 +22,7 @@ For each actionable issue (up to 5 per session):
 1. Verify issue is still open: `gh issue view <number> --json state --jq '.state'`
 2. Read the issue body and validate clear acceptance criteria. If unclear, label `refine` and comment.
 3. Select review panels based on change type (see `.ai/governance/prompts/startup.md` Phase 2c).
-4. Create branch: `itsfwcp/{type}/{number}/{name}`
+4. Create branch: `NETWORK_ID/{type}/{number}/{name}`
 5. Write plan using `.ai/governance/prompts/templates/plan-template.md` and save to .governance/plans/{number}-{description}.md`.
 
 ## Phase 3: Implementation

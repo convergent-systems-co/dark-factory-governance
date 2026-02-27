@@ -102,7 +102,7 @@ Project coding conventions that inform AI agents and review panels.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `branch_pattern` | string | — | Branch naming pattern (e.g., `itsfwcp/{type}/{number}/{name}`) |
+| `branch_pattern` | string | — | Branch naming pattern (e.g., `NETWORK_ID/{type}/{number}/{name}`) |
 | `commit_style` | string | — | Commit message style: `conventional` or `freeform` |
 | `pr_template` | boolean | — | Whether to use PR templates |
 
@@ -117,7 +117,7 @@ conventions:
     indent: spaces
     indent_size: 4
   git:
-    branch_pattern: "itsfwcp/{type}/{number}/{name}"
+    branch_pattern: "NETWORK_ID/{type}/{number}/{name}"
     commit_style: conventional
     pr_template: true
 ```
@@ -296,7 +296,7 @@ conventions:
     indent: spaces
     indent_size: 4
   git:
-    branch_pattern: "itsfwcp/{type}/{number}/{name}"
+    branch_pattern: "NETWORK_ID/{type}/{number}/{name}"
     commit_style: conventional
 
 repository:

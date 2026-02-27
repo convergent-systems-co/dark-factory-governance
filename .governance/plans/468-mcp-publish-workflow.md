@@ -4,7 +4,7 @@
 **Date:** 2026-02-27
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/468
-**Branch:** itsfwcp/feat/468/mcp-publish-workflow
+**Branch:** NETWORK_ID/feat/468/mcp-publish-workflow
 
 ---
 

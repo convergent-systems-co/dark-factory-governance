@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** completed
 **Issue:** #119
-**Branch:** itsfwcp/fix/119/codeowners-setup
+**Branch:** NETWORK_ID/fix/119/codeowners-setup
 
 ---
 

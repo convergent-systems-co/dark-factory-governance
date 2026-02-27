@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** #400 — D-3: Malformed Issue or Plan Crashing the Pipeline
-**Branch:** itsfwcp/fix/400/malformed-input-resilience
+**Branch:** NETWORK_ID/fix/400/malformed-input-resilience
 
 ---
 

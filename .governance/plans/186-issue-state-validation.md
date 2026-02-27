@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/186
-**Branch:** itsfwcp/feat/186/issue-state-validation
+**Branch:** NETWORK_ID/feat/186/issue-state-validation
 
 ---
 

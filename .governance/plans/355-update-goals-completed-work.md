@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/355
-**Branch:** itsfwcp/docs/355/update-goals-completed-work
+**Branch:** NETWORK_ID/docs/355/update-goals-completed-work
 
 ---
 

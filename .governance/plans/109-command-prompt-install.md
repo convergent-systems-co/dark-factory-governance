@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/109
-**Branch:** itsfwcp/feat/109/command-prompt-install
+**Branch:** NETWORK_ID/feat/109/command-prompt-install
 
 ---
 

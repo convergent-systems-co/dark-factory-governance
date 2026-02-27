@@ -2,7 +2,7 @@
 
 **Issue:** #388
 **Status:** complete
-**Branch:** `itsfwcp/feat/388/unlimited-parallel-coders`
+**Branch:** `NETWORK_ID/feat/388/unlimited-parallel-coders`
 **Risk:** Low — additive change, no breaking modifications
 
 ## Objective

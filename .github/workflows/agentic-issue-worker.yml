@@ -171,9 +171,15 @@ jobs:
         run: |
           REPO="${{ github.repository }}"
 
-          # Check for existing linked branch (convention: itsfwcp/*/ISSUE_NUMBER/*)
+          # Extract branch prefix from project.yaml (the part before the first /)
+          BRANCH_PREFIX=$(grep 'branch_pattern:' project.yaml | sed 's/.*"\([^/]*\)\/.*/\1/' || echo "")
+          if [ -z "$BRANCH_PREFIX" ] || [ "$BRANCH_PREFIX" = "{network_id}" ]; then
+            BRANCH_PREFIX="$(whoami)"
+          fi
+
+          # Check for existing linked branch (convention: NETWORK_ID/*/ISSUE_NUMBER/*)
           EXISTING_BRANCH=$(gh api "repos/$REPO/branches" --paginate --jq '.[].name' 2>/dev/null \
-            | grep -E "itsfwcp/[^/]+/${ISSUE_NUMBER}/" | head -1 || true)
+            | grep -E "${BRANCH_PREFIX}/[^/]+/${ISSUE_NUMBER}/" | head -1 || true)
 
           if [ -n "$EXISTING_BRANCH" ]; then
             echo "branch_name=$EXISTING_BRANCH" >> "$GITHUB_OUTPUT"
@@ -197,7 +203,7 @@ jobs:
             | sed 's/^-//;s/-$//' \
             | cut -c1-50)
 
-          BRANCH_NAME="itsfwcp/feat/${ISSUE_NUMBER}/${SLUG}"
+          BRANCH_NAME="${BRANCH_PREFIX}/feat/${ISSUE_NUMBER}/${SLUG}"
 
           # Create branch from main
           git fetch origin main

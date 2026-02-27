@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/203
-**Branch:** `itsfwcp/docs/203/simplify-developer-guide`
+**Branch:** `NETWORK_ID/docs/203/simplify-developer-guide`
 
 ---
 

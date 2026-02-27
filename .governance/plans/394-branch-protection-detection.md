@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/394
-**Branch:** `itsfwcp/feat/394/branch-protection-detection`
+**Branch:** `NETWORK_ID/feat/394/branch-protection-detection`
 
 ---
 

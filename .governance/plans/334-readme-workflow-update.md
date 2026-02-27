@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/334
-**Branch:** itsfwcp/docs/334/readme-workflow-update
+**Branch:** NETWORK_ID/docs/334/readme-workflow-update
 
 ---
 

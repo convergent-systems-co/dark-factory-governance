@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/117
-**Branch:** itsfwcp/feat/117/threshold-auto-tuning-policy
+**Branch:** NETWORK_ID/feat/117/threshold-auto-tuning-policy
 
 ---
 

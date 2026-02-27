@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/85
-**Branch:** itsfwcp/fix/85/archive-plans-branch-protection
+**Branch:** NETWORK_ID/fix/85/archive-plans-branch-protection
 
 ---
 

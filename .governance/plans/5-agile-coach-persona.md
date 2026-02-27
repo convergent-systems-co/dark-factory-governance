@@ -4,7 +4,7 @@
 **Date:** 2026-02-20
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/5
-**Branch:** itsfwcp/5-agile-coach-persona
+**Branch:** NETWORK_ID/5-agile-coach-persona
 
 ---
 

@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** complete
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/357
-**Branch:** itsfwcp/docs/357/ascii-to-mermaid-audit
+**Branch:** NETWORK_ID/docs/357/ascii-to-mermaid-audit
 
 ---
 

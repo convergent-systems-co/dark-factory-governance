@@ -4,7 +4,7 @@
 **Date:** 2026-02-20
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/6
-**Branch:** itsfwcp/6-finops-group
+**Branch:** NETWORK_ID/6-finops-group
 
 ---
 

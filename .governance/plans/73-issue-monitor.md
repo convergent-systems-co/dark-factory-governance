@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/73
-**Branch:** itsfwcp/feat/73/issue-monitor
+**Branch:** NETWORK_ID/feat/73/issue-monitor
 
 ---
 

@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/98
-**Branch:** itsfwcp/feat/98/signal-adapters
+**Branch:** NETWORK_ID/feat/98/signal-adapters
 
 ---
 

@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/102
-**Branch:** itsfwcp/fix/102/pr-resolution-before-issues
+**Branch:** NETWORK_ID/fix/102/pr-resolution-before-issues
 
 ---
 

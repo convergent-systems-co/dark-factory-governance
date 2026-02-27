@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/21
-**Branch:** itsfwcp/21-ai-expert-review-panel
+**Branch:** NETWORK_ID/21-ai-expert-review-panel
 
 ---
 

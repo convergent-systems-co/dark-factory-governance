@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** completed
 **Issue:** #136
-**Branch:** itsfwcp/fix/136/init-python-cmd
+**Branch:** NETWORK_ID/fix/136/init-python-cmd
 
 ---
 

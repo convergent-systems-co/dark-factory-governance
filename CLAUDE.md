@@ -149,7 +149,7 @@ All panel output must include JSON between `<!-- STRUCTURED_EMISSION_START -->` 
 ## Key Conventions
 
 - **Commit style**: Conventional commits (`feat:`, `fix:`, `refactor:`, `docs:`)
-- **Branch naming**: `itsfwcp/{issue-type}/{issue-number}/{branch-name}` (e.g., `itsfwcp/feat/42/add-auth`)
+- **Branch naming**: `NETWORK_ID/{issue-type}/{issue-number}/{branch-name}` (e.g., `NETWORK_ID/feat/42/add-auth`)
 - **Plans before code**: Every implementation requires a plan in `.governance/plans/` using `governance/prompts/templates/plan-template.md`
 - **Governance pipeline is mandatory**: The governance pipeline applies in all modes (local and remote). Required panels must execute, plan-first is non-negotiable, and the CI workflow blocks merges when panel emissions are missing. Projects can opt out via `governance.skip_panel_validation: true` in `project.yaml` (project root).
 - **`jm-compliance.yml` is enterprise-locked**: Never modify, move, or override `jm-compliance.yml`. It is managed centrally.

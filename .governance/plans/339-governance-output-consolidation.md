@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/339
-**Branch:** itsfwcp/feat/339/governance-output-consolidation
+**Branch:** NETWORK_ID/feat/339/governance-output-consolidation
 
 ---
 

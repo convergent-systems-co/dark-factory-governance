@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/38
-**Branch:** itsfwcp/feat/38/collapse-filesystem-structure
+**Branch:** NETWORK_ID/feat/38/collapse-filesystem-structure
 
 ---
 

@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/210
-**Branch:** itsfwcp/fix/210/move-requirements-txt
+**Branch:** NETWORK_ID/fix/210/move-requirements-txt
 
 ---
 

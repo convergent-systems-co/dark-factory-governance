@@ -115,13 +115,13 @@ Plans are auditable decision records. They're archived to releases after merge.
 Branch naming convention:
 
 ```bash
-git checkout -b itsfwcp/{type}/{issue-number}/{short-name}
+git checkout -b NETWORK_ID/{type}/{issue-number}/{short-name}
 ```
 
 Examples:
-- `itsfwcp/feat/42/add-auth`
-- `itsfwcp/fix/99/schema-validation`
-- `itsfwcp/docs/348/contributing-page`
+- `NETWORK_ID/feat/42/add-auth`
+- `NETWORK_ID/fix/99/schema-validation`
+- `NETWORK_ID/docs/348/contributing-page`
 
 ### 4. Implement the Change
 
@@ -182,7 +182,7 @@ python governance/engine/policy_engine.py --validate
 Push your branch and create a PR:
 
 ```bash
-git push origin itsfwcp/docs/348/contributing-page
+git push origin NETWORK_ID/docs/348/contributing-page
 gh pr create --title "docs: add contributing guide" --body "Closes #348"
 ```
 
@@ -238,7 +238,7 @@ Use these prefixes:
 
 ### Branch Naming
 
-Pattern: `itsfwcp/{type}/{issue-number}/{short-name}`
+Pattern: `NETWORK_ID/{type}/{issue-number}/{short-name}`
 
 - `{type}`: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`
 - `{issue-number}`: GitHub issue number

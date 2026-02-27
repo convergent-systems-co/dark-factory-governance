@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/48
-**Branch:** itsfwcp/feat/48/goals-fallback
+**Branch:** NETWORK_ID/feat/48/goals-fallback
 
 ---
 

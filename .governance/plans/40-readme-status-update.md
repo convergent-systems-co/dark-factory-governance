@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/40
-**Branch:** itsfwcp/docs/40/readme-status-update
+**Branch:** NETWORK_ID/docs/40/readme-status-update
 
 ---
 

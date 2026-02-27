@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/35
-**Branch:** itsfwcp/feat/35/issue-templates
+**Branch:** NETWORK_ID/feat/35/issue-templates
 
 ---
 

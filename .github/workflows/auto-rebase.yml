@@ -2,7 +2,7 @@ name: Auto-Rebase Agent PRs
 
 # Keeps agent-created PRs up to date with main by automatically rebasing.
 # Targets PRs created by github-actions[bot] or on branches matching the
-# agentic naming convention (itsfwcp/*).
+# agentic naming convention (NETWORK_ID/*).
 #
 # This workflow is part of Phase 4b (Autonomous Remediation) — self-repair
 # CI workflows that maintain repository health autonomously.
@@ -46,12 +46,18 @@ jobs:
         run: |
           set -uo pipefail
 
-          # Find open PRs created by github-actions[bot] or on itsfwcp/* branches
+          # Extract branch prefix from project.yaml (the part before the first /)
+          BRANCH_PREFIX=$(grep 'branch_pattern:' project.yaml | sed 's/.*"\([^/]*\)\/.*/\1/' || echo "")
+          if [ -z "$BRANCH_PREFIX" ] || [ "$BRANCH_PREFIX" = "{network_id}" ]; then
+            BRANCH_PREFIX="$(whoami)"
+          fi
+
+          # Find open PRs created by github-actions[bot] or on NETWORK_ID/* branches
           # Use jq to extract PR numbers — one per line
           PR_NUMBERS=$(gh pr list \
             --state open \
             --json number,headRefName,author \
-            --jq '[.[] | select(.author.login == "github-actions" or (.headRefName | startswith("itsfwcp/")))] | .[].number')
+            --jq "[.[] | select(.author.login == \"github-actions\" or (.headRefName | startswith(\"${BRANCH_PREFIX}/\")))] | .[].number")
 
           if [ -z "$PR_NUMBERS" ]; then
             echo "No agent PRs found to rebase"

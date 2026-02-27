@@ -172,17 +172,17 @@ Git worktrees are created as siblings to your project root, managed by git itsel
 ├── my-project-worktree-issue-42/       # Coder Agent 1 (worktree)
 │   ├── .ai/                            # Shared submodule
 │   ├── .governance/
-│   └── src/                            # Branch: itsfwcp/feat/42/add-auth
+│   └── src/                            # Branch: NETWORK_ID/feat/42/add-auth
 │
 ├── my-project-worktree-issue-55/       # Coder Agent 2 (worktree)
 │   ├── .ai/
 │   ├── .governance/
-│   └── src/                            # Branch: itsfwcp/fix/55/pagination
+│   └── src/                            # Branch: NETWORK_ID/fix/55/pagination
 │
 └── my-project-worktree-issue-78/       # Coder Agent N (worktree)
     ├── .ai/
     ├── .governance/
-    └── src/                            # Branch: itsfwcp/feat/78/migrate-db
+    └── src/                            # Branch: NETWORK_ID/feat/78/migrate-db
 ```
 
 ### How Worktrees Work
@@ -198,7 +198,7 @@ Git worktrees are created as siblings to your project root, managed by git itsel
 | Property | Value |
 |----------|-------|
 | **Isolation** | Full file system isolation — Coders cannot interfere with each other |
-| **Branch** | Each worktree is checked out to a feature branch (`itsfwcp/{type}/{issue}/{name}`) |
+| **Branch** | Each worktree is checked out to a feature branch (`NETWORK_ID/{type}/{issue}/{name}`) |
 | **Context** | Each Coder has its own AI context window — no shared context pressure |
 | **Cleanup** | Worktrees are removed after the Code Manager integrates the results |
 | **Fallback** | If worktree creation fails, the Code Manager falls back to sequential execution (one issue at a time) |

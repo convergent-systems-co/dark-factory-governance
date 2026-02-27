@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** #397 — R-1: Governance Decision Auditability Gap
-**Branch:** itsfwcp/fix/397/agent-message-audit-log
+**Branch:** NETWORK_ID/fix/397/agent-message-audit-log
 
 ---
 

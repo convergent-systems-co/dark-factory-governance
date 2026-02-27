@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/406
-**Branch:** itsfwcp/fix/406/hallucination-detection
+**Branch:** NETWORK_ID/fix/406/hallucination-detection
 
 ---
 

@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** in_progress
 **Issue:** GitHub Actions run 22363559063 (persistent startup_failure)
-**Branch:** itsfwcp/fix/propagate-submodule-workflow
+**Branch:** NETWORK_ID/fix/propagate-submodule-workflow
 
 ---
 

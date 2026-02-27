@@ -4,7 +4,7 @@
 **Date:** 2026-02-27
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/471
-**Branch:** itsfwcp/feat/471/agentic-loop-workflow
+**Branch:** NETWORK_ID/feat/471/agentic-loop-workflow
 
 ---
 

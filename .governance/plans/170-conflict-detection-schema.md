@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/170
-**Branch:** itsfwcp/feat/170/conflict-detection-schema
+**Branch:** NETWORK_ID/feat/170/conflict-detection-schema
 
 ---
 

@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/318
-**Branch:** itsfwcp/docs/318/readme-site-link
+**Branch:** NETWORK_ID/docs/318/readme-site-link
 
 ---
 

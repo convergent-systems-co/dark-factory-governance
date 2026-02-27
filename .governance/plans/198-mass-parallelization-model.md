@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/198
-**Branch:** itsfwcp/feat/198/mass-parallelization-model
+**Branch:** NETWORK_ID/feat/198/mass-parallelization-model
 
 ---
 

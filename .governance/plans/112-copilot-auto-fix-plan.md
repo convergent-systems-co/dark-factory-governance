@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/112
-**Branch:** itsfwcp/docs/112/copilot-auto-fix-plan
+**Branch:** NETWORK_ID/docs/112/copilot-auto-fix-plan
 
 ---
 

@@ -4,7 +4,7 @@
 **Date:** 2026-02-21
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/43
-**Branch:** itsfwcp/fix/43/context-management
+**Branch:** NETWORK_ID/fix/43/context-management
 
 ---
 

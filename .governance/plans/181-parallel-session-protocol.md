@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/181
-**Branch:** itsfwcp/feat/181/parallel-session-protocol
+**Branch:** NETWORK_ID/feat/181/parallel-session-protocol
 
 ---
 

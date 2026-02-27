@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/165
-**Branch:** itsfwcp/feat/165/acceptance-verification
+**Branch:** NETWORK_ID/feat/165/acceptance-verification
 
 ---
 

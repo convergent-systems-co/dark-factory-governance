@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/200
-**Branch:** `itsfwcp/docs/200/developer-guide-usage-patterns`
+**Branch:** `NETWORK_ID/docs/200/developer-guide-usage-patterns`
 
 ---
 

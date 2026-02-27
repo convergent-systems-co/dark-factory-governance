@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/380
-**Branch:** itsfwcp/feat/380/auto-restart-after-clear
+**Branch:** NETWORK_ID/feat/380/auto-restart-after-clear
 
 ---
 

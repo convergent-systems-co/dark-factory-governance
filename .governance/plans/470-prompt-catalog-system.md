@@ -4,7 +4,7 @@
 **Date:** 2026-02-27
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/470
-**Branch:** itsfwcp/feat/470/prompt-catalog-system
+**Branch:** NETWORK_ID/feat/470/prompt-catalog-system
 
 ---
 

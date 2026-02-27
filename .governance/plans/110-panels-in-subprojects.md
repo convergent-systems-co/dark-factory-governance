@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/110
-**Branch:** itsfwcp/feat/110/panels-in-subprojects
+**Branch:** NETWORK_ID/feat/110/panels-in-subprojects
 
 ---
 

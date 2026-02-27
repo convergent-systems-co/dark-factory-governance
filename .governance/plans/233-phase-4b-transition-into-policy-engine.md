@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/233
-**Branch:** itsfwcp/fix/233/phase-4b-transition-into-policy-engine
+**Branch:** NETWORK_ID/fix/233/phase-4b-transition-into-policy-engine
 
 ---
 

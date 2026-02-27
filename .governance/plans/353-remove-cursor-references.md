@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/353
-**Branch:** itsfwcp/refactor/353/remove-cursor-references
+**Branch:** NETWORK_ID/refactor/353/remove-cursor-references
 
 ---
 

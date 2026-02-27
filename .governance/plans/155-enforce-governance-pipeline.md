@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/155
-**Branch:** `itsfwcp/fix/155/enforce-governance-pipeline`
+**Branch:** `NETWORK_ID/fix/155/enforce-governance-pipeline`
 
 ---
 

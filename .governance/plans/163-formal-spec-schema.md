@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/163
-**Branch:** itsfwcp/feat/163/formal-spec-schema
+**Branch:** NETWORK_ID/feat/163/formal-spec-schema
 
 ---
 

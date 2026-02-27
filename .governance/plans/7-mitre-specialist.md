@@ -4,7 +4,7 @@
 **Date:** 2026-02-20
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/7
-**Branch:** itsfwcp/7-mitre-specialist
+**Branch:** NETWORK_ID/7-mitre-specialist
 
 ---
 

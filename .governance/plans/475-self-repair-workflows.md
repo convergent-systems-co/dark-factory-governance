@@ -4,7 +4,7 @@
 **Date:** 2026-02-27
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/475
-**Branch:** itsfwcp/feat/475/self-repair-workflows
+**Branch:** NETWORK_ID/feat/475/self-repair-workflows
 
 ---
 

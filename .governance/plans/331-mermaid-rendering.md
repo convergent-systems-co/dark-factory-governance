@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/331
-**Branch:** itsfwcp/fix/331/mermaid-rendering
+**Branch:** NETWORK_ID/fix/331/mermaid-rendering
 
 ---
 

@@ -4,7 +4,7 @@
 **Date:** 2026-02-23
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/126
-**Branch:** `itsfwcp/feat/126/data-governance-enforcement`
+**Branch:** `NETWORK_ID/feat/126/data-governance-enforcement`
 
 ---
 

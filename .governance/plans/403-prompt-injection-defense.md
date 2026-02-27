@@ -4,7 +4,7 @@
 **Date:** 2026-02-26
 **Status:** approved
 **Issue:** #403 — E-4: Prompt Injection via Issue Bodies and File Contents
-**Branch:** itsfwcp/fix/403/prompt-injection-defense
+**Branch:** NETWORK_ID/fix/403/prompt-injection-defense
 
 ---
 

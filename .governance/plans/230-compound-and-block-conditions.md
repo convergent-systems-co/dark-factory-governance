@@ -4,7 +4,7 @@
 **Date:** 2026-02-25
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/230
-**Branch:** itsfwcp/fix/230/compound-and-block-conditions
+**Branch:** NETWORK_ID/fix/230/compound-and-block-conditions
 
 ---
 

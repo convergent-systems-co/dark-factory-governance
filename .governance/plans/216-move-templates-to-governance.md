@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** completed
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/216
-**Branch:** itsfwcp/refactor/216/move-templates-to-governance
+**Branch:** NETWORK_ID/refactor/216/move-templates-to-governance
 
 ---
 

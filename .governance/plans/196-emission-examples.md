@@ -4,7 +4,7 @@
 **Date:** 2026-02-24
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/196
-**Branch:** `itsfwcp/feat/196/emission-examples`
+**Branch:** `NETWORK_ID/feat/196/emission-examples`
 
 ---
 

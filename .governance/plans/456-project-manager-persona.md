@@ -4,7 +4,7 @@
 **Date:** 2026-02-27
 **Status:** approved
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/456
-**Branch:** itsfwcp/feat/456/project-manager-persona
+**Branch:** NETWORK_ID/feat/456/project-manager-persona
 
 ---
 

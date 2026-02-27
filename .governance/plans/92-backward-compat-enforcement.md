@@ -4,7 +4,7 @@
 **Date:** 2026-02-22
 **Status:** in_progress
 **Issue:** https://github.com/SET-Apps/ai-submodule/issues/92
-**Branch:** itsfwcp/feat/92/backward-compat-enforcement
+**Branch:** NETWORK_ID/feat/92/backward-compat-enforcement
 
 ---
 
