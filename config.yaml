@@ -15,6 +15,9 @@ symlinks:
     targets:
       - .github/copilot-instructions.md
       - CLAUDE.md
+  - source: .claude/commands
+    targets:
+      - .claude/commands
 
 # Governance workflows to symlink into consuming repos during init
 # Only applied in submodule context; existing regular files are not overwritten
