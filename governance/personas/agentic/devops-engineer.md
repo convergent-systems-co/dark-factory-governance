@@ -71,6 +71,8 @@ The `reason` field must reflect the actual trigger: `context_capacity_80_percent
 
 After emitting CANCEL, wait for the Code Manager to report back with a STATUS summarizing cancelled work before proceeding with the checkpoint.
 
+**Checkpoint format:** When writing checkpoints during the Shutdown Protocol, the DevOps Engineer must produce JSON conforming to `governance/schemas/checkpoint.schema.json`. Include the `context_capacity` and `context_gates_passed` optional fields to enable diagnostic analysis of shutdown triggers. See the Code Manager persona for the full checkpoint format specification.
+
 - **N-issue session cap** (disabled when N = -1) — track completed issues/PRs and enforce the hard cap (N = `governance.parallel_coders`, default 5); resolved PRs from Phase 1c count toward this cap
 - **Checkpoint on hard-stop only** — write a checkpoint to `.governance/checkpoints/` only when a session cap or context pressure triggers the Shutdown Protocol
 - **Shutdown protocol execution** — when triggered: emit CANCEL to Code Manager, wait for STATUS, clean git state, write checkpoint, report to user, request `/clear`

@@ -92,6 +92,71 @@
       "minimum": 1,
       "maximum": 3,
       "description": "Current review cycle number if shutdown occurred during Step 7 (PR monitoring). Null otherwise."
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session identifier (e.g., '20260227-session-7'). Used for correlating checkpoints across context resets within a logical session."
+    },
+    "context_capacity": {
+      "type": "object",
+      "description": "Context capacity state at checkpoint time. Enables diagnostic analysis of shutdown triggers and capacity trends across sessions.",
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": ["green", "yellow", "orange", "red"],
+          "description": "Context capacity tier at checkpoint time per the four-tier model."
+        },
+        "tool_calls": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of tool calls made in the session at checkpoint time."
+        },
+        "turn_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of chat turns (exchanges) in the session at checkpoint time."
+        },
+        "issues_completed_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of issues completed in the session at checkpoint time."
+        },
+        "platform": {
+          "type": "string",
+          "enum": ["claude-code", "copilot", "unknown"],
+          "description": "Platform the session is running on. Determines which capacity signals are available."
+        },
+        "trigger": {
+          "type": "string",
+          "description": "Human-readable description of what triggered the shutdown (e.g., 'tool_calls > 80', 'session_cap_reached')."
+        }
+      },
+      "additionalProperties": false
+    },
+    "context_gates_passed": {
+      "type": "array",
+      "description": "Phase-by-phase gate decisions recording context capacity tier at each pipeline phase transition. Enables trend analysis for capacity planning.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "phase": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5,
+            "description": "Pipeline phase number (0 = checkpoint restore, 1 = pre-flight, 2 = planning, 3 = dispatch, 4 = evaluation, 5 = merge)."
+          },
+          "tier": {
+            "type": "string",
+            "enum": ["green", "yellow", "orange", "red"],
+            "description": "Context capacity tier at this phase transition."
+          },
+          "action": {
+            "type": "string",
+            "description": "Action taken based on the tier (e.g., 'proceed', 'no_new_dispatches', 'checkpoint_and_clear', 'emergency_stop')."
+          }
+        },
+        "additionalProperties": false
+      }
     }
   },
   "additionalProperties": false

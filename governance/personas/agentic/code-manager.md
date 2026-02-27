@@ -55,7 +55,48 @@ In **batch-scoped mode**, the Code Manager is spawned by the Project Manager as 
   1. **Propagate CANCEL** to all in-flight Coder, IaC Engineer, and Tester agents with the same `reason` and `context_signal`
   2. **Wait for partial RESULTs** from each worker (with a reasonable timeout — do not block indefinitely)
   3. **Clean up** — commit any pending branch state across all worktrees to avoid dirty git state
-  4. **Emit STATUS to the orchestrator** (DevOps Engineer in standard mode, Project Manager in batch-scoped mode) with a summary of cancelled work: which issues were in-flight, what partial progress was made, and which branches have uncommitted or partial work
+  4. **Write a milestone checkpoint** per the Milestone Checkpoint Protocol below, with `current_step` describing exactly what was in progress and what remains
+  5. **Emit STATUS to the orchestrator** (DevOps Engineer in standard mode, Project Manager in batch-scoped mode) with a summary of cancelled work: which issues were in-flight, what partial progress was made, and which branches have uncommitted or partial work
+
+### Milestone Checkpoint Protocol
+
+The Code Manager writes schema-compliant checkpoints at key pipeline milestones to enable seamless recovery after context resets. Checkpoints are written to `.governance/checkpoints/{timestamp}-{branch}.json` and must conform to `governance/schemas/checkpoint.schema.json`.
+
+**Checkpoint milestones (write after each):**
+
+1. **Phase 2 complete (all plans created)** — checkpoint with `current_step: "Phase 2 complete — plans created, ready for Phase 3 dispatch"` and all planned issues in `issues_remaining`
+2. **Phase 4d complete (PR created)** — checkpoint with `current_step: "Phase 4d complete — PR #{number} created, entering CI monitoring"`, `prs_created` populated, and `current_issue` set
+3. **CANCEL received** — immediately commit any in-progress work, write checkpoint with `current_step` describing exactly what was in progress and what remains, then stop
+
+**Checkpoint format (must match schema):**
+
+```json
+{
+  "timestamp": "ISO-8601",
+  "session_id": "YYYYMMDD-session-N",
+  "branch": "current-branch-name",
+  "issues_completed": ["#N"],
+  "issues_remaining": ["#X", "#Y"],
+  "current_issue": "#Z or null",
+  "current_step": "Phase N — description of current state",
+  "git_state": "clean",
+  "pending_work": "Human-readable description of what remains",
+  "prs_created": ["#A"],
+  "context_capacity": {
+    "tier": "green|yellow|orange|red",
+    "tool_calls": 0,
+    "turn_count": 0,
+    "issues_completed_count": 0,
+    "platform": "claude-code|copilot|unknown",
+    "trigger": "description of trigger signal"
+  },
+  "context_gates_passed": [
+    {"phase": 1, "tier": "green", "action": "proceed"}
+  ]
+}
+```
+
+**End-of-cycle guarantee:** The Code Manager must NEVER hand control back to the user for commit/PR/merge steps. If context pressure prevents completing the cycle, checkpoint the remaining steps so the next session drives them autonomously. The only manual steps are `/clear` and `/startup`.
 
 ## Containment Policy
 

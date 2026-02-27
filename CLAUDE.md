@@ -150,6 +150,10 @@ Context is loaded in tiers to prevent window overflow:
 
 All panel output must include JSON between `<!-- STRUCTURED_EMISSION_START -->` and `<!-- STRUCTURED_EMISSION_END -->` markers, validated against `governance/schemas/panel-output.schema.json`. Missing markers or invalid JSON means panel execution failed.
 
+### Checkpoint Schema
+
+Session checkpoints in `.governance/checkpoints/` conform to `governance/schemas/checkpoint.schema.json`. Checkpoints include optional `context_capacity` (tier, signals, trigger) and `context_gates_passed` (phase-by-phase gate decisions) fields for diagnostic analysis and seamless recovery via Phase 0.
+
 ## Key Conventions
 
 - **Commit style**: Conventional commits (`feat:`, `fix:`, `refactor:`, `docs:`)
