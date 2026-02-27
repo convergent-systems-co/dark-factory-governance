@@ -18,8 +18,15 @@ bash .ai/bin/init.sh                          # Symlinks only
 bash .ai/bin/init.sh --install-deps           # Symlinks + Python venv + dependencies
 bash .ai/bin/init.sh --refresh                # Re-apply structural setup after submodule update
 bash .ai/bin/init.sh --check-branch-protection  # Query if default branch requires PRs
+bash .ai/bin/init.sh --dry-run                # Show what would be done without making changes
+bash .ai/bin/init.sh --debug                  # Verbose output for troubleshooting
 ```
-Checks `.ai` submodule freshness (auto-updates if behind), creates symlinks for CLAUDE.md and .github/copilot-instructions.md, creates `.governance/plans/`, `.governance/panels/`, `.governance/checkpoints/`, and `.governance/state/` directories (with migration from legacy paths), generates GOALS.md from template, and validates required panel emissions. The `--refresh` flag skips the submodule freshness check and SSH-to-HTTPS conversion (already handled by the caller) but runs all other steps; the agentic startup loop calls this automatically after every submodule state check. The `--check-branch-protection` flag queries the GitHub API to detect if the default branch requires PRs and outputs `REQUIRES_PR=true|false`; the agentic startup loop uses this to route structural commits through PRs when required.
+Checks `.ai` submodule freshness (auto-updates if behind), creates symlinks for CLAUDE.md and .github/copilot-instructions.md, creates `.governance/plans/`, `.governance/panels/`, `.governance/checkpoints/`, and `.governance/state/` directories (with migration from legacy paths), generates GOALS.md from template, and validates required panel emissions. The `--refresh` flag skips the submodule freshness check and SSH-to-HTTPS conversion (already handled by the caller) but runs all other steps; the agentic startup loop calls this automatically after every submodule state check. The `--check-branch-protection` flag queries the GitHub API to detect if the default branch requires PRs and outputs `REQUIRES_PR=true|false`; the agentic startup loop uses this to route structural commits through PRs when required. The `--dry-run` flag shows planned actions without executing them. The `--debug` flag enables verbose output. The orchestrator (`bin/init.sh`, ~165 lines) delegates to modular scripts in `governance/bin/` — each script can also be run independently. See `docs/troubleshooting/init-failures.md` for diagnostics.
+
+**One-line install (new project):**
+```bash
+curl -sSL https://raw.githubusercontent.com/SET-Apps/ai-submodule/main/bin/quick-install.sh | bash
+```
 
 **Agentic bootstrap (interactive):**
 Tell your AI assistant to read and execute `governance/prompts/init.md`. This walks through setup interactively — choosing a language template, configuring repository settings, and installing dependencies — with the agent asking about each option.

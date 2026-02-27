@@ -131,6 +131,12 @@ This document tracks the maturity phases, completed work, and open enhancements 
 | #353 | #354 | Remove Cursor tooling references | Removed all Cursor IDE references; supported tools are now Claude Code and GitHub Copilot |
 | #433 | — | Governance dashboard and prompt catalog | Panel catalog, policy comparison, prompt index reference pages; catalog generator script; publish-dashboard CI workflow |
 
+### Developer Experience
+
+| Issue | PR | Title | Impact |
+|-------|----|-------|--------|
+| #432 | — | Simplify init.sh into modular scripts | Refactored 1,113-line init.sh into 165-line orchestrator + 10 modular scripts in governance/bin/; added --dry-run, --debug flags; quick-install.sh for one-line setup; troubleshooting guide |
+
 ## TODO
 
 - [ ] **MkDocs strict build mode** (#366) — Add `mkdocs build --strict` to CI pipeline. NOT INGESTABLE: requires troubleshooting build warnings/errors before strict mode can be enabled. Rolled back from PR #382.
