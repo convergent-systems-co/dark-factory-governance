@@ -30,6 +30,7 @@
   "files": [
     "dist/",
     "skills/",
+    "prompts/",
     "install.sh",
     "install.ps1"
   ],

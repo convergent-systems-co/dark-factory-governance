@@ -5,7 +5,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { resolveGovernanceRoot } from "./utils.js";
 import { registerResources } from "./resources.js";
 import { registerTools } from "./tools.js";
-import { registerPrompts } from "./prompts.js";
+import { registerPrompts, discoverAndRegisterPrompts } from "./prompts.js";
 import { ENV } from "./fetch.js";
 
 /**
@@ -105,6 +105,10 @@ async function main(): Promise<void> {
   const discovered = await registerResources(server, governanceRoot);
   const skillCount = await registerTools(server, governanceRoot);
   registerPrompts(server, governanceRoot);
+  const discoveredPrompts = await discoverAndRegisterPrompts(
+    server,
+    governanceRoot
+  );
 
   // Log to stderr (stdout is reserved for MCP protocol)
   console.error(
@@ -112,6 +116,9 @@ async function main(): Promise<void> {
   );
   console.error(
     `[ai-submodule-mcp] Serving ${discovered.length} resources, ${skillCount} skill(s)`
+  );
+  console.error(
+    `[ai-submodule-mcp] Discovered ${discoveredPrompts} prompt(s) from prompts/`
   );
 
   // Connect via STDIO transport
