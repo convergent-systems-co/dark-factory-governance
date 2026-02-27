@@ -109,7 +109,7 @@ cp .ai/governance/prompts/templates/plan-template.md .governance/plans/42-my-fea
 
 ## Where Things Live
 
-Emitted output (plans, panels, checkpoints, state) uses identical `.governance/` paths in both the ai-submodule and consuming repos. Read-only governance sources (personas, prompts, policies, schemas) differ — consumers access them via the `.ai/` submodule prefix.
+Emitted output (plans, panels, checkpoints, state) uses identical `.governance/` paths in both the Dark Factory Governance repository and consuming repos. Read-only governance sources (personas, prompts, policies, schemas) differ — consumers access them via the `.ai/` submodule prefix.
 
 For a complete breakdown of the project structure, see [Project Structure](project-structure.md).
 

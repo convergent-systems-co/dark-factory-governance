@@ -2,7 +2,7 @@
 
 Execute this prompt to bootstrap the `.ai` governance submodule in a consuming project. This is the agentic equivalent of `bash .ai/bin/init.sh` — it walks the user through setup interactively, asking about configuration options.
 
-**When to use this:** After adding the `.ai` submodule to a project (`git submodule add git@github.com:SET-Apps/ai-submodule.git .ai`), run this prompt to configure the project.
+**When to use this:** After adding the Dark Factory Governance submodule to a project (`git submodule add git@github.com:SET-Apps/ai-submodule.git .ai`), run this prompt to configure the project.
 
 **Canonical implementation:** `init.sh` (bash) and `init.ps1` (PowerShell) are the source of truth for bootstrap logic. This prompt mirrors their behavior but adds interactive configuration. If this prompt and the shell scripts diverge, the shell scripts are authoritative.
 

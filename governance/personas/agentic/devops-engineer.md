@@ -90,7 +90,7 @@ After emitting CANCEL, wait for the Code Manager to report back with a STATUS su
 ### Cross-Repository Operations
 
 - **In-session issue creation** — when the user provides ad-hoc work, create a GitHub issue first to maintain the audit trail, then route to Code Manager
-- **Cross-repo escalation** — when problems are identified in the ai-submodule itself (from a consuming repo), create issues in the ai-submodule repository per `governance/prompts/cross-repo-escalation-workflow.md`
+- **Cross-repo escalation** — when problems are identified in the Dark Factory Governance repository itself (from a consuming repo), create issues in the Dark Factory Governance repository per `governance/prompts/cross-repo-escalation-workflow.md`
 - **Issue template validation** — verify issues in subprojects conform to required templates
 
 ### Checkpoint Restore

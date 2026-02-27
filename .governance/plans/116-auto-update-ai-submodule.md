@@ -49,7 +49,7 @@ The agentic loop in consuming repos reads governance artifacts (startup.md, pers
    - Detect if running in a consuming repo (submodule context)
    - Run `git submodule update --remote .ai` to fetch latest
    - If the submodule pointer changed, commit the update and note it
-   - If not in a submodule context (running in ai-submodule itself), skip
+   - If not in a submodule context (running in Dark Factory Governance itself), skip
 
 2. Add a submodule freshness check to `init.sh`:
    - After symlinks but before repo configuration

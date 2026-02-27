@@ -47,7 +47,7 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/) a
   - Security review is now a mandatory gate after Tester approval, always producing a JSON report
   - Code Manager dynamically selects context-appropriate review panels (docs, API, infrastructure, etc.)
   - All ASCII art diagrams converted to Mermaid
-  - If a needed panel/persona is missing, Code Manager creates an issue in ai-submodule
+  - If a needed panel/persona is missing, Code Manager creates an issue in Dark Factory Governance
 
 - **Persona consolidation** (#220)
   - 19 consolidated review prompts added to `governance/prompts/reviews/`

@@ -1,6 +1,6 @@
 # Azure Dashboard Templates
 
-Importable Azure Portal dashboard JSON files for applications using the ai-submodule governance framework. These dashboards provide a hub-and-spoke model: one hub dashboard links to per-environment dashboards with detailed metrics.
+Importable Azure Portal dashboard JSON files for applications using the Dark Factory Governance framework. These dashboards provide a hub-and-spoke model: one hub dashboard links to per-environment dashboards with detailed metrics.
 
 ## Templates
 

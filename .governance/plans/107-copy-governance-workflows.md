@@ -16,7 +16,7 @@ Extend `init.sh` to copy governance workflows from `.ai/.github/workflows/` to t
 
 | Alternative | Considered | Rejected Because |
 |-------------|-----------|------------------|
-| Copy all workflows | Yes | Some workflows are ai-submodule-specific (propagate, plan-archival) |
+| Copy all workflows | Yes | Some workflows are Dark Factory Governance-specific (propagate, plan-archival) |
 | Hardcode governance workflow only | Yes | Not extensible; config.yaml pattern already exists |
 | **Configurable list in config.yaml** | **Selected** | Consistent with existing config-as-code pattern; extensible |
 
@@ -80,6 +80,6 @@ Fully backward compatible. New workflows are only copied in submodule context an
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
-| 2026-02-23 | Only copy dark-factory-governance.yml by default | Other workflows are ai-submodule-specific |
+| 2026-02-23 | Only copy dark-factory-governance.yml by default | Other workflows are Dark Factory Governance-specific |
 | 2026-02-23 | Make list configurable in config.yaml | Extensibility without code changes |
 | 2026-02-23 | Use symlinks instead of copies | Submodule updates flow automatically; init.sh never needs re-running. Consistent with CLAUDE.md symlink pattern. Regular files are not overwritten (skip with message). |

@@ -10,7 +10,7 @@
 
 ## 1. Objective
 
-Reduce the root-level file count of the ai-submodule from 18 non-hidden items to 13 by consolidating scattered scripts, docs, and research artifacts into their natural parent directories. Eliminate two top-level directories (`scripts/`, `docs/`) and one orphaned research file.
+Reduce the root-level file count of the Dark Factory Governance repository from 18 non-hidden items to 13 by consolidating scattered scripts, docs, and research artifacts into their natural parent directories. Eliminate two top-level directories (`scripts/`, `docs/`) and one orphaned research file.
 
 ## 2. Rationale
 

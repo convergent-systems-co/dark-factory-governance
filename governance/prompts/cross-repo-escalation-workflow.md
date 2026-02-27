@@ -1,6 +1,6 @@
 # Cross-Repo Issue Escalation Workflow
 
-This workflow enables consuming repositories to detect framework-level issues in the `.ai` governance submodule and escalate them to the upstream `SET-Apps/ai-submodule` repository. It runs as part of the agentic loop when a framework-level issue is encountered.
+This workflow enables consuming repositories to detect framework-level issues in the `.ai` governance submodule and escalate them to the upstream [Dark Factory Governance](https://github.com/SET-Apps/ai-submodule) repository. It runs as part of the agentic loop when a framework-level issue is encountered.
 
 ## Prerequisites
 

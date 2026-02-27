@@ -1,6 +1,6 @@
 # Architectural Decision Records
 
-**Repository:** SET-Apps/ai-submodule
+**Repository:** SET-Apps/ai-submodule (Dark Factory Governance)
 **Purpose:** Trace every significant architectural decision — what was decided, why, what alternatives were rejected, and what constraints bind future work.
 
 ---
@@ -29,7 +29,7 @@
 
 ### Context
 
-The ai-submodule needed a distribution model for governance artifacts across consuming repositories.
+Dark Factory Governance needed a distribution model for governance artifacts across consuming repositories.
 
 ### Decision
 
@@ -104,7 +104,7 @@ Remove `mcp/` directory and all MCP server references. MCP configs belong in con
 
 ### Consequences
 
-- ai-submodule has zero MCP infrastructure
+- Dark Factory Governance has zero MCP infrastructure
 - Any future MCP integration must be opt-in from consuming repos or external systems
 - **This decision is revisitable** — see ADR-010 for the MCP skills evaluation
 
@@ -289,7 +289,7 @@ Define all Phase 5 governance artifacts (schemas, policies, workflows, protocols
 
 ### Context
 
-Issue #220 called for consolidating 58 non-agentic persona files and 19 panel files. An external review report (`ai-submodule-review-report`) proposed an alternative: convert high-reuse personas (~15-20) into MCP Skills registered as tools (`skill_security_auditor`, etc.) and distribute them via the awesome-dach-copilot MCP server. Panels would become orchestrator + sub-prompt trees with Task-based delegation. ai-submodule would slim down to enforcement-only (policy engine, schemas, CI).
+Issue #220 called for consolidating 58 non-agentic persona files and 19 panel files. An external review report (`ai-submodule-review-report`) proposed an alternative: convert high-reuse personas (~15-20) into MCP Skills registered as tools (`skill_security_auditor`, etc.) and distribute them via the awesome-dach-copilot MCP server. Panels would become orchestrator + sub-prompt trees with Task-based delegation. Dark Factory Governance would slim down to enforcement-only (policy engine, schemas, CI).
 
 Research was conducted across 51 sources to evaluate both approaches.
 
@@ -352,7 +352,7 @@ Self-contained review prompts. Each panel + its persona definitions consolidated
 - **Persona labels are the contract.** All emissions use `category/kebab-case` persona identifiers. Any future decomposition (agents, skills, sub-prompts) MUST preserve these labels.
 - **Shared perspectives must stay canonical.** `shared-perspectives.md` is the single source of truth for cross-panel perspectives. Future agents should read from this file (or its successor), not duplicate definitions.
 - **Scoring logic stays with the review prompt** (for now). If scoring moves to the policy engine (per external review recommendation), that's a separate ADR.
-- **Don't close the MCP door.** ADR-003 removed MCP server code from ai-submodule, but this doesn't prevent consuming repos or external systems from wrapping review prompts as MCP resources.
+- **Don't close the MCP door.** ADR-003 removed MCP server code from Dark Factory Governance, but this doesn't prevent consuming repos or external systems from wrapping review prompts as MCP resources.
 
 ### Reassessment Triggers
 

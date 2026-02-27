@@ -10,7 +10,7 @@
 
 ## 1. Objective
 
-Make the Dark Factory governance workflow function identically in consuming repos (where files are under `.ai/`) and in the ai-submodule repo itself (where files are at the root). Fix SSH URL issue for CI compatibility.
+Make the Dark Factory governance workflow function identically in consuming repos (where files are under `.ai/`) and in the Dark Factory Governance repo itself (where files are at the root). Fix SSH URL issue for CI compatibility.
 
 ## 2. Rationale
 
@@ -57,7 +57,7 @@ None.
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|-----------|--------|------------|
-| Workflow change breaks ai-submodule CI | Low | High | Test root-relative paths still work |
+| Workflow change breaks Dark Factory Governance CI | Low | High | Test root-relative paths still work |
 | SSH conversion matches too broadly | Low | Low | Only target `.gitmodules` entries for .ai |
 
 ## 7. Dependencies

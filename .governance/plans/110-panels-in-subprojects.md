@@ -91,4 +91,4 @@ Fully backward compatible. New directories are only created if missing. Existing
 |------|----------|-----------|
 | 2026-02-23 | Use `.gitkeep` files | Ensures empty directories are tracked by git |
 | 2026-02-23 | Config-driven directory list | Allows consuming repos to customize via project.yaml |
-| 2026-02-23 | Only create in submodule context | Prevents accidental creation when running init.sh in the ai-submodule repo itself |
+| 2026-02-23 | Only create in submodule context | Prevents accidental creation when running init.sh in the Dark Factory Governance repo itself |

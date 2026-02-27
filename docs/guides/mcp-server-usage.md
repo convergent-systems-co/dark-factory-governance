@@ -1,6 +1,6 @@
 # MCP Server Usage Guide
 
-The `@jm-packages/ai-submodule-mcp` server exposes governance prompts, review panels, policy profiles, and tools via the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP). This allows any MCP-compatible IDE or AI assistant to access governance resources without directly reading the ai-submodule filesystem.
+The `@jm-packages/ai-submodule-mcp` server exposes governance prompts, review panels, policy profiles, and tools via the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP). This allows any MCP-compatible IDE or AI assistant to access governance resources without directly reading the Dark Factory Governance filesystem.
 
 ## Installation
 
@@ -48,7 +48,7 @@ powershell -ExecutionPolicy Bypass -File mcp-server\install.ps1 -GovernanceRoot 
 |--------|---------|-------------|
 | `--governance-root` | Auto-detected | Path to the repository root containing `governance/` |
 
-If `--governance-root` is not specified, the server walks up from its install location to find the `governance/` directory (works for both the ai-submodule itself and consuming repos with `.ai/governance/`).
+If `--governance-root` is not specified, the server walks up from its install location to find the `governance/` directory (works for both the Dark Factory Governance repository itself and consuming repos with `.ai/governance/`).
 
 ## IDE Configuration
 

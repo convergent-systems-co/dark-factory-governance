@@ -21,7 +21,7 @@ claude
 Then tell Claude:
 
 ```
-Read https://github.com/SET-Apps/ai-submodule and install it as a
+Read https://github.com/SET-Apps/ai-submodule (Dark Factory Governance) and install it as a
 git submodule at .ai in this repo. Then read and execute
 .ai/governance/prompts/init.md for interactive setup.
 ```
@@ -110,7 +110,7 @@ This begins the 5-phase agentic loop: DevOps Engineer pre-flight → Code Manage
 
 | Issue | Solution |
 |-------|---------|
-| **Permission denied on submodule** | Ensure you have SSH access to `SET-Apps/ai-submodule`. Test: `ssh -T git@github.com` |
+| **Permission denied on submodule** | Ensure you have SSH access to the Dark Factory Governance repo (`SET-Apps/ai-submodule`). Test: `ssh -T git@github.com` |
 | **AI tool can't find init.md** | Add the submodule manually first, then point the AI to `.ai/governance/prompts/init.md` |
 | **Symlinks not working (Windows)** | Enable Developer Mode or use `init.ps1` which falls back to file copies |
 | **Python not found** | Install Python 3.12+ and ensure it's in your PATH. The `--install-deps` flag handles the rest. |

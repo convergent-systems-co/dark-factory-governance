@@ -435,9 +435,9 @@ The pipeline loops until the session cap is hit or no work remains. See [startup
 
 ## Getting Help
 
-- **Documentation:** [https://set-apps.github.io/ai-submodule](https://set-apps.github.io/ai-submodule)
-- **Issues:** [https://github.com/SET-Apps/ai-submodule/issues](https://github.com/SET-Apps/ai-submodule/issues)
-- **Pull Requests:** [https://github.com/SET-Apps/ai-submodule/pulls](https://github.com/SET-Apps/ai-submodule/pulls)
+- **Documentation:** [Dark Factory Governance Docs](https://set-apps.github.io/ai-submodule)
+- **Issues:** [Dark Factory Governance Issues](https://github.com/SET-Apps/ai-submodule/issues)
+- **Pull Requests:** [Dark Factory Governance PRs](https://github.com/SET-Apps/ai-submodule/pulls)
 
 **Common questions:**
 

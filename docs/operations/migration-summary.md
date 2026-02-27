@@ -106,7 +106,7 @@
 
 ## Repo Rename
 
-The repository is currently `SET-Apps/ai-submodule`. Given its evolution into a governance platform, renaming is recommended. Top candidates:
+The repository is currently `SET-Apps/ai-submodule`. Given its evolution into the Dark Factory Governance platform, renaming is recommended. Top candidates:
 
 | Name | Pros | Cons |
 |------|------|------|

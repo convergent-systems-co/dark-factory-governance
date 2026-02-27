@@ -5,7 +5,7 @@ What consuming repositories pay when adopting the Dark Factory Governance Platfo
 This document covers **infrastructure costs only** — GitHub Actions minutes, runner pricing, and related CI/CD resources. For LLM token costs (the other major cost category), see [Token Costs](token-costs.md).
 
 !!! note "Scope"
-    Only resources that the consuming repository uses directly are counted here. Shared resources — such as the `ai-submodule` repository itself and its documentation site — are maintained centrally and do not cost consuming repos anything. The workflows listed below run in the **consuming repo's** GitHub Actions quota when installed via `init.sh`.
+    Only resources that the consuming repository uses directly are counted here. Shared resources — such as the Dark Factory Governance repository itself and its documentation site — are maintained centrally and do not cost consuming repos anything. The workflows listed below run in the **consuming repo's** GitHub Actions quota when installed via `init.sh`.
 
 ## GitHub Actions Minutes (Primary Cost)
 

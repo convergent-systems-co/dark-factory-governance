@@ -10,7 +10,7 @@
 
 ## 1. Objective
 
-Enable consuming repositories to automatically detect and escalate framework-level issues to the `SET-Apps/ai-submodule` repository, with duplicate prevention and configurable criteria.
+Enable consuming repositories to automatically detect and escalate framework-level issues to the Dark Factory Governance repository (`SET-Apps/ai-submodule`), with duplicate prevention and configurable criteria.
 
 ## 2. Rationale
 

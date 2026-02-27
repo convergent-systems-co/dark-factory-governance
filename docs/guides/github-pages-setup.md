@@ -1,10 +1,10 @@
 # GitHub Pages Setup Guide
 
-This guide covers enabling GitHub Pages for your project using the same MkDocs Material theme and workflow used by the ai-submodule documentation site.
+This guide covers enabling GitHub Pages for your project using the same MkDocs Material theme and workflow used by the Dark Factory Governance documentation site.
 
 ## Prerequisites
 
-- A GitHub repository with the ai-submodule (`.ai/`) configured
+- A GitHub repository with the Dark Factory Governance submodule (`.ai/`) configured
 - Repository admin access (to enable GitHub Pages)
 - Python 3.12+ (for local preview)
 
@@ -19,7 +19,7 @@ This tells GitHub to deploy pages from a GitHub Actions workflow rather than a b
 
 ## 2. Add the Deploy Workflow
 
-Create `.github/workflows/deploy-docs.yml` in your repository. The ai-submodule ships a reference workflow you can copy directly:
+Create `.github/workflows/deploy-docs.yml` in your repository. Dark Factory Governance ships a reference workflow you can copy directly:
 
 ```yaml
 name: Deploy Documentation
@@ -84,7 +84,7 @@ This workflow:
 
 ## 3. Configure MkDocs
 
-Create `mkdocs.yml` in your repository root. Use this minimal configuration to match the ai-submodule theme:
+Create `mkdocs.yml` in your repository root. Use this minimal configuration to match the Dark Factory Governance theme:
 
 ```yaml
 site_name: My Project Documentation
@@ -134,9 +134,9 @@ nav:
   - Home: index.md
 ```
 
-### Using the Nord Theme (Same as ai-submodule)
+### Using the Nord Theme (Same as Dark Factory Governance)
 
-To match the ai-submodule site exactly, use the Nord color scheme. Add a custom stylesheet:
+To match the Dark Factory Governance site exactly, use the Nord color scheme. Add a custom stylesheet:
 
 1. Create `docs/stylesheets/extra.css`:
 
@@ -221,7 +221,7 @@ After pushing to `main`:
 
 ## Adding Mermaid Diagrams
 
-To render Mermaid diagrams in your documentation, add the Mermaid JavaScript dependency. The ai-submodule self-hosts Mermaid v11.3.0 to eliminate CDN supply-chain risk. For your project, you can either:
+To render Mermaid diagrams in your documentation, add the Mermaid JavaScript dependency. Dark Factory Governance self-hosts Mermaid v11.3.0 to eliminate CDN supply-chain risk. For your project, you can either:
 
 **Option A: Use the CDN (simpler)**
 
@@ -240,7 +240,7 @@ markdown_extensions:
 
 **Option B: Self-host (recommended for production)**
 
-Copy the Mermaid files from the ai-submodule:
+Copy the Mermaid files from the Dark Factory Governance submodule:
 
 ```bash
 cp .ai/docs/javascripts/mermaid.min.js docs/javascripts/
@@ -267,6 +267,6 @@ Ensure `mkdocs.yml` is in the repository root (not inside `docs/`).
 - Confirm the workflow completed successfully in the Actions tab
 - Check that `docs/index.md` exists
 
-### Styles do not match ai-submodule
+### Styles do not match Dark Factory Governance
 
 Ensure you are using `mkdocs-material` (not the base `mkdocs` theme) and have the `pymdownx` extensions installed.

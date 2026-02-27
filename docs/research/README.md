@@ -186,9 +186,9 @@ An external review report (2026-02-25) proposed converting high-reuse personas i
 
 2. **Tool count budget exceeded.** 15-20 persona-skills + Claude Code's existing tools = 23-28 total tools. Anthropic's Opus 4 drops to 49% accuracy with large tool libraries (recovers to only 74% with Tool Search). Microsoft Research recommends "expose as few tools as possible."
 
-3. **No infrastructure exists.** The ai-submodule deliberately removed MCP server code (commit b636ebd) with rationale "MCP configs belong in consuming repos." Zero skill files, zero awesome-dach-copilot references exist in the codebase.
+3. **No infrastructure exists.** Dark Factory Governance deliberately removed MCP server code (commit b636ebd) with rationale "MCP configs belong in consuming repos." Zero skill files, zero awesome-dach-copilot references exist in the codebase.
 
-4. **Two-repo coordination cost.** Splitting cognitive (dach-copilot) and enforcement (ai-submodule) layers creates version drift risk. Breaking changes to `panel-output.schema.json` require coordinated releases across repos.
+4. **Two-repo coordination cost.** Splitting cognitive (dach-copilot) and enforcement (Dark Factory Governance) layers creates version drift risk. Breaking changes to `panel-output.schema.json` require coordinated releases across repos.
 
 ### When MCP Skills would make sense
 

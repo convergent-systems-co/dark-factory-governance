@@ -69,7 +69,7 @@ None.
    - GOALS.md generation from template (only in submodule context, only if not already present)
    - Panel emission validation: check that required panels have emission files
 
-5. **Create `templates/GOALS.md`** — Template based on the ai-submodule's own GOALS.md structure but generalized for consuming repos.
+5. **Create `templates/GOALS.md`** — Template based on the Dark Factory Governance GOALS.md structure but generalized for consuming repos.
 
 6. **Update documentation** — GOALS.md, CLAUDE.md as needed.
 

@@ -166,7 +166,7 @@ Every non-trivial action creates a plan file. This is your audit trail.
 ## Keeping the Framework Updated
 
 ```powershell
-# Pull latest governance updates from SET-Apps/ai-submodule
+# Pull latest Dark Factory Governance updates
 git submodule update --remote .ai
 git add .ai
 git commit -m "chore: update .ai submodule"

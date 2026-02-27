@@ -274,7 +274,7 @@ Generate a unique session identifier for the agent audit log. This ID is used by
    ```bash
    git submodule status .ai 2>/dev/null
    ```
-   If not a submodule (e.g., running inside the ai-submodule repo), skip this section.
+   If not a submodule (e.g., running inside the Dark Factory Governance repo), skip this section.
 
 2. **Check for submodule pin** in `project.yaml` (project root):
    ```yaml
@@ -483,7 +483,7 @@ Analyze the codebase and change type to determine which reviews to invoke:
   - Data model changes → data-governance-review (enhanced)
   - UI changes → accessibility review (if panel exists)
 
-If a needed review panel or persona does not exist, create a GitHub issue in the ai-submodule repository describing the gap, using `governance/prompts/cross-repo-escalation-workflow.md`.
+If a needed review panel or persona does not exist, create a GitHub issue in the Dark Factory Governance repository describing the gap, using `governance/prompts/cross-repo-escalation-workflow.md`.
 
 ### 2d: Create Plans (for all issues)
 

@@ -1,6 +1,6 @@
 # Cross-Repo Issue Escalation
 
-This document describes the cross-repository issue escalation system — a mechanism for consuming repositories to automatically detect framework-level issues in the `.ai` governance submodule and escalate them to the upstream `SET-Apps/ai-submodule` repository.
+This document describes the cross-repository issue escalation system — a mechanism for consuming repositories to automatically detect framework-level issues in the `.ai` governance submodule and escalate them to the upstream [Dark Factory Governance](https://github.com/SET-Apps/ai-submodule) repository.
 
 ## Architecture Overview
 
@@ -167,7 +167,7 @@ Records are saved to `.governance/panels/escalation-{id}.json` in the consuming 
 
 ## Upstream Issue Format
 
-Escalated issues on `SET-Apps/ai-submodule` follow this format:
+Escalated issues on the Dark Factory Governance repository (`SET-Apps/ai-submodule`) follow this format:
 
 - **Title:** `escalation({source-repo-short}): {summary}`
 - **Label:** `escalation`

@@ -53,7 +53,7 @@ my-project/
 
 ### `.ai/` — The Governance Submodule (Read-Only)
 
-The `.ai/` directory is a git submodule pointing to the [ai-submodule](https://github.com/SET-Apps/ai-submodule) repository. It contains all governance definitions — personas, prompts, review templates, policy profiles, schemas, and documentation.
+The `.ai/` directory is a git submodule pointing to the [Dark Factory Governance](https://github.com/SET-Apps/ai-submodule) repository. It contains all governance definitions — personas, prompts, review templates, policy profiles, schemas, and documentation.
 
 **You should never write files into `.ai/`.** It is a read-only reference. Templates and prompts are *read* from `.ai/governance/prompts/` at runtime, but all *emitted* artifacts (plans, panel reports, checkpoints) are written to `.governance/` in your project root.
 
@@ -228,7 +228,7 @@ These are read at runtime but never modified by the governance pipeline in your 
 
 ## Resource Location Summary
 
-Both the ai-submodule and consuming repos use `.governance/` for all emitted artifacts. The only difference is how read-only governance source files are accessed — directly in the ai-submodule, or via the `.ai/` submodule prefix in consumers.
+Both the Dark Factory Governance repository and consuming repos use `.governance/` for all emitted artifacts. The only difference is how read-only governance source files are accessed — directly in the Dark Factory Governance repository, or via the `.ai/` submodule prefix in consumers.
 
 | Resource | AI Submodule | Consuming Repo |
 |----------|-------------|----------------|

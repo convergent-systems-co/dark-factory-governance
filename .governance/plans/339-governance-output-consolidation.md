@@ -10,7 +10,7 @@
 
 ## 1. Objective
 
-Consolidate all consumer-repo governance output directories under a single hidden `.governance/` directory. Currently, outputs are scattered across `governance/plans/`, `governance/checkpoints/`, `.panels/`, and `.governance-state/`. After this change, consumers will have a single `.governance/` tree mirroring the ai-submodule's `governance/` layout.
+Consolidate all consumer-repo governance output directories under a single hidden `.governance/` directory. Currently, outputs are scattered across `governance/plans/`, `governance/checkpoints/`, `.panels/`, and `.governance-state/`. After this change, consumers will have a single `.governance/` tree mirroring the Dark Factory Governance `governance/` layout.
 
 ## 2. Rationale
 
@@ -58,10 +58,10 @@ None — old directories in consumer repos are migrated by init.sh, not deleted.
 ### Context detection
 
 The agentic loop (startup.md) and other prompts must detect context:
-- **In ai-submodule repo**: Use `governance/plans/`, `governance/checkpoints/` (existing paths)
+- **In Dark Factory Governance repo**: Use `governance/plans/`, `governance/checkpoints/` (existing paths)
 - **In consuming repo**: Use `.governance/plans/`, `.governance/checkpoints/`, etc.
 
-Detection: if `.gitmodules` contains `.ai` submodule entry → consumer context → use `.governance/`. Otherwise → ai-submodule context → use `governance/`.
+Detection: if `.gitmodules` contains `.ai` submodule entry → consumer context → use `.governance/`. Otherwise → Dark Factory Governance context → use `governance/`.
 
 ### Steps
 
@@ -108,4 +108,4 @@ init.sh will detect old directories and move their contents to the new `.governa
 | Date | Decision | Rationale |
 |------|----------|-----------|
 | 2026-02-25 | Use `.governance/` not `.ai/governance/` | `.ai/` is the submodule; consumer outputs must be separate |
-| 2026-02-25 | Keep ai-submodule paths as `governance/` | Submodule has its own convention; change is consumer-only |
+| 2026-02-25 | Keep Dark Factory Governance paths as `governance/` | Submodule has its own convention; change is consumer-only |

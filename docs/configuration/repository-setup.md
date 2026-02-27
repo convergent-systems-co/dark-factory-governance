@@ -254,7 +254,7 @@ Consuming projects can add additional directories in their `project.yaml`. Direc
 
 ### Behavior
 
-- Directories are only created in submodule context (consuming repos, not the ai-submodule itself)
+- Directories are only created in submodule context (consuming repos, not the Dark Factory Governance repository itself)
 - Each directory gets a `.gitkeep` file so git tracks the empty directory
 - Idempotent — existing directories are left untouched
 - If Python is not available, falls back to the hardcoded defaults (`.governance/plans/`, `.governance/panels/`, `.governance/checkpoints/`, `.governance/state/`)
@@ -296,9 +296,9 @@ Even though `@github-actions[bot]` is listed as a code owner, GitHub's behavior 
 | `fin_pii_high` | Require human code owner review — auto-merge is already disabled, human approval is expected |
 | `infrastructure_critical` | Require human code owner review — mandatory architecture and SRE review already in policy |
 
-### ai-submodule Repository
+### Dark Factory Governance Repository
 
-The ai-submodule itself uses `require_code_owner_review: true` in its org ruleset. CODEOWNERS includes `@github-actions[bot]` alongside `@SET-Apps/approvers` on all patterns. The branch ruleset grants bypass permissions to the governance workflow, allowing the agentic loop to merge PRs after panel review.
+The Dark Factory Governance repository itself uses `require_code_owner_review: true` in its org ruleset. CODEOWNERS includes `@github-actions[bot]` alongside `@SET-Apps/approvers` on all patterns. The branch ruleset grants bypass permissions to the governance workflow, allowing the agentic loop to merge PRs after panel review.
 
 ### Bot Identity
 

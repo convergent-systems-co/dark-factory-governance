@@ -31,7 +31,7 @@ SREs and developers need quick access to resource overviews, performance metrics
 | `governance/templates/dashboards/hub-dashboard.json` | Hub dashboard template — links to per-environment dashboards |
 | `governance/templates/dashboards/environment-dashboard.json` | Per-environment dashboard template — resource group resources, App Insights, AKS status |
 | `governance/templates/dashboards/README.md` | Usage guide for dashboard templates |
-| `docs/guides/github-pages-setup.md` | Guide for enabling GitHub Pages with the ai-submodule theme |
+| `docs/guides/github-pages-setup.md` | Guide for enabling GitHub Pages with the Dark Factory Governance theme |
 
 ### Files to Modify
 
@@ -53,7 +53,7 @@ SREs and developers need quick access to resource overviews, performance metrics
 3. Create environment dashboard JSON template with tiles for: resource group resources, App Insights performance metrics, AKS reader view (pods, logs)
 4. Create dashboard README with import instructions
 5. Add `dashboards` section to the Bicep project.yaml template
-6. Create GitHub Pages setup guide documenting how to enable Pages with the ai-submodule theme (referencing the existing deploy-docs.yml as the template)
+6. Create GitHub Pages setup guide documenting how to enable Pages with the Dark Factory Governance theme (referencing the existing deploy-docs.yml as the template)
 
 ## 5. Testing Strategy
 

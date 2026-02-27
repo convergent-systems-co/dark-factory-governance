@@ -1,4 +1,4 @@
-# Fix: CODEOWNERS Setup for ai-submodule and Consuming Repos
+# Fix: CODEOWNERS Setup for Dark Factory Governance and Consuming Repos
 
 **Author:** Coder (agentic)
 **Date:** 2026-02-23
@@ -10,7 +10,7 @@
 
 ## 1. Objective
 
-Populate the ai-submodule CODEOWNERS with meaningful ownership rules and improve init.sh CODEOWNERS generation for consuming repos to document governance workflow interaction.
+Populate the Dark Factory Governance CODEOWNERS with meaningful ownership rules and improve init.sh CODEOWNERS generation for consuming repos to document governance workflow interaction.
 
 ## 2. Rationale
 
@@ -42,7 +42,7 @@ None.
 
 ## 4. Approach
 
-1. Populate CODEOWNERS for the ai-submodule from config.yaml rules
+1. Populate CODEOWNERS for the Dark Factory Governance repo from config.yaml rules
 2. Update init.sh generate_codeowners() to add governance interaction comment
 3. Document the relationship in repository-configuration.md
 

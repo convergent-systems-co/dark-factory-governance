@@ -279,7 +279,7 @@ See `docs/architecture/context-management.md` for the full strategy including ch
 
 ## Repo Rename Recommendation
 
-This repository is currently named `ai-submodule`. Given its evolution into a governance platform, a more descriptive name is recommended:
+This repository is currently named `ai-submodule`. Given its evolution into the Dark Factory Governance platform, a more descriptive name is recommended:
 
 | Candidate | Rationale |
 |-----------|-----------|

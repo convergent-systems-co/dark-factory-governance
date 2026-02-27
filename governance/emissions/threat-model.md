@@ -17,7 +17,7 @@
 
 ```mermaid
 graph TD
-    subgraph REPO["ai-submodule repository (governance repo)"]
+    subgraph REPO["Dark Factory Governance repository"]
         subgraph GOV["governance/"]
             T["templates/ (NEW) — Language files"]
             PR["prompts/ — Cognitive files"]
@@ -187,7 +187,7 @@ Write-Host "  1. Copy a language template:  Copy-Item .ai\governance\templates\p
 
 1. **What if `governance/templates/` already exists?** — It did not. `governance/prompts/templates/` exists but is a different path. `git mv` would fail if the target existed — it succeeded, confirming no collision.
 
-2. **What if init.sh runs inside the ai-submodule repo itself (not a consuming repo)?** — The GOALS template copy is guarded by `if [ "$IS_SUBMODULE" = "true" ]` (line 202). When running inside the submodule repo directly, this block is skipped entirely. No path dependency.
+2. **What if init.sh runs inside the Dark Factory Governance repo itself (not a consuming repo)?** — The GOALS template copy is guarded by `if [ "$IS_SUBMODULE" = "true" ]` (line 202). When running inside the submodule repo directly, this block is skipped entirely. No path dependency.
 
 3. **What if a consuming repo has both old and new submodule versions?** — Not possible. A repo pins to a single submodule SHA. On update, all paths change atomically.
 
