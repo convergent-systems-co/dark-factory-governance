@@ -2,6 +2,30 @@
 
 The governance framework can configure GitHub repository settings to support the autonomous agentic workflow. Settings are declared in `config.yaml` (defaults) and overridden per-project in `project.yaml`.
 
+## Installation Methods
+
+### Recommended: Agentic Bootstrap
+
+Tell your AI assistant: "Read and execute `.ai/governance/prompts/init.md`"
+
+This interactively configures the project with zero shell commands. The agent reads the repo, asks about configuration, and sets everything up — including writing instruction files directly (not symlinks), installing PreCompact hooks, and creating governance directories.
+
+### Alternative: Shell Script
+
+```bash
+bash .ai/bin/init.sh                    # Basic setup
+bash .ai/bin/init.sh --install-deps     # Full setup with Python deps
+```
+
+### Self-Repair
+
+The agentic startup loop (`/startup`) automatically detects and repairs:
+- Missing or stale CLAUDE.md / copilot-instructions.md
+- Missing PreCompact hooks
+- Missing .governance/ directories
+
+See `governance/prompts/startup.md` Phase 1a-bis for details.
+
 ## Why This Exists
 
 The agentic loop (startup.md) requires specific GitHub repository settings to function: auto-merge must be enabled so PRs merge after CI + approval, CODEOWNERS must be populated so `require_code_owner_review` rulesets work, and branch protection rulesets must be configured for governance enforcement. Without these settings, the autonomous workflow breaks silently.
@@ -230,7 +254,7 @@ Emitted output uses identical `.governance/` paths everywhere. Read-only governa
 | Review prompts | `governance/prompts/reviews/` | `.ai/governance/prompts/reviews/` (read-only) |
 | Policy profiles | `governance/policy/` | `.ai/governance/policy/` (read-only) |
 | Schemas | `governance/schemas/` | `.ai/governance/schemas/` (read-only) |
-| Instructions | `instructions.md` | `CLAUDE.md` → `.ai/instructions.md` (symlink) |
+| Instructions | `instructions.md` | `CLAUDE.md` ← `.ai/instructions.md` (file copy, preferred) or symlink (legacy) |
 
 See [Project Structure](../onboarding/project-structure.md) for a detailed breakdown of every directory and file created by `init.sh`.
 
