@@ -166,6 +166,43 @@ personas:
       max_prs_per_session: 10
 
   # ──────────────────────────────────────────────────────────────────────
+  # Document Writer — documentation maintenance agent (Worker pattern)
+  # Scoped to documentation files; never modifies source code or tests.
+  # ──────────────────────────────────────────────────────────────────────
+  document-writer:
+    description: >
+      The Document Writer maintains documentation freshness. It may only
+      modify markdown documentation files. It never modifies source code,
+      tests, governance policy, or schema files.
+    allowed_paths:
+      - "*.md"
+      - "docs/**"
+      - "CLAUDE.md"
+      - "README.md"
+      - "GOALS.md"
+      - "CONTRIBUTING.md"
+      - ".governance/plans/**"
+    denied_paths:
+      - "governance/policy/**"
+      - "governance/schemas/**"
+      - "governance/personas/**"
+      - "governance/prompts/reviews/**"
+      - "jm-compliance.yml"
+      - ".github/workflows/dark-factory-governance.yml"
+    denied_operations:
+      - git_push
+      - git_merge
+      - approve_pr
+      - modify_policy
+      - modify_schema
+      - modify_source_code
+      - modify_tests
+    resource_limits:
+      max_files_per_pr: 20
+      max_lines_per_commit: 500
+      max_new_files_per_pr: 10
+
+  # ──────────────────────────────────────────────────────────────────────
   # DevOps Engineer — session entry point (Routing pattern)
   # Owns session lifecycle and triage; never implements code or reviews PRs.
   # ──────────────────────────────────────────────────────────────────────

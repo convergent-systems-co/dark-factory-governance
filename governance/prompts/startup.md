@@ -108,7 +108,12 @@ This removes worktrees older than 2 days and their orphaned branches.
 1. Wait for dispatched agents to complete
 2. Run Tester persona evaluation on each result
 3. Handle FEEDBACK (re-dispatch) or APPROVE outcomes
-4. Complete: `step --complete 4 --result '{"prs_created": [...], "prs_resolved": [...], "issues_completed": [...]}'`
+4. **Dispatch Document Writer** — after Coder agents complete and before PR creation, spawn a Document Writer agent (`governance/personas/agentic/document-writer.md`) for each branch:
+   - The Document Writer analyzes the diff of all changes on the branch
+   - Runs `bin/check-doc-staleness.py` to detect stale counts, paths, and descriptions
+   - Updates all affected documentation (CLAUDE.md, GOALS.md, README.md, docs/, etc.)
+   - Commits documentation updates to the same branch with `docs:` conventional commits
+5. Complete: `step --complete 4 --result '{"prs_created": [...], "prs_resolved": [...], "issues_completed": [...]}'`
 
 ### Phase 5: Merge & Loop Decision
 1. Merge approved PRs

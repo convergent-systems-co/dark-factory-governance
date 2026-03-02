@@ -52,7 +52,7 @@ bash mcp-server/install.sh --governance-root /path/to/repo
 
 Five governance layers: Intent → Cognitive → Execution → Runtime → Evolution. See `docs/architecture/governance-model.md`.
 
-Six agentic personas in `governance/personas/agentic/`: Project Manager, DevOps Engineer, Code Manager, Coder, IaC Engineer, Tester. Protocol: `governance/prompts/agent-protocol.md`. See `docs/architecture/agent-architecture.md`.
+Seven agentic personas in `governance/personas/agentic/`: Project Manager, DevOps Engineer, Code Manager, Coder, IaC Engineer, Tester, Document Writer. Protocol: `governance/prompts/agent-protocol.md`. See `docs/architecture/agent-architecture.md`.
 
 21 review prompts in `governance/prompts/reviews/`. Five policy profiles and 21 supporting policy configurations in `governance/policy/`. Panel output validated against `governance/schemas/panel-output.schema.json`.
 

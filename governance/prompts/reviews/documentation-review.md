@@ -149,9 +149,10 @@ Projects should have a documentation site deployed via GitHub Pages. This is an 
 2. Each participant evaluates the change independently from their perspective
 3. Test documentation by following it step-by-step (verify code examples, prerequisites, and instructions)
 4. Identify gaps and inconsistencies between documentation and current code behavior
-5. Prioritize findings by user impact (blocking gaps first, then accuracy, then polish)
-6. Verify all diagrams use mermaid code blocks — flag any ASCII art, box drawing characters (┌─│└├┤┬┴┼═▼), or plain-text flow diagrams as blocking findings
-7. Verify GitHub Pages presence — check for deployment workflow, site URL in README, static site generator config, and canonical URL format (advisory, medium severity)
+5. **Run staleness detection** — execute `bin/check-doc-staleness.py --json` and incorporate any staleness findings as high-severity policy flags. Stale numeric claims (persona counts, panel counts, policy profile counts) and broken path references are blocking findings that must be resolved before merge.
+6. Prioritize findings by user impact (blocking gaps first, then accuracy, then polish)
+7. Verify all diagrams use mermaid code blocks — flag any ASCII art, box drawing characters (┌─│└├┤┬┴┼═▼), or plain-text flow diagrams as blocking findings
+8. Verify GitHub Pages presence — check for deployment workflow, site URL in README, static site generator config, and canonical URL format (advisory, medium severity)
 
 ## Output Format
 
