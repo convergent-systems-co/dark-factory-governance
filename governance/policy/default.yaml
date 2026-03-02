@@ -364,3 +364,14 @@ cross_repo_escalation:
     marker_format: "<!-- dedup:{key} -->"
     hash_algorithm: sha256
     hash_length: 16
+
+# Multi-Model Validation
+# When enabled, review panels can be executed across multiple models.
+# Each model produces a separate emission; the policy engine aggregates
+# them using the configured consensus strategy.
+multi_model:
+  enabled: false                  # Disabled by default (backward compatible)
+  models: []                      # Models to use (e.g., ["opus", "sonnet", "haiku"])
+  consensus: majority             # majority | supermajority | unanimous
+  min_models: 2                   # Minimum models required for valid consensus
+  panels: []                      # Panels to run multi-model (empty = all panels)
