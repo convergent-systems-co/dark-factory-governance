@@ -79,6 +79,14 @@ If `would_shutdown` is true, skip the operation — the orchestrator will handle
 ## Phase Details
 
 ### Phase 1: Pre-flight & Triage
+
+#### Pre-flight Cleanup
+Before scanning issues, clean up stale worktrees from previous sessions:
+```bash
+bash governance/bin/cleanup-worktrees.sh
+```
+This removes worktrees older than 2 days and their orphaned branches.
+
 1. Scan Dependabot alerts: `gh api repos/{owner}/{repo}/dependabot/alerts --jq '[.[] | select(.state == "open")]'`
 2. Run `gh issue list --state open --json number,title,labels,assignees`
 3. Load `governance/paved-roads-catalog.yaml` — match issue keywords against domain keywords to identify relevant JM Paved Roads repos. When triaging infrastructure-related issues, surface applicable paved-road repos so Coder agents can reference established patterns instead of generating non-standard implementations.
