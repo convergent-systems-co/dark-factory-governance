@@ -81,9 +81,10 @@ If `would_shutdown` is true, skip the operation — the orchestrator will handle
 ### Phase 1: Pre-flight & Triage
 1. Scan Dependabot alerts: `gh api repos/{owner}/{repo}/dependabot/alerts --jq '[.[] | select(.state == "open")]'`
 2. Run `gh issue list --state open --json number,title,labels,assignees`
-3. Filter/prioritize by labels and project conventions. Interleave dependabot alerts by severity (critical/high = P0/P1).
-4. Select up to N work items — issues + dependabot alerts (N = `parallel_coders` from project.yaml)
-5. Complete: `step --complete 1 --result '{"issues_selected": ["#N", ...], "dependabot_alerts": ["dependabot-1", ...]}'`
+3. Load `governance/paved-roads-catalog.yaml` — match issue keywords against domain keywords to identify relevant JM Paved Roads repos. When triaging infrastructure-related issues, surface applicable paved-road repos so Coder agents can reference established patterns instead of generating non-standard implementations.
+4. Filter/prioritize by labels and project conventions. Interleave dependabot alerts by severity (critical/high = P0/P1).
+5. Select up to N work items — issues + dependabot alerts (N = `parallel_coders` from project.yaml)
+6. Complete: `step --complete 1 --result '{"issues_selected": ["#N", ...], "dependabot_alerts": ["dependabot-1", ...]}'`
 
 ### Phase 2: Parallel Planning
 1. For each selected issue, read the issue body and comments
