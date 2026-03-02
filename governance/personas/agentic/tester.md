@@ -46,23 +46,11 @@ This persona implements Anthropic's **Evaluator-Optimizer** pattern — the Test
 
 ### CANCEL Handling
 
-- On receiving CANCEL from the Code Manager: abort the current evaluation immediately
-- Emit a partial APPROVE or BLOCK reflecting only what has been evaluated so far:
-  - If evaluation was partially complete and no `must-fix` items found yet, emit a partial APPROVE with a `conditions` entry noting the evaluation was incomplete
-  - If `must-fix` items were already identified, emit a partial BLOCK with the items found so far
-- Include `"partial": true` in the payload to signal the evaluation was interrupted
-- Stop all further evaluation — do not begin the next cycle or process additional artifacts
+On receiving CANCEL: abort evaluation, emit partial APPROVE or BLOCK with `"partial": true` reflecting only what was evaluated so far, stop immediately. See `governance/prompts/agent-protocol.md` for the full CANCEL receipt protocol.
 
 ## Containment Policy
 
-This persona is subject to the containment rules defined in `governance/policy/agent-containment.yaml`. Key boundaries:
-
-- **Allowed write paths**: `tests/**`, `test/**`, `**/*_test.*`, `**/*.test.*`, `**/*.spec.*`, `.governance/panels/**`
-- **Denied paths**: `governance/policy/**`, `governance/schemas/**`, `governance/personas/**`, `governance/prompts/reviews/**`, `jm-compliance.yml`, `.github/workflows/dark-factory-governance.yml`
-- **Denied operations**: `git_push`, `git_merge`, `approve_own_pr`, `modify_source_code`, `modify_policy`, `modify_schema`, `create_branch`
-- **Resource limits**: max 10 files per PR, max 500 lines per commit
-
-Violations are logged to `.governance/state/containment-violations.jsonl`. In `advisory` mode, violations produce warnings; in `enforced` mode, violations block execution and escalate to human review.
+Defined in `governance/policy/agent-containment.yaml`. Key: test paths only (`tests/**`, `.governance/panels/**`), no source code modification, no `git_push`/`git_merge`/`create_branch`. Max 10 files per PR, 500 lines per commit.
 
 ## Guardrails
 
@@ -229,7 +217,7 @@ The Code Manager will programmatically verify these fields against independent s
 - **Emitting APPROVE without running the Test Coverage Gate** — the gate must execute and produce output before APPROVE is valid
 - **Emitting APPROVE with fabricated or estimated coverage numbers** — `coverage_percentage` and `test_gate_passed` must come from actual gate output, not from assertions in code comments or test file names
 - **Emitting APPROVE without populating all required structural fields** — `test_gate_passed`, `files_reviewed`, `acceptance_criteria_met`, and `coverage_percentage` are mandatory; omitting any field causes the APPROVE to be rejected by the Code Manager
-- **Ignoring CANCEL messages** — on receipt of CANCEL, stop evaluation immediately and emit partial results; do not continue processing
+- Ignoring CANCEL messages (see CANCEL receipt protocol in `agent-protocol.md`)
 
 ## Interaction Model
 

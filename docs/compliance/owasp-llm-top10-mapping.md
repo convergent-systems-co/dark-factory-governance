@@ -322,7 +322,7 @@ Canary calibration serves as a meta-defense: if a panel fabricates findings rath
 | **Schema Field** | `duration_ms` | `governance/schemas/panel-output.schema.json` -- Panel execution duration in milliseconds; enables monitoring and anomaly detection |
 | **Schema Field** | `execution_status` | `governance/schemas/panel-output.schema.json` -- Tracks `timeout` and `fallback` statuses; fallback emissions cannot trigger auto-merge |
 | **Persona Guardrail** | Coder capacity tiers | `governance/personas/agentic/coder.md` -- Pre-task capacity check: Green (<60%), Yellow (60-70%), Orange (70-80%), Red (>=80%); stop signals at Orange and Red |
-| **Persona Guardrail** | CANCEL messages | `governance/prompts/agent-protocol.md` -- Context capacity signals: tool calls >80 or chat turns >50 trigger CANCEL propagation; CANCEL supersedes all in-flight messages |
+| **Persona Guardrail** | CANCEL messages | `governance/prompts/agent-protocol.md` -- Context capacity signals: tool calls >80 or chat turns >140 trigger CANCEL propagation; CANCEL supersedes all in-flight messages |
 | **Persona Guardrail** | Error isolation | `governance/prompts/agent-protocol.md` "Error Isolation" section -- Failures in one work unit cannot cascade; retry cap of 2 per work unit; malformed inputs caught and isolated |
 | **Persona Guardrail** | Autonomy thresholds | `governance/policy/autonomy-thresholds.yaml` -- Tracks avg_context_usage_percent (critical >75%), avg_issues_per_session, dirty_context_compactions (must be 0) |
 
@@ -330,7 +330,7 @@ Canary calibration serves as a meta-defense: if a panel fabricates findings rath
 
 The governance platform implements resource consumption controls at every level of the pipeline.
 
-**Context window management:** A hard stop at 80% context capacity prevents context exhaustion. The Coder persona has explicit capacity tiers (Green/Yellow/Orange/Red) with escalating stop signals. CANCEL messages propagate from DevOps Engineer through Code Manager to all workers when context signals exceed thresholds (tool calls >80, chat turns >50).
+**Context window management:** A hard stop at 80% context capacity prevents context exhaustion. The Coder persona has explicit capacity tiers (Green/Yellow/Orange/Red) with escalating stop signals. CANCEL messages propagate from DevOps Engineer through Code Manager to all workers when context signals exceed thresholds (tool calls >80, chat turns >140).
 
 **Rate limiting:** `rate-limits.yaml` enforces per-DI, per-component, and global rate limits on panel executions with overflow strategies (queue, aggregate, triage by priority).
 

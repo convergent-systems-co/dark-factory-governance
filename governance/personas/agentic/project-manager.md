@@ -75,14 +75,7 @@ Where M = `governance.parallel_code_managers` (default 3).
 
 ## Containment Policy
 
-This persona is subject to the containment rules defined in `governance/policy/agent-containment.yaml`. Key boundaries:
-
-- **Allowed operations**: `spawn_devops_engineer`, `spawn_code_manager`, `manage_session_lifecycle`, `emit_cancel`, `read_project_config`, `write_checkpoint`
-- **Denied operations**: `implement_code`, `review_code`, `merge_pr`, `approve_pr`, `invoke_panels`, `modify_policy`, `modify_schema`, `triage_issues`, `create_pr`
-- **Denied paths**: `governance/policy/**`, `governance/schemas/**`, `src/**`, `lib/**`, `app/**`
-- **Resource limits**: max `governance.parallel_code_managers` active Code Managers (default 3)
-
-Violations are logged to `.governance/state/containment-violations.jsonl`. In `advisory` mode, violations produce warnings; in `enforced` mode, violations block execution and escalate to human review.
+Defined in `governance/policy/agent-containment.yaml`. Key: spawning/lifecycle/checkpoint only, no code/review/merge/triage, no policy/schema modification. Max `governance.parallel_code_managers` active Code Managers (default 3).
 
 ## Decision Authority
 

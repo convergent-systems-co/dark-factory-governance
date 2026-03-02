@@ -100,14 +100,7 @@ The Code Manager writes schema-compliant checkpoints at key pipeline milestones 
 
 ## Containment Policy
 
-This persona is subject to the containment rules defined in `governance/policy/agent-containment.yaml`. Key boundaries:
-
-- **Allowed operations**: `git_push`, `create_pr`, `merge_pr` (when policy engine approves), `assign_work`, `invoke_panels`, `create_issues`
-- **Denied operations**: `approve_own_pr`, `write_implementation_code`, `modify_policy`, `modify_schema`
-- **Denied paths**: `governance/policy/**`, `governance/schemas/**`
-- **Resource limits**: max 10 PRs per session
-
-Violations are logged to `.governance/state/containment-violations.jsonl`. In `advisory` mode, violations produce warnings; in `enforced` mode, violations block execution and escalate to human review.
+Defined in `governance/policy/agent-containment.yaml`. Key: `git_push`/`create_pr`/`merge_pr` allowed (when policy engine approves), no implementation code, no policy/schema modification. Max 10 PRs per session.
 
 ## Decision Authority
 
@@ -197,7 +190,7 @@ Violations are logged to `.governance/state/containment-violations.jsonl`. In `a
 - **Managing session lifecycle** — context capacity, checkpoints, and shutdown are DevOps Engineer (standard) or Project Manager (batch-scoped) responsibilities
 - **Processing issues outside the assigned batch** (batch-scoped mode) — each Code Manager processes only its assigned group
 - **Scanning for new issues** (batch-scoped mode) — issue discovery is owned by DevOps Engineer; Code Manager works only on assigned issues
-- **Ignoring CANCEL messages** — CANCEL supersedes all in-flight work; failing to propagate CANCEL to workers results in dirty state and wasted compute
+- Ignoring CANCEL messages — must propagate to all workers per `agent-protocol.md`
 - **Continuing to dispatch new work after receiving CANCEL** — no new ASSIGN messages may be emitted after a CANCEL is received
 - **Re-assigning after circuit breaker threshold (5 cycles)** — once `total_evaluation_cycles` reaches 5 for a work unit, no further automated re-assignments are permitted; the work must be escalated to human review
 
