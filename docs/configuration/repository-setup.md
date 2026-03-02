@@ -4,18 +4,26 @@ The governance framework can configure GitHub repository settings to support the
 
 ## Installation Methods
 
-### Recommended: Agentic Bootstrap
+There are two supported installation paths. All other entry points (`quick-install.sh`) are deprecated and redirect to these.
+
+### Path 1 (Primary): Agentic Bootstrap
 
 Tell your AI assistant: "Read and execute `.ai/governance/prompts/init.md`"
 
 This interactively configures the project with zero shell commands. The agent reads the repo, asks about configuration, and sets everything up — including writing instruction files directly (not symlinks), installing PreCompact hooks, and creating governance directories.
 
-### Alternative: Shell Script
+### Path 2 (Fallback): Shell Script
 
 ```bash
-bash .ai/bin/init.sh                    # Basic setup
-bash .ai/bin/init.sh --install-deps     # Full setup with Python deps
+bash .ai/bin/init.sh --quick            # Add submodule (HTTPS) + full init
+bash .ai/bin/init.sh --quick --install-deps --mcp  # Full setup with deps + MCP server
+bash .ai/bin/init.sh                    # Standard init (submodule already added)
+bash .ai/bin/init.sh --install-deps     # Standard init + Python deps
+bash .ai/bin/init.sh --mcp             # Also install MCP server for IDE integration
+bash .ai/bin/init.sh --uninstall       # Clean removal of governance artifacts
 ```
+
+The `--quick` flag replaces the deprecated `quick-install.sh` and defaults to HTTPS URLs (no SSH key required). The `--mcp` flag installs the MCP server for IDE prompt distribution. The `--uninstall` flag removes symlinks and the virtual environment.
 
 ### Self-Repair
 
