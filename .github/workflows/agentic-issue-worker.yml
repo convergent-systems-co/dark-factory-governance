@@ -627,7 +627,25 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CURRENT_ISSUE: ${{ needs.select-issue.outputs.issue_number }}
+          MAX_CHAIN_DEPTH: '3'
         run: |
+          # --- Chain depth guardrail ---
+          # Count consecutive agentic-issue-worker runs in the last hour
+          # to prevent unbounded self-dispatch chains.
+          CHAIN_DEPTH=$(gh run list \
+            --workflow=agentic-issue-worker.yml \
+            --status=completed \
+            --limit=10 \
+            --json conclusion,createdAt,event \
+            --jq '[.[] | select(.event == "workflow_dispatch" and .conclusion == "success")] | length' \
+            2>/dev/null || echo "0")
+
+          if [ "${CHAIN_DEPTH}" -ge "${MAX_CHAIN_DEPTH}" ]; then
+            echo "::warning::Self-dispatch chain depth ${CHAIN_DEPTH} >= max ${MAX_CHAIN_DEPTH} — halting chain"
+            echo "::notice::Remaining agentic-ready issues will be picked up by the next external trigger"
+            exit 0
+          fi
+
           # Find the next issue with agentic-ready label
           NEXT_ISSUE=$(gh issue list \
             --label "agentic-ready" \
@@ -636,7 +654,7 @@ jobs:
             --jq '.[0].number // empty' 2>/dev/null || true)
 
           if [ -n "$NEXT_ISSUE" ] && [ "$NEXT_ISSUE" != "$CURRENT_ISSUE" ]; then
-            echo "::notice::Found next agentic-ready issue: #$NEXT_ISSUE — dispatching"
+            echo "::notice::Found next agentic-ready issue: #$NEXT_ISSUE — dispatching (chain depth: $((CHAIN_DEPTH + 1))/${MAX_CHAIN_DEPTH})"
             gh workflow run agentic-issue-worker.yml \
               --field issue_number="$NEXT_ISSUE" 2>/dev/null || {
                 echo "::warning::Failed to self-dispatch for issue #$NEXT_ISSUE"

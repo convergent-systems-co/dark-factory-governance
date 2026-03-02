@@ -120,5 +120,8 @@
     "policy_profile": "default",
     "model_version": "claude-opus-4-6",
     "triggered_by": "manual"
+  },
+  "data_classification": {
+    "level": "internal"
   }
 }

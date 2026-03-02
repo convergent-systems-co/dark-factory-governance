@@ -14,7 +14,7 @@
       "persona": "finops/finops-strategist",
       "verdict": "approve",
       "confidence": 0.85,
-      "rationale": "No cost impact — changes are governance configuration only. Cloud financial management strategy alignment is maintained."
+      "rationale": "No cost impact \u2014 changes are governance configuration only. Cloud financial management strategy alignment is maintained."
     },
     {
       "persona": "finops/resource-optimizer",
@@ -47,5 +47,8 @@
     "policy_profile": "default",
     "model_version": "claude-opus-4-6",
     "triggered_by": "manual"
+  },
+  "data_classification": {
+    "level": "internal"
   }
 }

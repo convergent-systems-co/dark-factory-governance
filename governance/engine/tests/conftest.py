@@ -133,6 +133,9 @@ def make_emission(
             }
         ],
         "aggregate_verdict": aggregate_verdict,
+        "data_classification": {
+            "level": "internal",
+        },
     }
     emission.update(overrides)
     return emission

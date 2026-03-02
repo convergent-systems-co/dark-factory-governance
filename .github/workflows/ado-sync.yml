@@ -26,6 +26,8 @@ jobs:
   sync:
     name: sync-to-ado
     runs-on: ubuntu-latest
+    # Gate: skip entirely if ADO_SYNC_ENABLED repo variable is not 'true'
+    if: vars.ADO_SYNC_ENABLED == 'true'
     steps:
       - uses: actions/checkout@v4
         with:

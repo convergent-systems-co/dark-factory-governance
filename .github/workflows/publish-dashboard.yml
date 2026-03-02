@@ -15,7 +15,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "dashboard"
+  # Share concurrency group with deploy-docs.yml to prevent GitHub Pages race
+  group: "pages"
   cancel-in-progress: true
 
 jobs:

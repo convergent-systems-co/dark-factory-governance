@@ -14,7 +14,8 @@
     "requires_human_review",
     "timestamp",
     "findings",
-    "aggregate_verdict"
+    "aggregate_verdict",
+    "data_classification"
   ],
   "properties": {
     "panel_name": {
@@ -268,22 +269,61 @@
     },
     "data_classification": {
       "type": "object",
-      "description": "Optional classification of the emission's data sensitivity. Helps identify emissions that may contain sensitive content requiring redaction or access controls.",
+      "description": "Required classification of the emission's data sensitivity. All panels must classify data they reference and apply redaction rules for sensitive content.",
       "properties": {
         "level": {
           "type": "string",
-          "description": "Data sensitivity level of this emission's content.",
+          "description": "Data sensitivity level of this emission's content. Must reflect the highest classification of any data referenced in findings.",
           "enum": ["public", "internal", "confidential", "restricted"]
         },
         "contains_sensitive_evidence": {
           "type": "boolean",
-          "description": "Whether findings contain sensitive evidence (credentials, PII, vulnerability details).",
+          "description": "Whether findings contain sensitive evidence (credentials, PII, vulnerability details). Must be true if any finding references secrets, PII, or exploit details.",
           "default": false
         },
         "redaction_applied": {
           "type": "boolean",
-          "description": "Whether sensitive content has been redacted from this emission.",
+          "description": "Whether sensitive content has been redacted from this emission. Must be true when contains_sensitive_evidence is true.",
           "default": false
+        },
+        "sensitive_categories": {
+          "type": "array",
+          "description": "Categories of sensitive data detected in the reviewed change. Empty array if no sensitive data was found.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "credentials",
+              "api_keys",
+              "pii_email",
+              "pii_name",
+              "pii_address",
+              "pii_phone",
+              "pii_ssn",
+              "pii_financial",
+              "internal_urls",
+              "infrastructure_details",
+              "vulnerability_details",
+              "encryption_keys",
+              "access_tokens",
+              "database_credentials"
+            ]
+          }
+        },
+        "redaction_rules_applied": {
+          "type": "array",
+          "description": "List of redaction rules that were applied to sanitize this emission.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "secret_redacted",
+              "pii_redacted",
+              "path_sanitized",
+              "url_sanitized",
+              "credential_redacted",
+              "key_redacted",
+              "ip_redacted"
+            ]
+          }
         }
       },
       "required": ["level"],
