@@ -370,10 +370,34 @@ When the full policy engine is unavailable (consuming repo without submodule con
 
 ### Configuration Options
 
-Consuming repos have two options for the governance workflow:
+Consuming repos have three options for the governance workflow:
 
-- **Provide local emissions** -- run governance panels locally (via the agentic loop or MCP skills) and commit emission JSON files to `.governance/panels/`. The workflow will validate them using the lightweight fallback.
+- **Vendored policy engine (recommended)** -- During `init.sh` or `init.sh --refresh`, the full policy engine is automatically copied to `.governance/engine/` in the consuming repo. This allows cross-org repos to run Tier 1 evaluation in CI without needing to clone the private submodule. The vendored copy includes the policy engine, policy profiles, and schemas. Staleness is tracked via a `VERSION` file and refreshed automatically.
+- **Provide local emissions** -- run governance panels locally (via the agentic loop or MCP skills) and commit emission JSON files to `.governance/panels/`. The workflow will validate them using the lightweight fallback (Tier 2).
 - **Opt out of panel validation** -- set `governance.skip_panel_validation: true` in `project.yaml` (project root). The workflow will auto-approve with a warning instead of blocking.
+
+### Cross-Org CI: Vendored Policy Engine
+
+Consuming repos in different GitHub organizations (e.g., `SET-Sandbox/`) cannot clone `SET-Apps/ai-submodule` in CI because the `GITHUB_TOKEN` is scoped to the consuming repo's org. Without the submodule, the full Python policy engine is unavailable.
+
+The vendored engine solves this by copying the policy engine into `.governance/engine/` during `init.sh`. The governance workflow automatically detects and uses the vendored copy when the submodule is unavailable.
+
+**How it works:**
+
+1. `bash .ai/bin/init.sh` vendors the engine during initial setup
+2. `bash .ai/bin/init.sh --refresh` updates the vendored copy when the submodule is updated
+3. The CI workflow checks for `.governance/engine/policy-engine.py` as a fallback
+4. `bash .ai/bin/init.sh --verify` reports vendored engine presence and staleness
+
+**Staleness detection:**
+
+```bash
+# Check if the vendored engine is stale
+bash .ai/governance/bin/vendor-engine.sh --check
+
+# Force re-vendor even if up-to-date
+bash .ai/governance/bin/vendor-engine.sh --force
+```
 
 ### skip_panel_validation in PRs
 

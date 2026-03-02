@@ -238,6 +238,8 @@ if [ "$IS_SUBMODULE" = "true" ]; then
   source "$LIB_DIR/setup-workflows.sh"
   source "$LIB_DIR/validate-emissions.sh"
   source "$LIB_DIR/setup-directories.sh"
+  # Vendor policy engine for cross-org CI (consuming repos can't clone submodule)
+  source "$LIB_DIR/vendor-engine.sh"
 else
   echo "  Skipping template/workflow/directory setup (not a submodule context)"
 fi

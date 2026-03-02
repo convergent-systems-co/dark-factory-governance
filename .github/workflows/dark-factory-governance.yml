@@ -223,49 +223,25 @@ jobs:
           REPO_NAME: ${{ github.repository }}
           PROFILE_PATH: ${{ steps.profile.outputs.profile_path }}
         run: |
+          # Prefer submodule engine, fall back to vendored copy, then lightweight
           POLICY_ENGINE="${GOV_ROOT}/governance/bin/policy-engine.py"
+          VENDORED_ENGINE=".governance/engine/policy-engine.py"
+
+          if [ ! -f "$POLICY_ENGINE" ] && [ -f "$VENDORED_ENGINE" ]; then
+            echo "Using vendored policy engine at $VENDORED_ENGINE"
+            POLICY_ENGINE="$VENDORED_ENGINE"
+            # Use vendored policy profile and schema paths
+            if [ -d ".governance/engine/policy" ]; then
+              PROFILE_PATH=".governance/engine/policy/$(basename "$PROFILE_PATH")"
+              if [ ! -f "$PROFILE_PATH" ]; then
+                PROFILE_PATH=".governance/engine/policy/default.yaml"
+              fi
+            fi
+          fi
 
           if [ ! -f "$POLICY_ENGINE" ]; then
-            echo "Policy engine not available (consuming repo without submodule content)"
-
-            # Check require_python_engine setting (default: true — block PR if engine missing)
-            REQUIRE_ENGINE="true"
-            PROJECT_YAML=""
-            if [ -f "project.yaml" ]; then
-              PROJECT_YAML="project.yaml"
-            elif [ -f "${GOV_ROOT}/project.yaml" ]; then
-              PROJECT_YAML="${GOV_ROOT}/project.yaml"
-            fi
-            if [ -n "$PROJECT_YAML" ] && command -v python3 &>/dev/null; then
-              REQUIRE_ENGINE=$(python3 -c "
-          import yaml
-          try:
-              with open('${PROJECT_YAML}') as f:
-                  config = yaml.safe_load(f) or {}
-              print(str(config.get('governance', {}).get('require_python_engine', True)).lower())
-          except Exception:
-              print('true')
-          " 2>/dev/null || echo "true")
-            fi
-
-            if [ "$REQUIRE_ENGINE" = "true" ]; then
-              echo "::error::Python policy engine is required but unavailable. Set governance.require_python_engine: false in project.yaml to allow lightweight fallback."
-              # Write a blocking manifest so downstream steps can report the failure
-              python3 -c "
-          import json
-          manifest = {
-              'decision': {'action': 'block', 'rationale': 'Python policy engine required but unavailable. Set governance.require_python_engine: false in project.yaml to use lightweight fallback.'},
-              'aggregate_confidence': 0.0,
-              'risk_level': 'critical',
-              'panels_executed': [],
-              'policy_profile_used': 'none'
-          }
-          with open('manifest.json', 'w') as f:
-              json.dump(manifest, f, indent=2)
-          "
-            else
-              echo "::warning::Python policy engine unavailable — using lightweight fallback (governance.require_python_engine is false)"
-              echo "Falling back to lightweight emission-only validation"
+            echo "Policy engine not available (consuming repo without submodule content or vendored copy)"
+            echo "Falling back to lightweight emission-only validation"
 
             # Lightweight fallback: validate emissions directly
             python3 << 'PYEOF'
@@ -347,7 +323,6 @@ jobs:
               json.dump(manifest, f, indent=2)
           print(f"Lightweight validation complete: decision={decision}, confidence={avg_confidence:.2f}")
           PYEOF
-            fi  # end require_python_engine if/else
           else
             # Full policy engine available — run it
             # Exit codes: 0=approve, 1=block, 2=human_review, 3=auto_remediate

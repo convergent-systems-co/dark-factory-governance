@@ -191,6 +191,30 @@ if [ "$IS_SUBMODULE" = "true" ]; then
   fi
 fi
 
+# --- Check 7b: Vendored policy engine (submodule context only) ---
+if [ "$IS_SUBMODULE" = "true" ]; then
+  VENDOR_DIR="$PROJECT_ROOT/.governance/engine"
+  if [ -f "$VENDOR_DIR/policy-engine.py" ] && [ -f "$VENDOR_DIR/VERSION" ]; then
+    # Check staleness
+    VENDOR_VERSION="$(cat "$VENDOR_DIR/VERSION" 2>/dev/null || echo "")"
+    if [ -n "$VENDOR_VERSION" ]; then
+      CURRENT_VERSION=""
+      if git -C "$GOV_BASE" rev-parse HEAD &>/dev/null; then
+        CURRENT_VERSION="$(git -C "$GOV_BASE" rev-parse HEAD)"
+      fi
+      if [ -n "$CURRENT_VERSION" ] && [ "$VENDOR_VERSION" != "$CURRENT_VERSION" ]; then
+        record_warn "Vendored policy engine is stale (vendored: ${VENDOR_VERSION:0:12}, current: ${CURRENT_VERSION:0:12}) — run: bash .ai/bin/init.sh --refresh"
+      else
+        record_pass "Vendored policy engine present and up-to-date"
+      fi
+    else
+      record_warn "Vendored policy engine VERSION file is empty"
+    fi
+  else
+    record_warn "Vendored policy engine not found — cross-org CI will use lightweight fallback. Run: bash .ai/bin/init.sh --refresh"
+  fi
+fi
+
 # --- Check 8: CODEOWNERS ---
 # Check multiple valid locations
 CODEOWNERS_FOUND=false
